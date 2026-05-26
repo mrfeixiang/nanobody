@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nanobody VHH Analysis | SRP124616</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --cdr1: #e74c3c;
+            --cdr2: #2ecc71;
+            --cdr3: #3498db;
+            --fr: #a8d8ea;
+            --success: #3fb950;
+            --warn: #d29922;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d2137 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, var(--accent), var(--cdr2), var(--cdr3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 24px;
+        }
+        .hero .badges {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+        .badge.v { border-color: var(--cdr1); color: var(--cdr1); }
+        .badge.d { border-color: var(--cdr2); color: var(--cdr2); }
+        .badge.j { border-color: var(--cdr3); color: var(--cdr3); }
+        .badge.q { border-color: var(--success); color: var(--success); }
+
+        /* Navigation */
+        .nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+        }
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 12px 18px;
+            font-size: 0.9rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav a:hover {
+            color: var(--text);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 50px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        section:last-child { border-bottom: none; }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        h2 .num {
+            color: var(--accent);
+            font-weight: 400;
+            margin-right: 8px;
+        }
+        .section-desc {
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            font-size: 1rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin: 28px 0 12px;
+            color: var(--text);
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .card .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .card .detail {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* VHH structure diagram */
+        .vhh-bar {
+            display: flex;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 16px 0;
+            height: 48px;
+            border: 1px solid var(--border);
+        }
+        .vhh-bar .seg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #000;
+            position: relative;
+        }
+        .vhh-bar .seg.fr { background: var(--fr); }
+        .vhh-bar .seg.cdr1 { background: var(--cdr1); color: #fff; }
+        .vhh-bar .seg.cdr2 { background: var(--cdr2); color: #fff; }
+        .vhh-bar .seg.cdr3 { background: var(--cdr3); color: #fff; }
+
+        /* Sequence display */
+        .seq-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 16px 0;
+            word-break: break-all;
+        }
+        .seq-box .fr { color: var(--fr); }
+        .seq-box .c1 { color: var(--cdr1); font-weight: 700; background: rgba(231,76,60,0.15); border-radius: 3px; padding: 0 2px; }
+        .seq-box .c2 { color: var(--cdr2); font-weight: 700; background: rgba(46,204,113,0.15); border-radius: 3px; padding: 0 2px; }
+        .seq-box .c3 { color: var(--cdr3); font-weight: 700; background: rgba(52,152,219,0.15); border-radius: 3px; padding: 0 2px; }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td { font-size: 0.95rem; }
+        tr:hover { background: rgba(88,166,255,0.04); }
+        .mono { font-family: 'Courier New', monospace; }
+
+        /* pLDDT bar */
+        .plddt-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border);
+            overflow: hidden;
+            width: 100px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        .plddt-bar .fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* Figures */
+        .fig {
+            margin: 24px 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .fig img {
+            width: 100%;
+            display: block;
+        }
+        .fig .caption {
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+        .fig .caption strong {
+            color: var(--text);
+        }
+
+        .fig-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .fig-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Code */
+        code {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Info box */
+        .info {
+            background: rgba(88,166,255,0.08);
+            border: 1px solid rgba(88,166,255,0.3);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        .info .title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        /* Troubleshoot */
+        .trouble {
+            background: rgba(210,153,34,0.08);
+            border: 1px solid rgba(210,153,34,0.3);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .trouble .title {
+            font-weight: 700;
+            color: var(--warn);
+            margin-bottom: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+    <h1>Nanobody VHH Analysis</h1>
+    <p class="subtitle">
+        Complete bioinformatics pipeline for PacBio CCS nanobody sequencing data &mdash;
+        from raw FASTQ to 3D structure prediction with ESMFold
+    </p>
+    <div class="badges">
+        <span class="badge v">V: IGHV6-1*01</span>
+        <span class="badge d">D: IGHD1-26*01</span>
+        <span class="badge j">J: IGHJ4*02</span>
+        <span class="badge q">pLDDT: 0.838</span>
+    </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+    <div class="nav-inner">
+        <a href="#overview">Overview</a>
+        <a href="#qc">Quality Control</a>
+        <a href="#vhh">VHH Extraction</a>
+        <a href="#cdr">CDR Regions</a>
+        <a href="#diversity">Diversity</a>
+        <a href="#igblast">IgBLAST</a>
+        <a href="#structure">3D Structure</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+        <a href="#blogs">Blog Tutorials</a>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- 1. Overview -->
+<section id="overview">
+    <h2><span class="num">01</span>Project Overview</h2>
+    <p class="section-desc">Single-clone nanobody sequencing from a phage display library, analyzed end-to-end.</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <div class="label">BioProject</div>
+            <div class="value">SRP124616</div>
+            <div class="detail">SRR6269034 &bull; PacBio CCS</div>
+        </div>
+        <div class="card">
+            <div class="label">Total Reads</div>
+            <div class="value">85</div>
+            <div class="detail">Mean length: 976 bp &bull; Q92</div>
+        </div>
+        <div class="card">
+            <div class="label">VHH Identified</div>
+            <div class="value">83 / 85</div>
+            <div class="detail">97.6% success rate</div>
+        </div>
+        <div class="card">
+            <div class="label">CDR3</div>
+            <div class="value" style="font-family:monospace">ARQGSTYFDY</div>
+            <div class="detail">10 aa &bull; Monoclonal</div>
+        </div>
+    </div>
+
+    <div class="info">
+        <div class="title">What is a Nanobody?</div>
+        A nanobody (VHH) is the variable domain of a heavy-chain-only antibody found in camelids (camels, llamas, alpacas).
+        At ~15 kDa, it is the smallest naturally occurring antigen-binding fragment &mdash; roughly 1/10th the size of a conventional antibody.
+    </div>
+
+    <h3>VHH Domain Structure</h3>
+    <div class="vhh-bar">
+        <div class="seg fr" style="flex:25">FR1<br><small>25aa</small></div>
+        <div class="seg cdr1" style="flex:10">CDR1<br><small>10aa</small></div>
+        <div class="seg fr" style="flex:15">FR2<br><small>15aa</small></div>
+        <div class="seg cdr2" style="flex:8">CDR2<br><small>8aa</small></div>
+        <div class="seg fr" style="flex:41">FR3<br><small>41aa</small></div>
+        <div class="seg cdr3" style="flex:10">CDR3<br><small>10aa</small></div>
+        <div class="seg fr" style="flex:11">FR4<br><small>11aa</small></div>
+    </div>
+
+    <h3>VHH Sequence</h3>
+    <div class="seq-box">
+        <span class="fr">QVQLQQSGPGLVKPSQTLSLTCAIS</span><span class="c1">GDSVSSNNFG</span><span class="fr">WNWIRQSPSRGLEXL</span><span class="c2">GRTYYRSK</span><span class="fr">WYNDYAVSVRSRITINPDTSKNQFSLQLNSVTPEDTAVYYC</span><span class="c3">ARQGSTYFDY</span><span class="fr">WGQGTLVTVSS</span>
+    </div>
+</section>
+
+<!-- 2. Quality Control -->
+<section id="qc">
+    <h2><span class="num">02</span>Sequencing Quality Control</h2>
+    <p class="section-desc">PacBio CCS delivers near-perfect accuracy with Q92 mean quality scores.</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <div class="label">Mean Quality</div>
+            <div class="value">Q91.6</div>
+            <div class="detail">Range: Q82.1 &ndash; Q93.0</div>
+        </div>
+        <div class="card">
+            <div class="label">Mean Length</div>
+            <div class="value">975.6 bp</div>
+            <div class="detail">Range: 885 &ndash; 979 bp</div>
+        </div>
+        <div class="card">
+            <div class="label">Accuracy</div>
+            <div class="value">&gt;99.9999%</div>
+            <div class="detail">Q90+ = &lt;1 error per million bases</div>
+        </div>
+    </div>
+
+    <div class="fig">
+        <img src="../analysis_results/01_read_stats.png" alt="Read length and quality distribution">
+        <div class="caption"><strong>Figure 1.</strong> Read length distribution (left) and per-read mean quality score (right). Reads cluster tightly around 977 bp with Q90+ quality, consistent with PacBio CCS data.</div>
+    </div>
+</section>
+
+<!-- 3. VHH Extraction -->
+<section id="vhh">
+    <h2><span class="num">03</span>VHH Sequence Extraction</h2>
+    <p class="section-desc">Motif-driven extraction handles amber stop codons in phage display vectors.</p>
+
+    <div class="trouble">
+        <div class="title">Troubleshooting: ORF Search Failed (0 VHH found!)</div>
+        Traditional 6-frame ORF search found 0 VHH sequences because an <strong>amber stop codon (TAG &rarr; *)</strong> in the FR2 region
+        truncated every ORF. This is a design feature of phage display vectors &mdash; in suppressor strains, TAG is read through as Gln.
+        <strong>Solution:</strong> Search for conserved VHH motifs (<code>QVQL...WGQG</code>) instead of ORFs, and replace internal stops with X.
+    </div>
+
+    <div class="card-grid">
+        <div class="card">
+            <div class="label">Extraction Success</div>
+            <div class="value">83 / 85</div>
+            <div class="detail">97.6% of reads</div>
+        </div>
+        <div class="card">
+            <div class="label">VHH Length</div>
+            <div class="value">120 aa</div>
+            <div class="detail">All sequences identical length</div>
+        </div>
+        <div class="card">
+            <div class="label">Amber Stop</div>
+            <div class="value">100%</div>
+            <div class="detail">All VHH contain internal TAG</div>
+        </div>
+    </div>
+
+    <div class="fig">
+        <img src="../analysis_results/06_vhh_structure.png" alt="VHH domain structure">
+        <div class="caption"><strong>Figure 2.</strong> VHH domain structure showing framework (FR) and complementarity-determining (CDR) regions with average lengths.</div>
+    </div>
+</section>
+
+<!-- 4. CDR Regions -->
+<section id="cdr">
+    <h2><span class="num">04</span>CDR Region Identification</h2>
+    <p class="section-desc">Three CDR loops form the antigen-binding surface (paratope) of the nanobody.</p>
+
+    <table>
+        <thead>
+            <tr><th>Region</th><th>Length</th><th>Sequence</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>FR1</td><td>25 aa</td><td class="mono">QVQLQQSGPGLVKPSQTLSLTCAIS</td><td>Structural scaffold</td></tr>
+            <tr style="background:rgba(231,76,60,0.08)"><td style="color:var(--cdr1);font-weight:700">CDR1</td><td>10 aa</td><td class="mono" style="color:var(--cdr1)">GDSVSSNNFG</td><td>Antigen contact</td></tr>
+            <tr><td>FR2</td><td>15 aa</td><td class="mono">WNWIRQSPSRGLEXL</td><td>Scaffold (amber stop at X)</td></tr>
+            <tr style="background:rgba(46,204,113,0.08)"><td style="color:var(--cdr2);font-weight:700">CDR2</td><td>8 aa</td><td class="mono" style="color:var(--cdr2)">GRTYYRSK</td><td>Antigen contact</td></tr>
+            <tr><td>FR3</td><td>41 aa</td><td class="mono" style="font-size:0.8rem">WYNDYAVSVRSRITINPDTSKNQFSLQLNSVTPEDTAVYYC</td><td>Structural scaffold</td></tr>
+            <tr style="background:rgba(52,152,219,0.08)"><td style="color:var(--cdr3);font-weight:700">CDR3</td><td>10 aa</td><td class="mono" style="color:var(--cdr3)">ARQGSTYFDY</td><td>Key antigen specificity</td></tr>
+            <tr><td>FR4</td><td>11 aa</td><td class="mono">WGQGTLVTVSS</td><td>Structural scaffold</td></tr>
+        </tbody>
+    </table>
+
+    <div class="fig-grid">
+        <div class="fig">
+            <img src="../analysis_results/02_cdr_length_distribution.png" alt="CDR length distribution">
+            <div class="caption"><strong>Figure 3.</strong> CDR length distributions. All CDRs have uniform length (monoclonal).</div>
+        </div>
+        <div class="fig">
+            <img src="../analysis_results/05_cdr3_position_freq.png" alt="CDR3 position frequency">
+            <div class="caption"><strong>Figure 4.</strong> CDR3 position-specific amino acid frequency heatmap.</div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Diversity -->
+<section id="diversity">
+    <h2><span class="num">05</span>Sequence Diversity</h2>
+    <p class="section-desc">Extremely low diversity confirms this is a single-clone validation, not a library screen.</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <div class="label">Unique VHH</div>
+            <div class="value">2</div>
+            <div class="detail">Out of 83 total (2.4% diversity)</div>
+        </div>
+        <div class="card">
+            <div class="label">Unique CDR3</div>
+            <div class="value">1</div>
+            <div class="detail">ARQGSTYFDY &times; 83</div>
+        </div>
+        <div class="card">
+            <div class="label">Dominant Clone</div>
+            <div class="value">82&times;</div>
+            <div class="detail">98.8% of all sequences</div>
+        </div>
+    </div>
+
+    <div class="fig-grid">
+        <div class="fig">
+            <img src="../analysis_results/03_aa_composition.png" alt="Amino acid composition">
+            <div class="caption"><strong>Figure 5.</strong> Amino acid composition by physicochemical property for each CDR and full VHH.</div>
+        </div>
+        <div class="fig">
+            <img src="../analysis_results/04_similarity_distribution.png" alt="Similarity distribution">
+            <div class="caption"><strong>Figure 6.</strong> Pairwise sequence identity for full VHH (left) and CDR3 (right).</div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. IgBLAST -->
+<section id="igblast">
+    <h2><span class="num">06</span>IgBLAST Germline Gene Analysis</h2>
+    <p class="section-desc">V(D)J recombination assignment using human germline as reference.</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <div class="label">V Gene</div>
+            <div class="value" style="color:var(--cdr1)">IGHV6-1*01</div>
+            <div class="detail">97.7% identity to germline</div>
+        </div>
+        <div class="card">
+            <div class="label">D Gene</div>
+            <div class="value" style="color:var(--cdr2)">IGHD1-26*01</div>
+            <div class="detail">Diversity segment</div>
+        </div>
+        <div class="card">
+            <div class="label">J Gene</div>
+            <div class="value" style="color:var(--cdr3)">IGHJ4*02</div>
+            <div class="detail">91.3% identity to germline</div>
+        </div>
+        <div class="card">
+            <div class="label">Mutation Rate</div>
+            <div class="value">2.3%</div>
+            <div class="detail">7 nt differences / 303 nt (V region)</div>
+        </div>
+    </div>
+
+    <h3>IMGT Region Alignment Summary</h3>
+    <table>
+        <thead>
+            <tr><th>Region</th><th>Length</th><th>Matches</th><th>Mismatches</th><th>Identity</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>FR1-IMGT</td><td>75 nt</td><td>75</td><td>0</td><td>100.0%</td></tr>
+            <tr><td style="color:var(--cdr1)">CDR1-IMGT</td><td>30 nt</td><td>26</td><td>4</td><td>86.7%</td></tr>
+            <tr><td>FR2-IMGT</td><td>51 nt</td><td>50</td><td>1</td><td>98.0%</td></tr>
+            <tr><td style="color:var(--cdr2)">CDR2-IMGT</td><td>27 nt</td><td>27</td><td>0</td><td>100.0%</td></tr>
+            <tr><td>FR3-IMGT</td><td>114 nt</td><td>112</td><td>2</td><td>98.2%</td></tr>
+            <tr><td style="color:var(--cdr3)">CDR3-IMGT</td><td>6 nt</td><td>6</td><td>0</td><td>100.0%</td></tr>
+            <tr style="font-weight:700"><td>Total</td><td>303 nt</td><td>296</td><td>7</td><td>97.7%</td></tr>
+        </tbody>
+    </table>
+
+    <div class="info">
+        <div class="title">Note on Species</div>
+        This analysis uses human germline genes as reference. Since nanobodies originate from camelids,
+        some sequence differences may reflect natural inter-species variation rather than somatic hypermutation.
+        For formal publication, camelid-specific germline databases should be used.
+    </div>
+</section>
+
+<!-- 7. 3D Structure -->
+<section id="structure">
+    <h2><span class="num">07</span>ESMFold 3D Structure Prediction</h2>
+    <p class="section-desc">Protein structure predicted by Meta's ESMFold language model with high confidence.</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <div class="label">Model</div>
+            <div class="value">ESMFold v1</div>
+            <div class="detail">Evolutionary Scale Modeling</div>
+        </div>
+        <div class="card">
+            <div class="label">Overall pLDDT</div>
+            <div class="value" style="color:var(--success)">0.838</div>
+            <div class="detail">High confidence prediction</div>
+        </div>
+        <div class="card">
+            <div class="label">Residues &gt; 0.7</div>
+            <div class="value">87.4%</div>
+            <div class="detail">104 / 119 residues</div>
+        </div>
+        <div class="card">
+            <div class="label">PDB File</div>
+            <div class="value" style="font-size:1.1rem"><a href="../analysis_results/vhh_structure_esmfold.pdb" style="color:var(--accent);text-decoration:none">Download PDB</a></div>
+            <div class="detail">Open in PyMOL / ChimeraX</div>
+        </div>
+    </div>
+
+    <h3>Per-Residue Confidence (pLDDT)</h3>
+    <div class="fig">
+        <img src="../analysis_results/07_esmfold_plddt.png" alt="pLDDT per residue">
+        <div class="caption"><strong>Figure 7.</strong> pLDDT confidence score per residue. Framework regions (light blue background) show high confidence (&gt;0.9), while CDR loops &mdash; especially CDR2 &mdash; show lower confidence, reflecting their inherent flexibility.</div>
+    </div>
+
+    <h3>pLDDT by Region</h3>
+    <table>
+        <thead>
+            <tr><th>Region</th><th>Mean pLDDT</th><th>Confidence</th><th></th></tr>
+        </thead>
+        <tbody>
+            <tr><td>FR1</td><td>0.920</td><td style="color:var(--success)">Very High</td><td><div class="plddt-bar"><div class="fill" style="width:92%;background:var(--success)"></div></div></td></tr>
+            <tr><td style="color:var(--cdr1)">CDR1</td><td>0.798</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:80%;background:var(--warn)"></div></div></td></tr>
+            <tr><td>FR2</td><td>0.816</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:82%;background:var(--warn)"></div></div></td></tr>
+            <tr><td style="color:var(--cdr2)">CDR2</td><td>0.532</td><td style="color:var(--cdr1)">Low</td><td><div class="plddt-bar"><div class="fill" style="width:53%;background:var(--cdr1)"></div></div></td></tr>
+            <tr><td>FR3</td><td>0.853</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:85%;background:var(--warn)"></div></div></td></tr>
+            <tr><td style="color:var(--cdr3)">CDR3</td><td>0.807</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:81%;background:var(--warn)"></div></div></td></tr>
+            <tr><td>FR4</td><td>0.917</td><td style="color:var(--success)">Very High</td><td><div class="plddt-bar"><div class="fill" style="width:92%;background:var(--success)"></div></div></td></tr>
+        </tbody>
+    </table>
+
+    <h3>CDR Loop Geometry</h3>
+    <table>
+        <thead>
+            <tr><th>CDR</th><th>Sequence</th><th>End-to-End Span</th><th>Backbone Length</th><th>Compactness</th></tr>
+        </thead>
+        <tbody>
+            <tr><td style="color:var(--cdr1);font-weight:700">CDR1</td><td class="mono">GDSVSSNNFG</td><td>15.0 A</td><td>34.1 A</td><td>0.44</td></tr>
+            <tr><td style="color:var(--cdr2);font-weight:700">CDR2</td><td class="mono">RTYYRSKW</td><td>9.7 A</td><td>26.4 A</td><td>0.37</td></tr>
+            <tr><td style="color:var(--cdr3);font-weight:700">CDR3</td><td class="mono">RQGSTYFDYW</td><td>6.5 A</td><td>34.2 A</td><td>0.19 (tight loop)</td></tr>
+        </tbody>
+    </table>
+
+    <div class="fig">
+        <img src="../analysis_results/10_esmfold_summary.png" alt="Structure summary">
+        <div class="caption"><strong>Figure 8.</strong> Multi-panel structure analysis: (A) pLDDT by region, (B) region lengths with sequences, (C) surface exposure profile with CDR annotations, (D) 2D structure projection colored by pLDDT with CDR loop labels.</div>
+    </div>
+
+    <div class="fig-grid">
+        <div class="fig">
+            <img src="../analysis_results/08_esmfold_contact_map.png" alt="Contact map">
+            <div class="caption"><strong>Figure 9.</strong> CA-CA distance map (left) and contact map (right, &lt;8A). CDR boundaries marked by colored lines.</div>
+        </div>
+        <div class="fig">
+            <img src="../analysis_results/09_esmfold_ramachandran.png" alt="Ramachandran plot">
+            <div class="caption"><strong>Figure 10.</strong> Ramachandran plot. CDR residues (colored) populate both allowed and generously allowed regions, typical for loop conformations.</div>
+        </div>
+    </div>
+</section>
+
+<!-- 8. Troubleshooting -->
+<section id="troubleshooting">
+    <h2><span class="num">08</span>Troubleshooting Log</h2>
+    <p class="section-desc">Real problems encountered during this analysis and how they were solved.</p>
+
+    <div class="trouble">
+        <div class="title">1. SSL Connection Error with NCBI</div>
+        <code>curl: (56) OpenSSL SSL_read: error:0A000126</code><br><br>
+        <strong>Cause:</strong> OpenSSL 3.6.2 (conda) incompatible with NCBI's TLS configuration.<br>
+        <strong>Fix:</strong> Use ENA API as alternative, or <code>curl -k</code> to bypass SSL verification.
+    </div>
+
+    <div class="trouble">
+        <div class="title">2. VHH Extraction Failed &mdash; 0 sequences found</div>
+        ORF search returned only 6-109 aa fragments instead of expected 120 aa VHH.<br><br>
+        <strong>Cause:</strong> Amber stop codon (TAG &rarr; *) in FR2 region truncates ORF.<br>
+        <strong>Fix:</strong> Use conserved motif search (<code>QVQL...WGQG</code>) instead of ORF search. Replace internal <code>*</code> with <code>X</code>.
+    </div>
+
+    <div class="trouble">
+        <div class="title">3. IgBLAST Missing D/J Databases</div>
+        <code>BLAST Database error: No alias or index file found for [human_gl_D]</code><br><br>
+        <strong>Cause:</strong> conda IgBLAST only includes V gene internal data, not D/J BLAST databases.<br>
+        <strong>Fix:</strong> Manually create D/J germline FASTA files and build BLAST databases with <code>makeblastdb</code>.
+    </div>
+
+    <div class="trouble">
+        <div class="title">4. IMGT Database Download Failed</div>
+        <code>curl</code> returned HTML instead of FASTA from IMGT website.<br><br>
+        <strong>Cause:</strong> IMGT requires browser-based access with authentication.<br>
+        <strong>Fix:</strong> Use IgBLAST's built-in internal_data for V genes, manually prepare D/J sequences.
+    </div>
+</section>
+
+<!-- 9. Blogs -->
+<section id="blogs">
+    <h2><span class="num">09</span>Tutorial Blog Posts</h2>
+    <p class="section-desc">Detailed step-by-step tutorials with full code and explanations.</p>
+
+    <div class="card-grid">
+        <div class="card" style="border-color:var(--cdr1)">
+            <div class="label">Chinese / 中文</div>
+            <div class="value" style="font-size:1.2rem">从零开始的纳米抗体分析</div>
+            <div class="detail" style="margin-top:8px">
+                <a href="https://github.com/mrfeixiang/nanobody/blob/main/blog_nanobody_analysis_zh.md"
+                   style="color:var(--accent);text-decoration:none">
+                   Read on GitHub &rarr;
+                </a>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--cdr3)">
+            <div class="label">Korean / 한국어</div>
+            <div class="value" style="font-size:1.2rem">나노바디 분석 실전 가이드</div>
+            <div class="detail" style="margin-top:8px">
+                <a href="https://github.com/mrfeixiang/nanobody/blob/main/blog_nanobody_analysis_kr.md"
+                   style="color:var(--accent);text-decoration:none">
+                   Read on GitHub &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>
+        <strong>Nanobody VHH Analysis Pipeline</strong> &mdash;
+        Data: <a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP124616">NCBI SRA SRP124616</a> &bull;
+        Code: <a href="https://github.com/mrfeixiang/nanobody">GitHub</a>
+    </p>
+    <p style="margin-top:8px">
+        Built with Python, BioPython, IgBLAST, ESMFold &bull; 2024
+    </p>
+</div>
+
+</body>
+</html>
