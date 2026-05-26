@@ -1,0 +1,11 @@
+# SRA raw data (large files)
+SRR6269034/
+*.sra
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
