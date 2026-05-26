@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,345 +19,72 @@
             --success: #3fb950;
             --warn: #d29922;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        /* Hero */
-        .hero {
-            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d2137 100%);
-            border-bottom: 1px solid var(--border);
-            padding: 60px 20px;
-            text-align: center;
-        }
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            background: linear-gradient(90deg, var(--accent), var(--cdr2), var(--cdr3));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero .subtitle {
-            font-size: 1.15rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto 24px;
-        }
-        .hero .badges {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            background: var(--surface);
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .hero { background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d2137 100%); border-bottom: 1px solid var(--border); padding: 60px 20px; text-align: center; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 12px; background: linear-gradient(90deg, var(--accent), var(--cdr2), var(--cdr3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 24px; }
+        .hero .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface); }
         .badge.v { border-color: var(--cdr1); color: var(--cdr1); }
         .badge.d { border-color: var(--cdr2); color: var(--cdr2); }
         .badge.j { border-color: var(--cdr3); color: var(--cdr3); }
         .badge.q { border-color: var(--success); color: var(--success); }
-
-        /* Navigation */
-        .nav {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 0 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        .nav-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0;
-        }
-        .nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            padding: 12px 18px;
-            font-size: 0.9rem;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-        }
-        .nav a:hover {
-            color: var(--text);
-            border-bottom-color: var(--accent);
-        }
-
-        /* Main content */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        section {
-            padding: 50px 0;
-            border-bottom: 1px solid var(--border);
-        }
+        .nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; position: sticky; top: 0; z-index: 100; overflow-x: auto; white-space: nowrap; }
+        .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 0; align-items: center; }
+        .nav a { color: var(--text-muted); text-decoration: none; padding: 12px 18px; font-size: 0.9rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .nav a:hover { color: var(--text); border-bottom-color: var(--accent); }
+        .lang-switcher { margin-left: auto; display: flex; gap: 4px; padding: 6px 0; }
+        .lang-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .lang-btn:hover { border-color: var(--accent); color: var(--text); }
+        .lang-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 50px 0; border-bottom: 1px solid var(--border); }
         section:last-child { border-bottom: none; }
-
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-        h2 .num {
-            color: var(--accent);
-            font-weight: 400;
-            margin-right: 8px;
-        }
-        .section-desc {
-            color: var(--text-muted);
-            margin-bottom: 28px;
-            font-size: 1rem;
-        }
-
-        h3 {
-            font-size: 1.2rem;
-            margin: 28px 0 12px;
-            color: var(--text);
-        }
-
-        /* Cards */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-            margin: 20px 0;
-        }
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-        }
-        .card .label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 4px;
-        }
-        .card .value {
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
-        .card .detail {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* VHH structure diagram */
-        .vhh-bar {
-            display: flex;
-            border-radius: 6px;
-            overflow: hidden;
-            margin: 16px 0;
-            height: 48px;
-            border: 1px solid var(--border);
-        }
-        .vhh-bar .seg {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #000;
-            position: relative;
-        }
-        .vhh-bar .seg.fr { background: var(--fr); }
-        .vhh-bar .seg.cdr1 { background: var(--cdr1); color: #fff; }
-        .vhh-bar .seg.cdr2 { background: var(--cdr2); color: #fff; }
-        .vhh-bar .seg.cdr3 { background: var(--cdr3); color: #fff; }
-
-        /* Sequence display */
-        .seq-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95rem;
-            line-height: 1.8;
-            overflow-x: auto;
-            margin: 16px 0;
-            word-break: break-all;
-        }
-        .seq-box .fr { color: var(--fr); }
-        .seq-box .c1 { color: var(--cdr1); font-weight: 700; background: rgba(231,76,60,0.15); border-radius: 3px; padding: 0 2px; }
-        .seq-box .c2 { color: var(--cdr2); font-weight: 700; background: rgba(46,204,113,0.15); border-radius: 3px; padding: 0 2px; }
-        .seq-box .c3 { color: var(--cdr3); font-weight: 700; background: rgba(52,152,219,0.15); border-radius: 3px; padding: 0 2px; }
-
-        /* Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 16px 0;
-        }
-        th, td {
-            padding: 10px 14px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        th {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        td { font-size: 0.95rem; }
-        tr:hover { background: rgba(88,166,255,0.04); }
+        h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--text); }
+        h2 .num { color: var(--accent); font-weight: 400; margin-right: 8px; }
+        .section-desc { color: var(--text-muted); margin-bottom: 28px; font-size: 1rem; }
+        h3 { font-size: 1.2rem; margin: 28px 0 12px; color: var(--text); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+        .card .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .card .value { font-size: 1.6rem; font-weight: 700; }
+        .card .detail { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+        .vhh-bar { display: flex; border-radius: 6px; overflow: hidden; margin: 16px 0; height: 48px; border: 1px solid var(--border); }
+        .vhh-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #000; }
+        .vhh-bar .seg.fr { background: var(--fr); } .vhh-bar .seg.cdr1 { background: var(--cdr1); color: #fff; } .vhh-bar .seg.cdr2 { background: var(--cdr2); color: #fff; } .vhh-bar .seg.cdr3 { background: var(--cdr3); color: #fff; }
+        .seq-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.8; overflow-x: auto; margin: 16px 0; word-break: break-all; }
+        .seq-box .fr { color: var(--fr); } .seq-box .c1 { color: var(--cdr1); font-weight: 700; background: rgba(231,76,60,0.15); border-radius: 3px; padding: 0 2px; } .seq-box .c2 { color: var(--cdr2); font-weight: 700; background: rgba(46,204,113,0.15); border-radius: 3px; padding: 0 2px; } .seq-box .c3 { color: var(--cdr3); font-weight: 700; background: rgba(52,152,219,0.15); border-radius: 3px; padding: 0 2px; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { font-size: 0.95rem; } tr:hover { background: rgba(88,166,255,0.04); }
         .mono { font-family: 'Courier New', monospace; }
-
-        /* pLDDT bar */
-        .plddt-bar {
-            height: 8px;
-            border-radius: 4px;
-            background: var(--border);
-            overflow: hidden;
-            width: 100px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 8px;
-        }
-        .plddt-bar .fill {
-            height: 100%;
-            border-radius: 4px;
-        }
-
-        /* Figures */
-        .fig {
-            margin: 24px 0;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .fig img {
-            width: 100%;
-            display: block;
-        }
-        .fig .caption {
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-        }
-        .fig .caption strong {
-            color: var(--text);
-        }
-
-        .fig-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 20px 0;
-        }
-        @media (max-width: 768px) {
-            .fig-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 1.8rem; }
-            .card-grid { grid-template-columns: 1fr; }
-        }
-
-        /* Code */
-        code {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 2px 6px;
-            font-size: 0.85em;
-            font-family: 'Courier New', monospace;
-        }
-
-        /* Info box */
-        .info {
-            background: rgba(88,166,255,0.08);
-            border: 1px solid rgba(88,166,255,0.3);
-            border-radius: 8px;
-            padding: 16px 20px;
-            margin: 16px 0;
-            font-size: 0.9rem;
-        }
-        .info .title {
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 4px;
-        }
-
-        /* Troubleshoot */
-        .trouble {
-            background: rgba(210,153,34,0.08);
-            border: 1px solid rgba(210,153,34,0.3);
-            border-radius: 8px;
-            padding: 16px 20px;
-            margin: 16px 0;
-        }
-        .trouble .title {
-            font-weight: 700;
-            color: var(--warn);
-            margin-bottom: 4px;
-        }
-
-        /* 3D Viewer buttons */
-        .view-btn {
-            background: var(--surface);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .view-btn:hover {
-            border-color: var(--accent);
-            color: var(--text);
-            background: rgba(88,166,255,0.08);
-        }
-        .view-btn.active {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(88,166,255,0.12);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border);
-        }
+        .plddt-bar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; width: 100px; display: inline-block; vertical-align: middle; margin-left: 8px; }
+        .plddt-bar .fill { height: 100%; border-radius: 4px; }
+        .fig { margin: 24px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .fig img { width: 100%; display: block; }
+        .fig .caption { padding: 12px 16px; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border); }
+        .fig .caption strong { color: var(--text); }
+        .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        @media (max-width: 768px) { .fig-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.8rem; } .card-grid { grid-template-columns: 1fr; } }
+        code { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-size: 0.85em; font-family: 'Courier New', monospace; }
+        .info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 16px 20px; margin: 16px 0; font-size: 0.9rem; }
+        .info .title { font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+        .trouble { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.3); border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
+        .trouble .title { font-weight: 700; color: var(--warn); margin-bottom: 4px; }
+        .view-btn { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; padding: 8px 16px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .view-btn:hover { border-color: var(--accent); color: var(--text); background: rgba(88,166,255,0.08); }
+        .view-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.12); }
+        .footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
         .footer a { color: var(--accent); text-decoration: none; }
     </style>
 </head>
 <body>
 
-<!-- Hero -->
 <div class="hero">
-    <h1>Nanobody VHH Analysis</h1>
-    <p class="subtitle">
-        Complete bioinformatics pipeline for PacBio CCS nanobody sequencing data &mdash;
-        from raw FASTQ to 3D structure prediction with ESMFold
-    </p>
+    <h1 data-i18n="hero_title">나노바디 VHH 분석</h1>
+    <p class="subtitle" data-i18n="hero_subtitle">PacBio CCS 나노바디 시퀀싱 데이터의 완전한 생명정보학 파이프라인 &mdash; 원시 FASTQ에서 ESMFold 3D 구조 예측까지</p>
     <div class="badges">
         <span class="badge v">V: IGHV6-1*01</span>
         <span class="badge d">D: IGHD1-26*01</span>
@@ -366,58 +93,38 @@
     </div>
 </div>
 
-<!-- Navigation -->
 <div class="nav">
     <div class="nav-inner">
-        <a href="#overview">Overview</a>
-        <a href="#qc">Quality Control</a>
-        <a href="#vhh">VHH Extraction</a>
-        <a href="#cdr">CDR Regions</a>
-        <a href="#diversity">Diversity</a>
+        <a href="#overview" data-i18n="nav_overview">개요</a>
+        <a href="#qc" data-i18n="nav_qc">품질 관리</a>
+        <a href="#vhh" data-i18n="nav_vhh">VHH 추출</a>
+        <a href="#cdr" data-i18n="nav_cdr">CDR 영역</a>
+        <a href="#diversity" data-i18n="nav_diversity">다양성</a>
         <a href="#igblast">IgBLAST</a>
-        <a href="#structure">3D Structure</a>
-        <a href="#troubleshooting">Troubleshooting</a>
-        <a href="#blogs">Blog Tutorials</a>
+        <a href="#structure" data-i18n="nav_structure">3D 구조</a>
+        <a href="#troubleshooting" data-i18n="nav_trouble">트러블슈팅</a>
+        <a href="#blogs" data-i18n="nav_blogs">블로그</a>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLang('ko')">한국어</button>
+            <button class="lang-btn" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">EN</button>
+        </div>
     </div>
 </div>
 
 <div class="container">
 
-<!-- 1. Overview -->
 <section id="overview">
-    <h2><span class="num">01</span>Project Overview</h2>
-    <p class="section-desc">Single-clone nanobody sequencing from a phage display library, analyzed end-to-end.</p>
-
+    <h2><span class="num">01</span><span data-i18n="s1_title">프로젝트 개요</span></h2>
+    <p class="section-desc" data-i18n="s1_desc">파지 디스플레이 라이브러리의 단일 클론 나노바디 시퀀싱을 처음부터 끝까지 분석합니다.</p>
     <div class="card-grid">
-        <div class="card">
-            <div class="label">BioProject</div>
-            <div class="value">SRP124616</div>
-            <div class="detail">SRR6269034 &bull; PacBio CCS</div>
-        </div>
-        <div class="card">
-            <div class="label">Total Reads</div>
-            <div class="value">85</div>
-            <div class="detail">Mean length: 976 bp &bull; Q92</div>
-        </div>
-        <div class="card">
-            <div class="label">VHH Identified</div>
-            <div class="value">83 / 85</div>
-            <div class="detail">97.6% success rate</div>
-        </div>
-        <div class="card">
-            <div class="label">CDR3</div>
-            <div class="value" style="font-family:monospace">ARQGSTYFDY</div>
-            <div class="detail">10 aa &bull; Monoclonal</div>
-        </div>
+        <div class="card"><div class="label" data-i18n="c_bioproject">바이오프로젝트</div><div class="value">SRP124616</div><div class="detail">SRR6269034 &bull; PacBio CCS</div></div>
+        <div class="card"><div class="label" data-i18n="c_reads">총 리드 수</div><div class="value">85</div><div class="detail" data-i18n="c_reads_d">평균 길이: 976 bp &bull; Q92</div></div>
+        <div class="card"><div class="label" data-i18n="c_vhh_id">VHH 식별</div><div class="value">83 / 85</div><div class="detail" data-i18n="c_vhh_id_d">97.6% 성공률</div></div>
+        <div class="card"><div class="label">CDR3</div><div class="value" style="font-family:monospace">ARQGSTYFDY</div><div class="detail" data-i18n="c_cdr3_d">10 aa &bull; 단일 클론</div></div>
     </div>
-
-    <div class="info">
-        <div class="title">What is a Nanobody?</div>
-        A nanobody (VHH) is the variable domain of a heavy-chain-only antibody found in camelids (camels, llamas, alpacas).
-        At ~15 kDa, it is the smallest naturally occurring antigen-binding fragment &mdash; roughly 1/10th the size of a conventional antibody.
-    </div>
-
-    <h3>VHH Domain Structure</h3>
+    <div class="info"><div class="title" data-i18n="info_nanobody_t">나노바디란?</div><span data-i18n="info_nanobody">나노바디(VHH)는 낙타과 동물(낙타, 라마, 알파카)에서 발견되는 중쇄 항체(HCAb)의 가변 도메인입니다. ~15 kDa로, 자연에서 발견되는 가장 작은 항원 결합 단편이며, 기존 항체의 약 1/10 크기입니다.</span></div>
+    <h3 data-i18n="h_vhh_struct">VHH 도메인 구조</h3>
     <div class="vhh-bar">
         <div class="seg fr" style="flex:25">FR1<br><small>25aa</small></div>
         <div class="seg cdr1" style="flex:10">CDR1<br><small>10aa</small></div>
@@ -427,178 +134,80 @@
         <div class="seg cdr3" style="flex:10">CDR3<br><small>10aa</small></div>
         <div class="seg fr" style="flex:11">FR4<br><small>11aa</small></div>
     </div>
-
-    <h3>VHH Sequence</h3>
-    <div class="seq-box">
-        <span class="fr">QVQLQQSGPGLVKPSQTLSLTCAIS</span><span class="c1">GDSVSSNNFG</span><span class="fr">WNWIRQSPSRGLEXL</span><span class="c2">GRTYYRSK</span><span class="fr">WYNDYAVSVRSRITINPDTSKNQFSLQLNSVTPEDTAVYYC</span><span class="c3">ARQGSTYFDY</span><span class="fr">WGQGTLVTVSS</span>
-    </div>
+    <h3 data-i18n="h_vhh_seq">VHH 서열</h3>
+    <div class="seq-box"><span class="fr">QVQLQQSGPGLVKPSQTLSLTCAIS</span><span class="c1">GDSVSSNNFG</span><span class="fr">WNWIRQSPSRGLEXL</span><span class="c2">GRTYYRSK</span><span class="fr">WYNDYAVSVRSRITINPDTSKNQFSLQLNSVTPEDTAVYYC</span><span class="c3">ARQGSTYFDY</span><span class="fr">WGQGTLVTVSS</span></div>
 </section>
 
-<!-- 2. Quality Control -->
 <section id="qc">
-    <h2><span class="num">02</span>Sequencing Quality Control</h2>
-    <p class="section-desc">PacBio CCS delivers near-perfect accuracy with Q92 mean quality scores.</p>
-
+    <h2><span class="num">02</span><span data-i18n="s2_title">시퀀싱 품질 관리</span></h2>
+    <p class="section-desc" data-i18n="s2_desc">PacBio CCS는 평균 Q92의 거의 완벽한 정확도를 제공합니다.</p>
     <div class="card-grid">
-        <div class="card">
-            <div class="label">Mean Quality</div>
-            <div class="value">Q91.6</div>
-            <div class="detail">Range: Q82.1 &ndash; Q93.0</div>
-        </div>
-        <div class="card">
-            <div class="label">Mean Length</div>
-            <div class="value">975.6 bp</div>
-            <div class="detail">Range: 885 &ndash; 979 bp</div>
-        </div>
-        <div class="card">
-            <div class="label">Accuracy</div>
-            <div class="value">&gt;99.9999%</div>
-            <div class="detail">Q90+ = &lt;1 error per million bases</div>
-        </div>
+        <div class="card"><div class="label" data-i18n="c_quality">평균 품질</div><div class="value">Q91.6</div><div class="detail" data-i18n="c_quality_d">범위: Q82.1 &ndash; Q93.0</div></div>
+        <div class="card"><div class="label" data-i18n="c_length">평균 길이</div><div class="value">975.6 bp</div><div class="detail" data-i18n="c_length_d">범위: 885 &ndash; 979 bp</div></div>
+        <div class="card"><div class="label" data-i18n="c_accuracy">정확도</div><div class="value">&gt;99.9999%</div><div class="detail" data-i18n="c_accuracy_d">Q90+ = 백만 염기당 1개 미만 오류</div></div>
     </div>
-
-    <div class="fig">
-        <img src="./01_read_stats.png" alt="Read length and quality distribution">
-        <div class="caption"><strong>Figure 1.</strong> Read length distribution (left) and per-read mean quality score (right). Reads cluster tightly around 977 bp with Q90+ quality, consistent with PacBio CCS data.</div>
-    </div>
+    <div class="fig"><img src="./01_read_stats.png" alt="Read stats"><div class="caption"><strong data-i18n="fig1_t">그림 1.</strong> <span data-i18n="fig1">리드 길이 분포(왼쪽)와 리드별 평균 품질 점수(오른쪽). 리드가 977 bp 부근에 집중되어 있으며, Q90+ 품질로 PacBio CCS 데이터의 높은 정확도를 확인합니다.</span></div></div>
 </section>
 
-<!-- 3. VHH Extraction -->
 <section id="vhh">
-    <h2><span class="num">03</span>VHH Sequence Extraction</h2>
-    <p class="section-desc">Motif-driven extraction handles amber stop codons in phage display vectors.</p>
-
-    <div class="trouble">
-        <div class="title">Troubleshooting: ORF Search Failed (0 VHH found!)</div>
-        Traditional 6-frame ORF search found 0 VHH sequences because an <strong>amber stop codon (TAG &rarr; *)</strong> in the FR2 region
-        truncated every ORF. This is a design feature of phage display vectors &mdash; in suppressor strains, TAG is read through as Gln.
-        <strong>Solution:</strong> Search for conserved VHH motifs (<code>QVQL...WGQG</code>) instead of ORFs, and replace internal stops with X.
-    </div>
-
+    <h2><span class="num">03</span><span data-i18n="s3_title">VHH 서열 추출</span></h2>
+    <p class="section-desc" data-i18n="s3_desc">모티프 기반 추출로 파지 디스플레이 벡터의 amber 종결 코돈을 처리합니다.</p>
+    <div class="trouble"><div class="title" data-i18n="trouble1_t">트러블슈팅: ORF 탐색 실패 (VHH 0개 발견!)</div><span data-i18n="trouble1">기존 6-frame ORF 탐색은 FR2 영역의 <strong>amber 종결 코돈(TAG &rarr; *)</strong>이 ORF를 절단하여 VHH를 찾지 못했습니다. 이는 파지 디스플레이 벡터의 설계 특성입니다. <strong>해결:</strong> ORF 탐색 대신 보존 모티프(<code>QVQL...WGQG</code>)를 검색하고, 내부 종결 코돈을 X로 치환합니다.</span></div>
     <div class="card-grid">
-        <div class="card">
-            <div class="label">Extraction Success</div>
-            <div class="value">83 / 85</div>
-            <div class="detail">97.6% of reads</div>
-        </div>
-        <div class="card">
-            <div class="label">VHH Length</div>
-            <div class="value">120 aa</div>
-            <div class="detail">All sequences identical length</div>
-        </div>
-        <div class="card">
-            <div class="label">Amber Stop</div>
-            <div class="value">100%</div>
-            <div class="detail">All VHH contain internal TAG</div>
-        </div>
+        <div class="card"><div class="label" data-i18n="c_extract">추출 성공</div><div class="value">83 / 85</div><div class="detail" data-i18n="c_extract_d">97.6%의 리드</div></div>
+        <div class="card"><div class="label" data-i18n="c_vhh_len">VHH 길이</div><div class="value">120 aa</div><div class="detail" data-i18n="c_vhh_len_d">모든 서열 동일 길이</div></div>
+        <div class="card"><div class="label">Amber Stop</div><div class="value">100%</div><div class="detail" data-i18n="c_amber_d">모든 VHH에 내부 TAG 포함</div></div>
     </div>
-
-    <div class="fig">
-        <img src="./06_vhh_structure.png" alt="VHH domain structure">
-        <div class="caption"><strong>Figure 2.</strong> VHH domain structure showing framework (FR) and complementarity-determining (CDR) regions with average lengths.</div>
-    </div>
+    <div class="fig"><img src="./06_vhh_structure.png" alt="VHH structure"><div class="caption"><strong data-i18n="fig2_t">그림 2.</strong> <span data-i18n="fig2">VHH 도메인 구조: 골격 영역(FR)과 상보성 결정 영역(CDR)의 평균 길이.</span></div></div>
 </section>
 
-<!-- 4. CDR Regions -->
 <section id="cdr">
-    <h2><span class="num">04</span>CDR Region Identification</h2>
-    <p class="section-desc">Three CDR loops form the antigen-binding surface (paratope) of the nanobody.</p>
-
+    <h2><span class="num">04</span><span data-i18n="s4_title">CDR 영역 식별</span></h2>
+    <p class="section-desc" data-i18n="s4_desc">3개의 CDR 루프가 나노바디의 항원 결합면(파라토프)을 형성합니다.</p>
     <table>
-        <thead>
-            <tr><th>Region</th><th>Length</th><th>Sequence</th><th>Role</th></tr>
-        </thead>
+        <thead><tr><th data-i18n="th_region">영역</th><th data-i18n="th_length">길이</th><th data-i18n="th_sequence">서열</th><th data-i18n="th_role">역할</th></tr></thead>
         <tbody>
-            <tr><td>FR1</td><td>25 aa</td><td class="mono">QVQLQQSGPGLVKPSQTLSLTCAIS</td><td>Structural scaffold</td></tr>
-            <tr style="background:rgba(231,76,60,0.08)"><td style="color:var(--cdr1);font-weight:700">CDR1</td><td>10 aa</td><td class="mono" style="color:var(--cdr1)">GDSVSSNNFG</td><td>Antigen contact</td></tr>
-            <tr><td>FR2</td><td>15 aa</td><td class="mono">WNWIRQSPSRGLEXL</td><td>Scaffold (amber stop at X)</td></tr>
-            <tr style="background:rgba(46,204,113,0.08)"><td style="color:var(--cdr2);font-weight:700">CDR2</td><td>8 aa</td><td class="mono" style="color:var(--cdr2)">GRTYYRSK</td><td>Antigen contact</td></tr>
-            <tr><td>FR3</td><td>41 aa</td><td class="mono" style="font-size:0.8rem">WYNDYAVSVRSRITINPDTSKNQFSLQLNSVTPEDTAVYYC</td><td>Structural scaffold</td></tr>
-            <tr style="background:rgba(52,152,219,0.08)"><td style="color:var(--cdr3);font-weight:700">CDR3</td><td>10 aa</td><td class="mono" style="color:var(--cdr3)">ARQGSTYFDY</td><td>Key antigen specificity</td></tr>
-            <tr><td>FR4</td><td>11 aa</td><td class="mono">WGQGTLVTVSS</td><td>Structural scaffold</td></tr>
+            <tr><td>FR1</td><td>25 aa</td><td class="mono">QVQLQQSGPGLVKPSQTLSLTCAIS</td><td data-i18n="role_scaffold">구조적 골격</td></tr>
+            <tr style="background:rgba(231,76,60,0.08)"><td style="color:var(--cdr1);font-weight:700">CDR1</td><td>10 aa</td><td class="mono" style="color:var(--cdr1)">GDSVSSNNFG</td><td data-i18n="role_antigen">항원 접촉</td></tr>
+            <tr><td>FR2</td><td>15 aa</td><td class="mono">WNWIRQSPSRGLEXL</td><td data-i18n="role_scaffold_amber">골격 (X = amber stop)</td></tr>
+            <tr style="background:rgba(46,204,113,0.08)"><td style="color:var(--cdr2);font-weight:700">CDR2</td><td>8 aa</td><td class="mono" style="color:var(--cdr2)">GRTYYRSK</td><td data-i18n="role_antigen">항원 접촉</td></tr>
+            <tr><td>FR3</td><td>41 aa</td><td class="mono" style="font-size:0.8rem">WYNDYAVSVRSRITINPDTSKNQFSLQLNSVTPEDTAVYYC</td><td data-i18n="role_scaffold">구조적 골격</td></tr>
+            <tr style="background:rgba(52,152,219,0.08)"><td style="color:var(--cdr3);font-weight:700">CDR3</td><td>10 aa</td><td class="mono" style="color:var(--cdr3)">ARQGSTYFDY</td><td data-i18n="role_specificity">항원 특이성 핵심</td></tr>
+            <tr><td>FR4</td><td>11 aa</td><td class="mono">WGQGTLVTVSS</td><td data-i18n="role_scaffold">구조적 골격</td></tr>
         </tbody>
     </table>
-
     <div class="fig-grid">
-        <div class="fig">
-            <img src="./02_cdr_length_distribution.png" alt="CDR length distribution">
-            <div class="caption"><strong>Figure 3.</strong> CDR length distributions. All CDRs have uniform length (monoclonal).</div>
-        </div>
-        <div class="fig">
-            <img src="./05_cdr3_position_freq.png" alt="CDR3 position frequency">
-            <div class="caption"><strong>Figure 4.</strong> CDR3 position-specific amino acid frequency heatmap.</div>
-        </div>
+        <div class="fig"><img src="./02_cdr_length_distribution.png" alt="CDR length"><div class="caption"><strong data-i18n="fig3_t">그림 3.</strong> <span data-i18n="fig3">CDR 길이 분포. 모든 CDR이 균일한 길이(단일 클론).</span></div></div>
+        <div class="fig"><img src="./05_cdr3_position_freq.png" alt="CDR3 freq"><div class="caption"><strong data-i18n="fig4_t">그림 4.</strong> <span data-i18n="fig4">CDR3 위치별 아미노산 빈도 히트맵.</span></div></div>
     </div>
 </section>
 
-<!-- 5. Diversity -->
 <section id="diversity">
-    <h2><span class="num">05</span>Sequence Diversity</h2>
-    <p class="section-desc">Extremely low diversity confirms this is a single-clone validation, not a library screen.</p>
-
+    <h2><span class="num">05</span><span data-i18n="s5_title">서열 다양성</span></h2>
+    <p class="section-desc" data-i18n="s5_desc">매우 낮은 다양성은 라이브러리 스크리닝이 아닌 단일 클론 검증임을 확인합니다.</p>
     <div class="card-grid">
-        <div class="card">
-            <div class="label">Unique VHH</div>
-            <div class="value">2</div>
-            <div class="detail">Out of 83 total (2.4% diversity)</div>
-        </div>
-        <div class="card">
-            <div class="label">Unique CDR3</div>
-            <div class="value">1</div>
-            <div class="detail">ARQGSTYFDY &times; 83</div>
-        </div>
-        <div class="card">
-            <div class="label">Dominant Clone</div>
-            <div class="value">82&times;</div>
-            <div class="detail">98.8% of all sequences</div>
-        </div>
+        <div class="card"><div class="label" data-i18n="c_unique_vhh">고유 VHH</div><div class="value">2</div><div class="detail" data-i18n="c_unique_vhh_d">83개 중 (다양성 2.4%)</div></div>
+        <div class="card"><div class="label" data-i18n="c_unique_cdr3">고유 CDR3</div><div class="value">1</div><div class="detail">ARQGSTYFDY &times; 83</div></div>
+        <div class="card"><div class="label" data-i18n="c_dominant">우세 클론</div><div class="value">82&times;</div><div class="detail" data-i18n="c_dominant_d">전체 서열의 98.8%</div></div>
     </div>
-
     <div class="fig-grid">
-        <div class="fig">
-            <img src="./03_aa_composition.png" alt="Amino acid composition">
-            <div class="caption"><strong>Figure 5.</strong> Amino acid composition by physicochemical property for each CDR and full VHH.</div>
-        </div>
-        <div class="fig">
-            <img src="./04_similarity_distribution.png" alt="Similarity distribution">
-            <div class="caption"><strong>Figure 6.</strong> Pairwise sequence identity for full VHH (left) and CDR3 (right).</div>
-        </div>
+        <div class="fig"><img src="./03_aa_composition.png" alt="AA composition"><div class="caption"><strong data-i18n="fig5_t">그림 5.</strong> <span data-i18n="fig5">각 CDR과 전체 VHH의 물리화학적 특성별 아미노산 조성.</span></div></div>
+        <div class="fig"><img src="./04_similarity_distribution.png" alt="Similarity"><div class="caption"><strong data-i18n="fig6_t">그림 6.</strong> <span data-i18n="fig6">전체 VHH(왼쪽)와 CDR3(오른쪽)의 쌍별 서열 동일성.</span></div></div>
     </div>
 </section>
 
-<!-- 6. IgBLAST -->
 <section id="igblast">
-    <h2><span class="num">06</span>IgBLAST Germline Gene Analysis</h2>
-    <p class="section-desc">V(D)J recombination assignment using human germline as reference.</p>
-
+    <h2><span class="num">06</span><span data-i18n="s6_title">IgBLAST Germline 유전자 분석</span></h2>
+    <p class="section-desc" data-i18n="s6_desc">인간 germline을 참조로 한 V(D)J 재조합 할당.</p>
     <div class="card-grid">
-        <div class="card">
-            <div class="label">V Gene</div>
-            <div class="value" style="color:var(--cdr1)">IGHV6-1*01</div>
-            <div class="detail">97.7% identity to germline</div>
-        </div>
-        <div class="card">
-            <div class="label">D Gene</div>
-            <div class="value" style="color:var(--cdr2)">IGHD1-26*01</div>
-            <div class="detail">Diversity segment</div>
-        </div>
-        <div class="card">
-            <div class="label">J Gene</div>
-            <div class="value" style="color:var(--cdr3)">IGHJ4*02</div>
-            <div class="detail">91.3% identity to germline</div>
-        </div>
-        <div class="card">
-            <div class="label">Mutation Rate</div>
-            <div class="value">2.3%</div>
-            <div class="detail">7 nt differences / 303 nt (V region)</div>
-        </div>
+        <div class="card"><div class="label">V Gene</div><div class="value" style="color:var(--cdr1)">IGHV6-1*01</div><div class="detail" data-i18n="c_v_d">Germline 대비 97.7% 일치도</div></div>
+        <div class="card"><div class="label">D Gene</div><div class="value" style="color:var(--cdr2)">IGHD1-26*01</div><div class="detail" data-i18n="c_d_d">다양성 분절</div></div>
+        <div class="card"><div class="label">J Gene</div><div class="value" style="color:var(--cdr3)">IGHJ4*02</div><div class="detail" data-i18n="c_j_d">Germline 대비 91.3% 일치도</div></div>
+        <div class="card"><div class="label" data-i18n="c_mutation">돌연변이율</div><div class="value">2.3%</div><div class="detail" data-i18n="c_mutation_d">303 nt 중 7개 뉴클레오티드 차이 (V 영역)</div></div>
     </div>
-
-    <h3>IMGT Region Alignment Summary</h3>
+    <h3 data-i18n="h_imgt">IMGT 영역 정렬 요약</h3>
     <table>
-        <thead>
-            <tr><th>Region</th><th>Length</th><th>Matches</th><th>Mismatches</th><th>Identity</th></tr>
-        </thead>
+        <thead><tr><th data-i18n="th_region">영역</th><th data-i18n="th_length">길이</th><th data-i18n="th_match">일치</th><th data-i18n="th_mismatch">불일치</th><th data-i18n="th_identity">동일성</th></tr></thead>
         <tbody>
             <tr><td>FR1-IMGT</td><td>75 nt</td><td>75</td><td>0</td><td>100.0%</td></tr>
             <tr><td style="color:var(--cdr1)">CDR1-IMGT</td><td>30 nt</td><td>26</td><td>4</td><td>86.7%</td></tr>
@@ -606,391 +215,295 @@
             <tr><td style="color:var(--cdr2)">CDR2-IMGT</td><td>27 nt</td><td>27</td><td>0</td><td>100.0%</td></tr>
             <tr><td>FR3-IMGT</td><td>114 nt</td><td>112</td><td>2</td><td>98.2%</td></tr>
             <tr><td style="color:var(--cdr3)">CDR3-IMGT</td><td>6 nt</td><td>6</td><td>0</td><td>100.0%</td></tr>
-            <tr style="font-weight:700"><td>Total</td><td>303 nt</td><td>296</td><td>7</td><td>97.7%</td></tr>
+            <tr style="font-weight:700"><td data-i18n="total">합계</td><td>303 nt</td><td>296</td><td>7</td><td>97.7%</td></tr>
         </tbody>
     </table>
-
-    <div class="info">
-        <div class="title">Note on Species</div>
-        This analysis uses human germline genes as reference. Since nanobodies originate from camelids,
-        some sequence differences may reflect natural inter-species variation rather than somatic hypermutation.
-        For formal publication, camelid-specific germline databases should be used.
-    </div>
+    <div class="info"><div class="title" data-i18n="info_species_t">종(Species) 관련 참고</div><span data-i18n="info_species">이 분석은 인간 germline 유전자를 참조로 사용했습니다. 나노바디는 낙타과 동물에서 유래하므로, 일부 서열 차이는 체세포 과돌연변이가 아닌 종 간 자연적 차이를 반영할 수 있습니다. 정식 논문에서는 낙타과 전용 germline 데이터베이스를 사용해야 합니다.</span></div>
 </section>
 
-<!-- 7. 3D Structure -->
 <section id="structure">
-    <h2><span class="num">07</span>ESMFold 3D Structure Prediction</h2>
-    <p class="section-desc">Protein structure predicted by Meta's ESMFold language model with high confidence.</p>
-
+    <h2><span class="num">07</span><span data-i18n="s7_title">ESMFold 3D 구조 예측</span></h2>
+    <p class="section-desc" data-i18n="s7_desc">Meta의 ESMFold 언어 모델로 예측된 높은 신뢰도의 단백질 구조.</p>
     <div class="card-grid">
-        <div class="card">
-            <div class="label">Model</div>
-            <div class="value">ESMFold v1</div>
-            <div class="detail">Evolutionary Scale Modeling</div>
-        </div>
-        <div class="card">
-            <div class="label">Overall pLDDT</div>
-            <div class="value" style="color:var(--success)">0.838</div>
-            <div class="detail">High confidence prediction</div>
-        </div>
-        <div class="card">
-            <div class="label">Residues &gt; 0.7</div>
-            <div class="value">87.4%</div>
-            <div class="detail">104 / 119 residues</div>
-        </div>
-        <div class="card">
-            <div class="label">PDB File</div>
-            <div class="value" style="font-size:1.1rem"><a href="./vhh_structure_esmfold.pdb" style="color:var(--accent);text-decoration:none">Download PDB</a></div>
-            <div class="detail">Open in PyMOL / ChimeraX</div>
-        </div>
+        <div class="card"><div class="label" data-i18n="c_model">모델</div><div class="value">ESMFold v1</div><div class="detail">Evolutionary Scale Modeling</div></div>
+        <div class="card"><div class="label" data-i18n="c_plddt">전체 pLDDT</div><div class="value" style="color:var(--success)">0.838</div><div class="detail" data-i18n="c_plddt_d">높은 신뢰도 예측</div></div>
+        <div class="card"><div class="label" data-i18n="c_res07">잔기 &gt; 0.7</div><div class="value">87.4%</div><div class="detail">104 / 119</div></div>
+        <div class="card"><div class="label" data-i18n="c_pdb">PDB 파일</div><div class="value" style="font-size:1.1rem"><a href="./vhh_structure_esmfold.pdb" style="color:var(--accent);text-decoration:none" data-i18n="c_pdb_link">다운로드 PDB</a></div><div class="detail">PyMOL / ChimeraX</div></div>
     </div>
 
-    <h3>Interactive 3D Structure</h3>
-    <p style="color:var(--text-muted);margin-bottom:12px;font-size:0.9rem">
-        Drag to rotate, scroll to zoom, right-click to translate. Use the buttons to switch coloring modes.
-    </p>
-
+    <h3 data-i18n="h_interactive">인터랙티브 3D 구조</h3>
+    <p style="color:var(--text-muted);margin-bottom:12px;font-size:0.9rem" data-i18n="viewer_help">드래그로 회전, 스크롤로 확대/축소, 우클릭으로 이동. 버튼으로 색상 모드를 전환하세요.</p>
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-        <button onclick="colorByRegion()" class="view-btn" id="btn-region">Color by CDR/FR Region</button>
-        <button onclick="colorByPLDDT()" class="view-btn" id="btn-plddt">Color by pLDDT</button>
-        <button onclick="colorByChain()" class="view-btn" id="btn-chain">Color by Secondary Structure</button>
-        <button onclick="showSurface()" class="view-btn" id="btn-surface">Toggle Surface</button>
-        <button onclick="resetView()" class="view-btn" id="btn-reset">Reset View</button>
+        <button onclick="colorByRegion()" class="view-btn" id="btn-region" data-i18n="btn_region">CDR/FR 영역별 색상</button>
+        <button onclick="colorByPLDDT()" class="view-btn" id="btn-plddt" data-i18n="btn_plddt">pLDDT 신뢰도별 색상</button>
+        <button onclick="colorByChain()" class="view-btn" id="btn-chain" data-i18n="btn_ss">이차구조별 색상</button>
+        <button onclick="showSurface()" class="view-btn" id="btn-surface" data-i18n="btn_surface">표면 토글</button>
+        <button onclick="resetView()" class="view-btn" id="btn-reset" data-i18n="btn_reset">초기화</button>
     </div>
-
     <div id="viewer-container" style="position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">
         <div id="viewport" style="width:100%;height:500px"></div>
         <div id="viewer-legend" style="position:absolute;top:12px;right:12px;background:rgba(13,17,23,0.85);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:0.8rem;line-height:1.6">
-            <div><span style="color:#a8d8ea">&#9632;</span> Framework (FR)</div>
+            <div><span style="color:#a8d8ea">&#9632;</span> <span data-i18n="leg_fr">골격 영역 (FR)</span></div>
             <div><span style="color:#e74c3c">&#9632;</span> CDR1 (res 26-35)</div>
             <div><span style="color:#2ecc71">&#9632;</span> CDR2 (res 51-58)</div>
             <div><span style="color:#3498db">&#9632;</span> CDR3 (res 100-109)</div>
         </div>
     </div>
 
-    <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
-    <script>
-    let viewer = null;
-    let pdbData = null;
-    let surfaceOn = false;
-    let surfaceId = null;
+    <h3 data-i18n="h_plddt">잔기별 신뢰도 (pLDDT)</h3>
+    <div class="fig"><img src="./07_esmfold_plddt.png" alt="pLDDT"><div class="caption"><strong data-i18n="fig7_t">그림 7.</strong> <span data-i18n="fig7">잔기별 pLDDT 신뢰도 점수. 골격 영역(하늘색)은 높은 신뢰도(&gt;0.9)를 보이고, CDR 루프(특히 CDR2)는 내재적 유연성으로 낮은 신뢰도를 보입니다.</span></div></div>
 
-    // CDR boundaries (1-based residue numbers)
-    const regions = [
-        { name: 'FR1',  start: 1,   end: 25,  color: '#a8d8ea' },
-        { name: 'CDR1', start: 26,  end: 35,  color: '#e74c3c' },
-        { name: 'FR2',  start: 36,  end: 50,  color: '#a8d8ea' },
-        { name: 'CDR2', start: 51,  end: 58,  color: '#2ecc71' },
-        { name: 'FR3',  start: 59,  end: 99,  color: '#a8d8ea' },
-        { name: 'CDR3', start: 100, end: 109, color: '#3498db' },
-        { name: 'FR4',  start: 110, end: 120, color: '#a8d8ea' },
-    ];
-
-    function initViewer() {
-        const element = document.getElementById('viewport');
-        viewer = $3Dmol.createViewer(element, {
-            backgroundColor: '#161b22',
-            antialias: true,
-        });
-
-        fetch('./vhh_structure_esmfold.pdb')
-            .then(r => r.text())
-            .then(data => {
-                pdbData = data;
-                viewer.addModel(data, 'pdb');
-                colorByRegion();
-                viewer.zoomTo();
-                viewer.zoom(1.2);
-                viewer.render();
-
-                // Add CDR labels
-                addCDRLabels();
-            });
-    }
-
-    function addCDRLabels() {
-        const cdrRegions = regions.filter(r => r.name.startsWith('CDR'));
-        cdrRegions.forEach(r => {
-            const midRes = Math.floor((r.start + r.end) / 2);
-            viewer.addLabel(r.name, {
-                position: viewer.getModel().atoms.find(a => a.resi === midRes && a.atom === 'CA'),
-                backgroundColor: r.color,
-                fontColor: '#ffffff',
-                fontSize: 12,
-                borderRadius: 4,
-                padding: 3,
-                backgroundOpacity: 0.8,
-            });
-        });
-        viewer.render();
-    }
-
-    function clearStyle() {
-        surfaceOn = false;
-        viewer.removeAllSurfaces();
-        viewer.removeAllLabels();
-        viewer.removeAllShapes();
-    }
-
-    function colorByRegion() {
-        clearStyle();
-        setActiveBtn('btn-region');
-
-        // Cartoon for all
-        viewer.setStyle({}, { cartoon: { color: '#a8d8ea', opacity: 0.9 } });
-
-        // Color CDR regions
-        regions.forEach(r => {
-            const sel = { resi: [] };
-            for (let i = r.start; i <= r.end; i++) sel.resi.push(i);
-
-            if (r.name.startsWith('CDR')) {
-                viewer.setStyle(sel, {
-                    cartoon: { color: r.color, opacity: 1.0 },
-                });
-                // Show CDR sidechains as sticks
-                viewer.addStyle(sel, {
-                    stick: { colorscheme: { prop: 'resi', map: singleColorMap(r.color) }, radius: 0.15, opacity: 0.7 }
-                });
-            } else {
-                viewer.setStyle(sel, {
-                    cartoon: { color: r.color, opacity: 0.85 },
-                });
-            }
-        });
-
-        addCDRLabels();
-        viewer.render();
-    }
-
-    function singleColorMap(hex) {
-        const map = {};
-        for (let i = 1; i <= 120; i++) map[i] = hex;
-        return map;
-    }
-
-    function colorByPLDDT() {
-        clearStyle();
-        setActiveBtn('btn-plddt');
-
-        viewer.setStyle({}, {
-            cartoon: {
-                colorfunc: function(atom) {
-                    const b = atom.b;
-                    if (b > 0.9) return '#3fb950';
-                    if (b > 0.7) return '#d29922';
-                    if (b > 0.5) return '#f47c3c';
-                    return '#e74c3c';
-                },
-                opacity: 0.95,
-            }
-        });
-
-        // Update legend
-        const legend = document.getElementById('viewer-legend');
-        legend.innerHTML = `
-            <div style="margin-bottom:4px;font-weight:700;color:#e6edf3">pLDDT Score</div>
-            <div><span style="color:#3fb950">&#9632;</span> Very High (&gt;0.9)</div>
-            <div><span style="color:#d29922">&#9632;</span> High (0.7-0.9)</div>
-            <div><span style="color:#f47c3c">&#9632;</span> Low (0.5-0.7)</div>
-            <div><span style="color:#e74c3c">&#9632;</span> Very Low (&lt;0.5)</div>
-        `;
-
-        viewer.render();
-    }
-
-    function colorByChain() {
-        clearStyle();
-        setActiveBtn('btn-chain');
-
-        viewer.setStyle({}, {
-            cartoon: { colorscheme: 'ssJmol', opacity: 0.95 }
-        });
-
-        const legend = document.getElementById('viewer-legend');
-        legend.innerHTML = `
-            <div style="margin-bottom:4px;font-weight:700;color:#e6edf3">Secondary Structure</div>
-            <div><span style="color:#FF0080">&#9632;</span> Alpha Helix</div>
-            <div><span style="color:#FFC800">&#9632;</span> Beta Sheet</div>
-            <div><span style="color:#FFFFFF">&#9632;</span> Loop / Coil</div>
-        `;
-
-        viewer.render();
-    }
-
-    function showSurface() {
-        if (surfaceOn) {
-            viewer.removeAllSurfaces();
-            surfaceOn = false;
-        } else {
-            viewer.addSurface($3Dmol.SurfaceType.VDW, {
-                opacity: 0.6,
-                colorfunc: function(atom) {
-                    for (const r of regions) {
-                        if (atom.resi >= r.start && atom.resi <= r.end) {
-                            if (r.name.startsWith('CDR')) return $3Dmol.CC.color(r.color);
-                        }
-                    }
-                    return $3Dmol.CC.color('#a8d8ea');
-                }
-            });
-            surfaceOn = true;
-        }
-        viewer.render();
-    }
-
-    function resetView() {
-        colorByRegion();
-        viewer.zoomTo();
-        viewer.zoom(1.2);
-        viewer.render();
-
-        const legend = document.getElementById('viewer-legend');
-        legend.innerHTML = `
-            <div><span style="color:#a8d8ea">&#9632;</span> Framework (FR)</div>
-            <div><span style="color:#e74c3c">&#9632;</span> CDR1 (res 26-35)</div>
-            <div><span style="color:#2ecc71">&#9632;</span> CDR2 (res 51-58)</div>
-            <div><span style="color:#3498db">&#9632;</span> CDR3 (res 100-109)</div>
-        `;
-    }
-
-    function setActiveBtn(id) {
-        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    // Initialize on load
-    document.addEventListener('DOMContentLoaded', initViewer);
-    </script>
-
-    <h3>Per-Residue Confidence (pLDDT)</h3>
-    <div class="fig">
-        <img src="./07_esmfold_plddt.png" alt="pLDDT per residue">
-        <div class="caption"><strong>Figure 7.</strong> pLDDT confidence score per residue. Framework regions (light blue background) show high confidence (&gt;0.9), while CDR loops &mdash; especially CDR2 &mdash; show lower confidence, reflecting their inherent flexibility.</div>
-    </div>
-
-    <h3>pLDDT by Region</h3>
+    <h3 data-i18n="h_plddt_region">영역별 pLDDT</h3>
     <table>
-        <thead>
-            <tr><th>Region</th><th>Mean pLDDT</th><th>Confidence</th><th></th></tr>
-        </thead>
+        <thead><tr><th data-i18n="th_region">영역</th><th data-i18n="th_mean_plddt">평균 pLDDT</th><th data-i18n="th_confidence">신뢰도</th><th></th></tr></thead>
         <tbody>
-            <tr><td>FR1</td><td>0.920</td><td style="color:var(--success)">Very High</td><td><div class="plddt-bar"><div class="fill" style="width:92%;background:var(--success)"></div></div></td></tr>
-            <tr><td style="color:var(--cdr1)">CDR1</td><td>0.798</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:80%;background:var(--warn)"></div></div></td></tr>
-            <tr><td>FR2</td><td>0.816</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:82%;background:var(--warn)"></div></div></td></tr>
-            <tr><td style="color:var(--cdr2)">CDR2</td><td>0.532</td><td style="color:var(--cdr1)">Low</td><td><div class="plddt-bar"><div class="fill" style="width:53%;background:var(--cdr1)"></div></div></td></tr>
-            <tr><td>FR3</td><td>0.853</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:85%;background:var(--warn)"></div></div></td></tr>
-            <tr><td style="color:var(--cdr3)">CDR3</td><td>0.807</td><td>High</td><td><div class="plddt-bar"><div class="fill" style="width:81%;background:var(--warn)"></div></div></td></tr>
-            <tr><td>FR4</td><td>0.917</td><td style="color:var(--success)">Very High</td><td><div class="plddt-bar"><div class="fill" style="width:92%;background:var(--success)"></div></div></td></tr>
+            <tr><td>FR1</td><td>0.920</td><td style="color:var(--success)" data-i18n="conf_vh">매우 높음</td><td><div class="plddt-bar"><div class="fill" style="width:92%;background:var(--success)"></div></div></td></tr>
+            <tr><td style="color:var(--cdr1)">CDR1</td><td>0.798</td><td data-i18n="conf_h">높음</td><td><div class="plddt-bar"><div class="fill" style="width:80%;background:var(--warn)"></div></div></td></tr>
+            <tr><td>FR2</td><td>0.816</td><td data-i18n="conf_h">높음</td><td><div class="plddt-bar"><div class="fill" style="width:82%;background:var(--warn)"></div></div></td></tr>
+            <tr><td style="color:var(--cdr2)">CDR2</td><td>0.532</td><td style="color:var(--cdr1)" data-i18n="conf_l">낮음</td><td><div class="plddt-bar"><div class="fill" style="width:53%;background:var(--cdr1)"></div></div></td></tr>
+            <tr><td>FR3</td><td>0.853</td><td data-i18n="conf_h">높음</td><td><div class="plddt-bar"><div class="fill" style="width:85%;background:var(--warn)"></div></div></td></tr>
+            <tr><td style="color:var(--cdr3)">CDR3</td><td>0.807</td><td data-i18n="conf_h">높음</td><td><div class="plddt-bar"><div class="fill" style="width:81%;background:var(--warn)"></div></div></td></tr>
+            <tr><td>FR4</td><td>0.917</td><td style="color:var(--success)" data-i18n="conf_vh">매우 높음</td><td><div class="plddt-bar"><div class="fill" style="width:92%;background:var(--success)"></div></div></td></tr>
         </tbody>
     </table>
 
-    <h3>CDR Loop Geometry</h3>
+    <h3 data-i18n="h_cdr_geom">CDR 루프 기하학</h3>
     <table>
-        <thead>
-            <tr><th>CDR</th><th>Sequence</th><th>End-to-End Span</th><th>Backbone Length</th><th>Compactness</th></tr>
-        </thead>
+        <thead><tr><th>CDR</th><th data-i18n="th_sequence">서열</th><th data-i18n="th_span">End-to-End 거리</th><th data-i18n="th_backbone">백본 길이</th><th data-i18n="th_compact">밀집도</th></tr></thead>
         <tbody>
             <tr><td style="color:var(--cdr1);font-weight:700">CDR1</td><td class="mono">GDSVSSNNFG</td><td>15.0 A</td><td>34.1 A</td><td>0.44</td></tr>
             <tr><td style="color:var(--cdr2);font-weight:700">CDR2</td><td class="mono">RTYYRSKW</td><td>9.7 A</td><td>26.4 A</td><td>0.37</td></tr>
-            <tr><td style="color:var(--cdr3);font-weight:700">CDR3</td><td class="mono">RQGSTYFDYW</td><td>6.5 A</td><td>34.2 A</td><td>0.19 (tight loop)</td></tr>
+            <tr><td style="color:var(--cdr3);font-weight:700">CDR3</td><td class="mono">RQGSTYFDYW</td><td>6.5 A</td><td>34.2 A</td><td data-i18n="tight_loop">0.19 (촘촘한 루프)</td></tr>
         </tbody>
     </table>
 
-    <div class="fig">
-        <img src="./10_esmfold_summary.png" alt="Structure summary">
-        <div class="caption"><strong>Figure 8.</strong> Multi-panel structure analysis: (A) pLDDT by region, (B) region lengths with sequences, (C) surface exposure profile with CDR annotations, (D) 2D structure projection colored by pLDDT with CDR loop labels.</div>
-    </div>
-
+    <div class="fig"><img src="./10_esmfold_summary.png" alt="Summary"><div class="caption"><strong data-i18n="fig8_t">그림 8.</strong> <span data-i18n="fig8">다중 패널 구조 분석: (A) 영역별 pLDDT, (B) 영역 길이 및 서열, (C) CDR 표면 노출, (D) pLDDT 색상 구조 투영.</span></div></div>
     <div class="fig-grid">
-        <div class="fig">
-            <img src="./08_esmfold_contact_map.png" alt="Contact map">
-            <div class="caption"><strong>Figure 9.</strong> CA-CA distance map (left) and contact map (right, &lt;8A). CDR boundaries marked by colored lines.</div>
-        </div>
-        <div class="fig">
-            <img src="./09_esmfold_ramachandran.png" alt="Ramachandran plot">
-            <div class="caption"><strong>Figure 10.</strong> Ramachandran plot. CDR residues (colored) populate both allowed and generously allowed regions, typical for loop conformations.</div>
-        </div>
+        <div class="fig"><img src="./08_esmfold_contact_map.png" alt="Contact map"><div class="caption"><strong data-i18n="fig9_t">그림 9.</strong> <span data-i18n="fig9">CA-CA 거리 맵(왼쪽)과 접촉 맵(오른쪽, &lt;8A). CDR 경계는 색상 선으로 표시.</span></div></div>
+        <div class="fig"><img src="./09_esmfold_ramachandran.png" alt="Ramachandran"><div class="caption"><strong data-i18n="fig10_t">그림 10.</strong> <span data-i18n="fig10">라마찬드란 플롯. CDR 잔기(색상)가 허용 및 관대 허용 영역에 분포하며, 루프 구조의 전형적인 패턴.</span></div></div>
     </div>
 </section>
 
-<!-- 8. Troubleshooting -->
 <section id="troubleshooting">
-    <h2><span class="num">08</span>Troubleshooting Log</h2>
-    <p class="section-desc">Real problems encountered during this analysis and how they were solved.</p>
-
-    <div class="trouble">
-        <div class="title">1. SSL Connection Error with NCBI</div>
-        <code>curl: (56) OpenSSL SSL_read: error:0A000126</code><br><br>
-        <strong>Cause:</strong> OpenSSL 3.6.2 (conda) incompatible with NCBI's TLS configuration.<br>
-        <strong>Fix:</strong> Use ENA API as alternative, or <code>curl -k</code> to bypass SSL verification.
-    </div>
-
-    <div class="trouble">
-        <div class="title">2. VHH Extraction Failed &mdash; 0 sequences found</div>
-        ORF search returned only 6-109 aa fragments instead of expected 120 aa VHH.<br><br>
-        <strong>Cause:</strong> Amber stop codon (TAG &rarr; *) in FR2 region truncates ORF.<br>
-        <strong>Fix:</strong> Use conserved motif search (<code>QVQL...WGQG</code>) instead of ORF search. Replace internal <code>*</code> with <code>X</code>.
-    </div>
-
-    <div class="trouble">
-        <div class="title">3. IgBLAST Missing D/J Databases</div>
-        <code>BLAST Database error: No alias or index file found for [human_gl_D]</code><br><br>
-        <strong>Cause:</strong> conda IgBLAST only includes V gene internal data, not D/J BLAST databases.<br>
-        <strong>Fix:</strong> Manually create D/J germline FASTA files and build BLAST databases with <code>makeblastdb</code>.
-    </div>
-
-    <div class="trouble">
-        <div class="title">4. IMGT Database Download Failed</div>
-        <code>curl</code> returned HTML instead of FASTA from IMGT website.<br><br>
-        <strong>Cause:</strong> IMGT requires browser-based access with authentication.<br>
-        <strong>Fix:</strong> Use IgBLAST's built-in internal_data for V genes, manually prepare D/J sequences.
-    </div>
+    <h2><span class="num">08</span><span data-i18n="s8_title">트러블슈팅 기록</span></h2>
+    <p class="section-desc" data-i18n="s8_desc">분석 과정에서 실제로 발생한 문제와 해결 방법.</p>
+    <div class="trouble"><div class="title" data-i18n="ts1_t">1. NCBI SSL 연결 오류</div><code>curl: (56) OpenSSL SSL_read: error:0A000126</code><br><br><strong data-i18n="ts_cause">원인:</strong> <span data-i18n="ts1_cause">OpenSSL 3.6.2(conda)와 NCBI TLS 설정 비호환.</span><br><strong data-i18n="ts_fix">해결:</strong> <span data-i18n="ts1_fix">ENA API 대체 사용 또는 <code>curl -k</code>로 SSL 검증 우회.</span></div>
+    <div class="trouble"><div class="title" data-i18n="ts2_t">2. VHH 추출 실패 &mdash; 0개 서열 발견</div><span data-i18n="ts2_body">ORF 탐색이 120 aa VHH 대신 6-109 aa 단편만 반환.</span><br><br><strong data-i18n="ts_cause">원인:</strong> <span data-i18n="ts2_cause">FR2 영역의 amber 종결 코돈(TAG &rarr; *)이 ORF를 절단.</span><br><strong data-i18n="ts_fix">해결:</strong> <span data-i18n="ts2_fix">ORF 탐색 대신 보존 모티프 검색(<code>QVQL...WGQG</code>) 사용. 내부 <code>*</code>를 <code>X</code>로 치환.</span></div>
+    <div class="trouble"><div class="title" data-i18n="ts3_t">3. IgBLAST D/J 데이터베이스 누락</div><code>BLAST Database error: No alias or index file found for [human_gl_D]</code><br><br><strong data-i18n="ts_cause">원인:</strong> <span data-i18n="ts3_cause">conda IgBLAST에 V 유전자만 포함, D/J BLAST 데이터베이스 없음.</span><br><strong data-i18n="ts_fix">해결:</strong> <span data-i18n="ts3_fix">D/J germline FASTA를 수동 생성하고 <code>makeblastdb</code>로 BLAST DB 구축.</span></div>
+    <div class="trouble"><div class="title" data-i18n="ts4_t">4. IMGT 데이터베이스 다운로드 실패</div><span data-i18n="ts4_body"><code>curl</code>이 IMGT에서 FASTA 대신 HTML을 반환.</span><br><br><strong data-i18n="ts_cause">원인:</strong> <span data-i18n="ts4_cause">IMGT 웹사이트가 브라우저 기반 접근을 요구.</span><br><strong data-i18n="ts_fix">해결:</strong> <span data-i18n="ts4_fix">IgBLAST 내장 internal_data의 V 유전자 사용, D/J 서열 수동 준비.</span></div>
 </section>
 
-<!-- 9. Blogs -->
 <section id="blogs">
-    <h2><span class="num">09</span>Tutorial Blog Posts</h2>
-    <p class="section-desc">Detailed step-by-step tutorials with full code and explanations.</p>
-
+    <h2><span class="num">09</span><span data-i18n="s9_title">블로그 튜토리얼</span></h2>
+    <p class="section-desc" data-i18n="s9_desc">전체 코드와 설명이 포함된 단계별 상세 튜토리얼.</p>
     <div class="card-grid">
-        <div class="card" style="border-color:var(--cdr1)">
-            <div class="label">Chinese / 中文</div>
-            <div class="value" style="font-size:1.2rem">从零开始的纳米抗体分析</div>
-            <div class="detail" style="margin-top:8px">
-                <a href="https://github.com/mrfeixiang/nanobody/blob/main/blog_nanobody_analysis_zh.md"
-                   style="color:var(--accent);text-decoration:none">
-                   Read on GitHub &rarr;
-                </a>
-            </div>
-        </div>
-        <div class="card" style="border-color:var(--cdr3)">
-            <div class="label">Korean / 한국어</div>
-            <div class="value" style="font-size:1.2rem">나노바디 분석 실전 가이드</div>
-            <div class="detail" style="margin-top:8px">
-                <a href="https://github.com/mrfeixiang/nanobody/blob/main/blog_nanobody_analysis_kr.md"
-                   style="color:var(--accent);text-decoration:none">
-                   Read on GitHub &rarr;
-                </a>
-            </div>
-        </div>
+        <div class="card" style="border-color:var(--cdr1)"><div class="label">Chinese / 中文</div><div class="value" style="font-size:1.2rem">从零开始的纳米抗体分析</div><div class="detail" style="margin-top:8px"><a href="https://github.com/mrfeixiang/nanobody/blob/main/blog_nanobody_analysis_zh.md" style="color:var(--accent);text-decoration:none" data-i18n="read_github">GitHub에서 읽기 &rarr;</a></div></div>
+        <div class="card" style="border-color:var(--cdr3)"><div class="label">Korean / 한국어</div><div class="value" style="font-size:1.2rem">나노바디 분석 실전 가이드</div><div class="detail" style="margin-top:8px"><a href="https://github.com/mrfeixiang/nanobody/blob/main/blog_nanobody_analysis_kr.md" style="color:var(--accent);text-decoration:none" data-i18n="read_github">GitHub에서 읽기 &rarr;</a></div></div>
     </div>
 </section>
 
 </div>
 
-<!-- Footer -->
 <div class="footer">
-    <p>
-        <strong>Nanobody VHH Analysis Pipeline</strong> &mdash;
-        Data: <a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP124616">NCBI SRA SRP124616</a> &bull;
-        Code: <a href="https://github.com/mrfeixiang/nanobody">GitHub</a>
-    </p>
-    <p style="margin-top:8px">
-        Built with Python, BioPython, IgBLAST, ESMFold &bull; 2024
-    </p>
+    <p><strong>Nanobody VHH Analysis Pipeline</strong> &mdash; Data: <a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP124616">NCBI SRA SRP124616</a> &bull; Code: <a href="https://github.com/mrfeixiang/nanobody">GitHub</a></p>
+    <p style="margin-top:8px" data-i18n="footer">Python, BioPython, IgBLAST, ESMFold로 제작</p>
 </div>
 
+<script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+<script>
+// ============== i18n ==============
+const T = {
+ko: {
+    hero_title: "나노바디 VHH 분석",
+    hero_subtitle: "PacBio CCS 나노바디 시퀀싱 데이터의 완전한 생명정보학 파이프라인 — 원시 FASTQ에서 ESMFold 3D 구조 예측까지",
+    nav_overview: "개요", nav_qc: "품질 관리", nav_vhh: "VHH 추출", nav_cdr: "CDR 영역", nav_diversity: "다양성", nav_structure: "3D 구조", nav_trouble: "트러블슈팅", nav_blogs: "블로그",
+    s1_title: "프로젝트 개요", s1_desc: "파지 디스플레이 라이브러리의 단일 클론 나노바디 시퀀싱을 처음부터 끝까지 분석합니다.",
+    c_bioproject: "바이오프로젝트", c_reads: "총 리드 수", c_reads_d: "평균 길이: 976 bp · Q92", c_vhh_id: "VHH 식별", c_vhh_id_d: "97.6% 성공률", c_cdr3_d: "10 aa · 단일 클론",
+    info_nanobody_t: "나노바디란?", info_nanobody: "나노바디(VHH)는 낙타과 동물(낙타, 라마, 알파카)에서 발견되는 중쇄 항체(HCAb)의 가변 도메인입니다. ~15 kDa로, 자연에서 발견되는 가장 작은 항원 결합 단편이며, 기존 항체의 약 1/10 크기입니다.",
+    h_vhh_struct: "VHH 도메인 구조", h_vhh_seq: "VHH 서열",
+    s2_title: "시퀀싱 품질 관리", s2_desc: "PacBio CCS는 평균 Q92의 거의 완벽한 정확도를 제공합니다.",
+    c_quality: "평균 품질", c_quality_d: "범위: Q82.1 – Q93.0", c_length: "평균 길이", c_length_d: "범위: 885 – 979 bp", c_accuracy: "정확도", c_accuracy_d: "Q90+ = 백만 염기당 1개 미만 오류",
+    fig1_t: "그림 1.", fig1: "리드 길이 분포(왼쪽)와 리드별 평균 품질 점수(오른쪽). 리드가 977 bp 부근에 집중되어 있으며, Q90+ 품질로 PacBio CCS 데이터의 높은 정확도를 확인합니다.",
+    s3_title: "VHH 서열 추출", s3_desc: "모티프 기반 추출로 파지 디스플레이 벡터의 amber 종결 코돈을 처리합니다.",
+    trouble1_t: "트러블슈팅: ORF 탐색 실패 (VHH 0개 발견!)", trouble1: "기존 6-frame ORF 탐색은 FR2 영역의 <strong>amber 종결 코돈(TAG → *)</strong>이 ORF를 절단하여 VHH를 찾지 못했습니다. 이는 파지 디스플레이 벡터의 설계 특성입니다. <strong>해결:</strong> ORF 탐색 대신 보존 모티프(<code>QVQL...WGQG</code>)를 검색하고, 내부 종결 코돈을 X로 치환합니다.",
+    c_extract: "추출 성공", c_extract_d: "97.6%의 리드", c_vhh_len: "VHH 길이", c_vhh_len_d: "모든 서열 동일 길이", c_amber_d: "모든 VHH에 내부 TAG 포함",
+    fig2_t: "그림 2.", fig2: "VHH 도메인 구조: 골격 영역(FR)과 상보성 결정 영역(CDR)의 평균 길이.",
+    s4_title: "CDR 영역 식별", s4_desc: "3개의 CDR 루프가 나노바디의 항원 결합면(파라토프)을 형성합니다.",
+    th_region: "영역", th_length: "길이", th_sequence: "서열", th_role: "역할", role_scaffold: "구조적 골격", role_antigen: "항원 접촉", role_scaffold_amber: "골격 (X = amber stop)", role_specificity: "항원 특이성 핵심",
+    fig3_t: "그림 3.", fig3: "CDR 길이 분포. 모든 CDR이 균일한 길이(단일 클론).", fig4_t: "그림 4.", fig4: "CDR3 위치별 아미노산 빈도 히트맵.",
+    s5_title: "서열 다양성", s5_desc: "매우 낮은 다양성은 라이브러리 스크리닝이 아닌 단일 클론 검증임을 확인합니다.",
+    c_unique_vhh: "고유 VHH", c_unique_vhh_d: "83개 중 (다양성 2.4%)", c_unique_cdr3: "고유 CDR3", c_dominant: "우세 클론", c_dominant_d: "전체 서열의 98.8%",
+    fig5_t: "그림 5.", fig5: "각 CDR과 전체 VHH의 물리화학적 특성별 아미노산 조성.", fig6_t: "그림 6.", fig6: "전체 VHH(왼쪽)와 CDR3(오른쪽)의 쌍별 서열 동일성.",
+    s6_title: "IgBLAST Germline 유전자 분석", s6_desc: "인간 germline을 참조로 한 V(D)J 재조합 할당.",
+    c_v_d: "Germline 대비 97.7% 일치도", c_d_d: "다양성 분절", c_j_d: "Germline 대비 91.3% 일치도", c_mutation: "돌연변이율", c_mutation_d: "303 nt 중 7개 뉴클레오티드 차이 (V 영역)",
+    h_imgt: "IMGT 영역 정렬 요약", th_match: "일치", th_mismatch: "불일치", th_identity: "동일성", total: "합계",
+    info_species_t: "종(Species) 관련 참고", info_species: "이 분석은 인간 germline 유전자를 참조로 사용했습니다. 나노바디는 낙타과 동물에서 유래하므로, 일부 서열 차이는 체세포 과돌연변이가 아닌 종 간 자연적 차이를 반영할 수 있습니다. 정식 논문에서는 낙타과 전용 germline 데이터베이스를 사용해야 합니다.",
+    s7_title: "ESMFold 3D 구조 예측", s7_desc: "Meta의 ESMFold 언어 모델로 예측된 높은 신뢰도의 단백질 구조.",
+    c_model: "모델", c_plddt: "전체 pLDDT", c_plddt_d: "높은 신뢰도 예측", c_res07: "잔기 > 0.7", c_pdb: "PDB 파일", c_pdb_link: "다운로드 PDB",
+    h_interactive: "인터랙티브 3D 구조", viewer_help: "드래그로 회전, 스크롤로 확대/축소, 우클릭으로 이동. 버튼으로 색상 모드를 전환하세요.",
+    btn_region: "CDR/FR 영역별 색상", btn_plddt: "pLDDT 신뢰도별 색상", btn_ss: "이차구조별 색상", btn_surface: "표면 토글", btn_reset: "초기화", leg_fr: "골격 영역 (FR)",
+    h_plddt: "잔기별 신뢰도 (pLDDT)", fig7_t: "그림 7.", fig7: "잔기별 pLDDT 신뢰도 점수. 골격 영역(하늘색)은 높은 신뢰도(>0.9)를 보이고, CDR 루프(특히 CDR2)는 내재적 유연성으로 낮은 신뢰도를 보입니다.",
+    h_plddt_region: "영역별 pLDDT", th_mean_plddt: "평균 pLDDT", th_confidence: "신뢰도", conf_vh: "매우 높음", conf_h: "높음", conf_l: "낮음",
+    h_cdr_geom: "CDR 루프 기하학", th_span: "End-to-End 거리", th_backbone: "백본 길이", th_compact: "밀집도", tight_loop: "0.19 (촘촘한 루프)",
+    fig8_t: "그림 8.", fig8: "다중 패널 구조 분석: (A) 영역별 pLDDT, (B) 영역 길이 및 서열, (C) CDR 표면 노출, (D) pLDDT 색상 구조 투영.",
+    fig9_t: "그림 9.", fig9: "CA-CA 거리 맵(왼쪽)과 접촉 맵(오른쪽, <8A). CDR 경계는 색상 선으로 표시.", fig10_t: "그림 10.", fig10: "라마찬드란 플롯. CDR 잔기(색상)가 허용 및 관대 허용 영역에 분포하며, 루프 구조의 전형적인 패턴.",
+    s8_title: "트러블슈팅 기록", s8_desc: "분석 과정에서 실제로 발생한 문제와 해결 방법.",
+    ts1_t: "1. NCBI SSL 연결 오류", ts_cause: "원인:", ts_fix: "해결:", ts1_cause: "OpenSSL 3.6.2(conda)와 NCBI TLS 설정 비호환.", ts1_fix: "ENA API 대체 사용 또는 <code>curl -k</code>로 SSL 검증 우회.",
+    ts2_t: "2. VHH 추출 실패 — 0개 서열 발견", ts2_body: "ORF 탐색이 120 aa VHH 대신 6-109 aa 단편만 반환.", ts2_cause: "FR2 영역의 amber 종결 코돈(TAG → *)이 ORF를 절단.", ts2_fix: "ORF 탐색 대신 보존 모티프 검색(<code>QVQL...WGQG</code>) 사용. 내부 <code>*</code>를 <code>X</code>로 치환.",
+    ts3_t: "3. IgBLAST D/J 데이터베이스 누락", ts3_cause: "conda IgBLAST에 V 유전자만 포함, D/J BLAST 데이터베이스 없음.", ts3_fix: "D/J germline FASTA를 수동 생성하고 <code>makeblastdb</code>로 BLAST DB 구축.",
+    ts4_t: "4. IMGT 데이터베이스 다운로드 실패", ts4_body: "<code>curl</code>이 IMGT에서 FASTA 대신 HTML을 반환.", ts4_cause: "IMGT 웹사이트가 브라우저 기반 접근을 요구.", ts4_fix: "IgBLAST 내장 internal_data의 V 유전자 사용, D/J 서열 수동 준비.",
+    s9_title: "블로그 튜토리얼", s9_desc: "전체 코드와 설명이 포함된 단계별 상세 튜토리얼.", read_github: "GitHub에서 읽기 →",
+    footer: "Python, BioPython, IgBLAST, ESMFold로 제작"
+},
+zh: {
+    hero_title: "纳米抗体 VHH 分析",
+    hero_subtitle: "PacBio CCS 纳米抗体测序数据的完整生信分析流程 — 从原始FASTQ到ESMFold三维结构预测",
+    nav_overview: "概述", nav_qc: "质量控制", nav_vhh: "VHH提取", nav_cdr: "CDR区域", nav_diversity: "多样性", nav_structure: "3D结构", nav_trouble: "踩坑记录", nav_blogs: "博客",
+    s1_title: "项目概述", s1_desc: "从噬菌体展示文库中对单克隆纳米抗体进行全流程测序分析。",
+    c_bioproject: "生物项目", c_reads: "总读数", c_reads_d: "平均长度: 976 bp · Q92", c_vhh_id: "VHH鉴定", c_vhh_id_d: "97.6%成功率", c_cdr3_d: "10 aa · 单克隆",
+    info_nanobody_t: "什么是纳米抗体？", info_nanobody: "纳米抗体(VHH)是骆驼科动物(骆驼、羊驼)中发现的重链抗体(HCAb)的可变域。仅~15 kDa，是自然界中最小的抗原结合片段，约为传统抗体的1/10。",
+    h_vhh_struct: "VHH结构域组成", h_vhh_seq: "VHH序列",
+    s2_title: "测序质量控制", s2_desc: "PacBio CCS以平均Q92的质量分数提供近乎完美的准确度。",
+    c_quality: "平均质量", c_quality_d: "范围: Q82.1 – Q93.0", c_length: "平均长度", c_length_d: "范围: 885 – 979 bp", c_accuracy: "准确度", c_accuracy_d: "Q90+ = 每百万碱基不到1个错误",
+    fig1_t: "图1.", fig1: "读长分布(左)和每条read平均质量分数(右)。reads集中在977 bp附近，Q90+质量证实了CCS数据的高准确度。",
+    s3_title: "VHH序列提取", s3_desc: "基于模体的提取方法处理噬菌体展示载体中的amber终止密码子。",
+    trouble1_t: "踩坑：ORF搜索失败（找到0个VHH！）", trouble1: "传统6-frame ORF搜索因FR2区域的<strong>amber终止密码子(TAG → *)</strong>截断ORF而找不到VHH。这是噬菌体展示载体的设计特征。<strong>解决：</strong>用保守模体搜索(<code>QVQL...WGQG</code>)替代ORF搜索，内部终止密码子替换为X。",
+    c_extract: "提取成功", c_extract_d: "97.6%的reads", c_vhh_len: "VHH长度", c_vhh_len_d: "所有序列长度一致", c_amber_d: "所有VHH含内部TAG",
+    fig2_t: "图2.", fig2: "VHH结构域：骨架区(FR)和互补决定区(CDR)的平均长度。",
+    s4_title: "CDR区域鉴定", s4_desc: "三个CDR环构成纳米抗体的抗原结合面（互补位）。",
+    th_region: "区域", th_length: "长度", th_sequence: "序列", th_role: "功能", role_scaffold: "结构骨架", role_antigen: "抗原接触", role_scaffold_amber: "骨架 (X = amber stop)", role_specificity: "抗原特异性核心",
+    fig3_t: "图3.", fig3: "CDR长度分布。所有CDR长度均一(单克隆)。", fig4_t: "图4.", fig4: "CDR3位置特异性氨基酸频率热图。",
+    s5_title: "序列多样性", s5_desc: "极低的多样性证实这是单克隆验证而非文库筛选。",
+    c_unique_vhh: "唯一VHH", c_unique_vhh_d: "83个中(多样性2.4%)", c_unique_cdr3: "唯一CDR3", c_dominant: "优势克隆", c_dominant_d: "占全部序列的98.8%",
+    fig5_t: "图5.", fig5: "各CDR和完整VHH按物理化学性质的氨基酸组成。", fig6_t: "图6.", fig6: "完整VHH(左)和CDR3(右)的两两序列一致性。",
+    s6_title: "IgBLAST Germline基因分析", s6_desc: "以人类germline为参考的V(D)J重组分配。",
+    c_v_d: "与germline 97.7%一致", c_d_d: "多样性片段", c_j_d: "与germline 91.3%一致", c_mutation: "突变率", c_mutation_d: "303 nt中7个核苷酸差异(V区域)",
+    h_imgt: "IMGT区域比对摘要", th_match: "匹配", th_mismatch: "错配", th_identity: "一致性", total: "合计",
+    info_species_t: "物种说明", info_species: "本分析使用人类germline基因作为参考。纳米抗体来源于骆驼科动物，部分序列差异可能是物种间自然差异而非体细胞突变。正式发表时应使用骆驼科专用germline数据库。",
+    s7_title: "ESMFold三维结构预测", s7_desc: "由Meta的ESMFold语言模型预测的高置信度蛋白质结构。",
+    c_model: "模型", c_plddt: "总体pLDDT", c_plddt_d: "高置信度预测", c_res07: "残基 > 0.7", c_pdb: "PDB文件", c_pdb_link: "下载PDB",
+    h_interactive: "交互式3D结构", viewer_help: "拖动旋转，滚轮缩放，右键平移。点击按钮切换着色模式。",
+    btn_region: "按CDR/FR区域着色", btn_plddt: "按pLDDT置信度着色", btn_ss: "按二级结构着色", btn_surface: "切换表面", btn_reset: "重置视图", leg_fr: "骨架区 (FR)",
+    h_plddt: "每残基置信度 (pLDDT)", fig7_t: "图7.", fig7: "每残基pLDDT置信度分数。骨架区(浅蓝)显示高置信度(>0.9)，CDR环(尤其CDR2)因固有柔性显示较低置信度。",
+    h_plddt_region: "各区域pLDDT", th_mean_plddt: "平均pLDDT", th_confidence: "置信度", conf_vh: "非常高", conf_h: "高", conf_l: "低",
+    h_cdr_geom: "CDR环几何构型", th_span: "端到端距离", th_backbone: "骨架长度", th_compact: "紧凑度", tight_loop: "0.19 (紧凑环)",
+    fig8_t: "图8.", fig8: "多面板结构分析：(A)各区域pLDDT，(B)区域长度及序列，(C)CDR表面暴露，(D)pLDDT着色结构投影。",
+    fig9_t: "图9.", fig9: "CA-CA距离图(左)和接触图(右，<8A)。CDR边界以彩色线标记。", fig10_t: "图10.", fig10: "拉马钱德兰图。CDR残基(彩色)分布在允许和宽容区域，为环构象的典型模式。",
+    s8_title: "踩坑记录", s8_desc: "分析过程中实际遇到的问题及解决方案。",
+    ts1_t: "1. NCBI SSL连接错误", ts_cause: "原因：", ts_fix: "解决：", ts1_cause: "OpenSSL 3.6.2(conda)与NCBI TLS配置不兼容。", ts1_fix: "改用ENA API或<code>curl -k</code>跳过SSL验证。",
+    ts2_t: "2. VHH提取失败 — 找到0个序列", ts2_body: "ORF搜索只返回6-109 aa片段而非120 aa的VHH。", ts2_cause: "FR2区域的amber终止密码子(TAG → *)截断ORF。", ts2_fix: "用保守模体搜索(<code>QVQL...WGQG</code>)替代ORF搜索。内部<code>*</code>替换为<code>X</code>。",
+    ts3_t: "3. IgBLAST缺少D/J数据库", ts3_cause: "conda IgBLAST仅包含V基因，无D/J BLAST数据库。", ts3_fix: "手动创建D/J germline FASTA并用<code>makeblastdb</code>构建BLAST数据库。",
+    ts4_t: "4. IMGT数据库下载失败", ts4_body: "<code>curl</code>从IMGT获得HTML而非FASTA。", ts4_cause: "IMGT网站需要浏览器访问。", ts4_fix: "使用IgBLAST内置internal_data的V基因，手动准备D/J序列。",
+    s9_title: "博客教程", s9_desc: "包含完整代码和说明的逐步详细教程。", read_github: "在GitHub上阅读 →",
+    footer: "使用 Python, BioPython, IgBLAST, ESMFold 构建"
+},
+en: {
+    hero_title: "Nanobody VHH Analysis",
+    hero_subtitle: "Complete bioinformatics pipeline for PacBio CCS nanobody sequencing data — from raw FASTQ to 3D structure prediction with ESMFold",
+    nav_overview: "Overview", nav_qc: "Quality Control", nav_vhh: "VHH Extraction", nav_cdr: "CDR Regions", nav_diversity: "Diversity", nav_structure: "3D Structure", nav_trouble: "Troubleshooting", nav_blogs: "Blogs",
+    s1_title: "Project Overview", s1_desc: "Single-clone nanobody sequencing from a phage display library, analyzed end-to-end.",
+    c_bioproject: "BioProject", c_reads: "Total Reads", c_reads_d: "Mean length: 976 bp · Q92", c_vhh_id: "VHH Identified", c_vhh_id_d: "97.6% success rate", c_cdr3_d: "10 aa · Monoclonal",
+    info_nanobody_t: "What is a Nanobody?", info_nanobody: "A nanobody (VHH) is the variable domain of a heavy-chain-only antibody found in camelids (camels, llamas, alpacas). At ~15 kDa, it is the smallest naturally occurring antigen-binding fragment — roughly 1/10th the size of a conventional antibody.",
+    h_vhh_struct: "VHH Domain Structure", h_vhh_seq: "VHH Sequence",
+    s2_title: "Sequencing Quality Control", s2_desc: "PacBio CCS delivers near-perfect accuracy with Q92 mean quality scores.",
+    c_quality: "Mean Quality", c_quality_d: "Range: Q82.1 – Q93.0", c_length: "Mean Length", c_length_d: "Range: 885 – 979 bp", c_accuracy: "Accuracy", c_accuracy_d: "Q90+ = <1 error per million bases",
+    fig1_t: "Figure 1.", fig1: "Read length distribution (left) and per-read mean quality score (right). Reads cluster tightly around 977 bp with Q90+ quality, consistent with PacBio CCS data.",
+    s3_title: "VHH Sequence Extraction", s3_desc: "Motif-driven extraction handles amber stop codons in phage display vectors.",
+    trouble1_t: "Troubleshooting: ORF Search Failed (0 VHH found!)", trouble1: "Traditional 6-frame ORF search found 0 VHH sequences because an <strong>amber stop codon (TAG → *)</strong> in the FR2 region truncated every ORF. This is a design feature of phage display vectors. <strong>Solution:</strong> Search for conserved VHH motifs (<code>QVQL...WGQG</code>) instead of ORFs, and replace internal stops with X.",
+    c_extract: "Extraction Success", c_extract_d: "97.6% of reads", c_vhh_len: "VHH Length", c_vhh_len_d: "All sequences identical length", c_amber_d: "All VHH contain internal TAG",
+    fig2_t: "Figure 2.", fig2: "VHH domain structure showing framework (FR) and complementarity-determining (CDR) regions with average lengths.",
+    s4_title: "CDR Region Identification", s4_desc: "Three CDR loops form the antigen-binding surface (paratope) of the nanobody.",
+    th_region: "Region", th_length: "Length", th_sequence: "Sequence", th_role: "Role", role_scaffold: "Structural scaffold", role_antigen: "Antigen contact", role_scaffold_amber: "Scaffold (amber stop at X)", role_specificity: "Key antigen specificity",
+    fig3_t: "Figure 3.", fig3: "CDR length distributions. All CDRs have uniform length (monoclonal).", fig4_t: "Figure 4.", fig4: "CDR3 position-specific amino acid frequency heatmap.",
+    s5_title: "Sequence Diversity", s5_desc: "Extremely low diversity confirms this is a single-clone validation, not a library screen.",
+    c_unique_vhh: "Unique VHH", c_unique_vhh_d: "Out of 83 total (2.4% diversity)", c_unique_cdr3: "Unique CDR3", c_dominant: "Dominant Clone", c_dominant_d: "98.8% of all sequences",
+    fig5_t: "Figure 5.", fig5: "Amino acid composition by physicochemical property for each CDR and full VHH.", fig6_t: "Figure 6.", fig6: "Pairwise sequence identity for full VHH (left) and CDR3 (right).",
+    s6_title: "IgBLAST Germline Gene Analysis", s6_desc: "V(D)J recombination assignment using human germline as reference.",
+    c_v_d: "97.7% identity to germline", c_d_d: "Diversity segment", c_j_d: "91.3% identity to germline", c_mutation: "Mutation Rate", c_mutation_d: "7 nt differences / 303 nt (V region)",
+    h_imgt: "IMGT Region Alignment Summary", th_match: "Matches", th_mismatch: "Mismatches", th_identity: "Identity", total: "Total",
+    info_species_t: "Note on Species", info_species: "This analysis uses human germline genes as reference. Since nanobodies originate from camelids, some sequence differences may reflect natural inter-species variation rather than somatic hypermutation. For formal publication, camelid-specific germline databases should be used.",
+    s7_title: "ESMFold 3D Structure Prediction", s7_desc: "Protein structure predicted by Meta's ESMFold language model with high confidence.",
+    c_model: "Model", c_plddt: "Overall pLDDT", c_plddt_d: "High confidence prediction", c_res07: "Residues > 0.7", c_pdb: "PDB File", c_pdb_link: "Download PDB",
+    h_interactive: "Interactive 3D Structure", viewer_help: "Drag to rotate, scroll to zoom, right-click to translate. Use the buttons to switch coloring modes.",
+    btn_region: "Color by CDR/FR Region", btn_plddt: "Color by pLDDT", btn_ss: "Color by Secondary Structure", btn_surface: "Toggle Surface", btn_reset: "Reset View", leg_fr: "Framework (FR)",
+    h_plddt: "Per-Residue Confidence (pLDDT)", fig7_t: "Figure 7.", fig7: "pLDDT confidence score per residue. Framework regions (light blue) show high confidence (>0.9), while CDR loops — especially CDR2 — show lower confidence, reflecting their inherent flexibility.",
+    h_plddt_region: "pLDDT by Region", th_mean_plddt: "Mean pLDDT", th_confidence: "Confidence", conf_vh: "Very High", conf_h: "High", conf_l: "Low",
+    h_cdr_geom: "CDR Loop Geometry", th_span: "End-to-End Span", th_backbone: "Backbone Length", th_compact: "Compactness", tight_loop: "0.19 (tight loop)",
+    fig8_t: "Figure 8.", fig8: "Multi-panel structure analysis: (A) pLDDT by region, (B) region lengths with sequences, (C) surface exposure profile with CDR annotations, (D) 2D structure projection colored by pLDDT.",
+    fig9_t: "Figure 9.", fig9: "CA-CA distance map (left) and contact map (right, <8A). CDR boundaries marked by colored lines.", fig10_t: "Figure 10.", fig10: "Ramachandran plot. CDR residues (colored) populate both allowed and generously allowed regions, typical for loop conformations.",
+    s8_title: "Troubleshooting Log", s8_desc: "Real problems encountered during this analysis and how they were solved.",
+    ts1_t: "1. SSL Connection Error with NCBI", ts_cause: "Cause:", ts_fix: "Fix:", ts1_cause: "OpenSSL 3.6.2 (conda) incompatible with NCBI's TLS configuration.", ts1_fix: "Use ENA API as alternative, or <code>curl -k</code> to bypass SSL verification.",
+    ts2_t: "2. VHH Extraction Failed — 0 sequences found", ts2_body: "ORF search returned only 6-109 aa fragments instead of expected 120 aa VHH.", ts2_cause: "Amber stop codon (TAG → *) in FR2 region truncates ORF.", ts2_fix: "Use conserved motif search (<code>QVQL...WGQG</code>) instead of ORF search. Replace internal <code>*</code> with <code>X</code>.",
+    ts3_t: "3. IgBLAST Missing D/J Databases", ts3_cause: "conda IgBLAST only includes V gene internal data, not D/J BLAST databases.", ts3_fix: "Manually create D/J germline FASTA files and build BLAST databases with <code>makeblastdb</code>.",
+    ts4_t: "4. IMGT Database Download Failed", ts4_body: "<code>curl</code> returned HTML instead of FASTA from IMGT website.", ts4_cause: "IMGT requires browser-based access with authentication.", ts4_fix: "Use IgBLAST's built-in internal_data for V genes, manually prepare D/J sequences.",
+    s9_title: "Tutorial Blog Posts", s9_desc: "Detailed step-by-step tutorials with full code and explanations.", read_github: "Read on GitHub →",
+    footer: "Built with Python, BioPython, IgBLAST, ESMFold"
+}
+};
+
+let currentLang = 'ko';
+function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.documentElement.lang = lang === 'ko' ? 'ko' : lang === 'zh' ? 'zh-CN' : 'en';
+}
+
+// ============== 3Dmol Viewer ==============
+let viewer = null, surfaceOn = false;
+const regions = [
+    { name:'FR1', start:1, end:25, color:'#a8d8ea' },
+    { name:'CDR1', start:26, end:35, color:'#e74c3c' },
+    { name:'FR2', start:36, end:50, color:'#a8d8ea' },
+    { name:'CDR2', start:51, end:58, color:'#2ecc71' },
+    { name:'FR3', start:59, end:99, color:'#a8d8ea' },
+    { name:'CDR3', start:100, end:109, color:'#3498db' },
+    { name:'FR4', start:110, end:120, color:'#a8d8ea' },
+];
+function initViewer() {
+    const el = document.getElementById('viewport');
+    viewer = $3Dmol.createViewer(el, { backgroundColor:'#161b22', antialias:true });
+    fetch('./vhh_structure_esmfold.pdb').then(r=>r.text()).then(data => {
+        viewer.addModel(data,'pdb'); colorByRegion(); viewer.zoomTo(); viewer.zoom(1.2); viewer.render(); addCDRLabels();
+    });
+}
+function addCDRLabels() {
+    regions.filter(r=>r.name.startsWith('CDR')).forEach(r => {
+        const mid = Math.floor((r.start+r.end)/2);
+        viewer.addLabel(r.name, { position: viewer.getModel().atoms.find(a=>a.resi===mid&&a.atom==='CA'), backgroundColor:r.color, fontColor:'#fff', fontSize:12, borderRadius:4, padding:3, backgroundOpacity:0.8 });
+    }); viewer.render();
+}
+function clearStyle() { surfaceOn=false; viewer.removeAllSurfaces(); viewer.removeAllLabels(); viewer.removeAllShapes(); }
+function singleColorMap(hex) { const m={}; for(let i=1;i<=120;i++) m[i]=hex; return m; }
+function colorByRegion() {
+    clearStyle(); setActiveBtn('btn-region');
+    viewer.setStyle({},{cartoon:{color:'#a8d8ea',opacity:0.9}});
+    regions.forEach(r => { const sel={resi:[]}; for(let i=r.start;i<=r.end;i++) sel.resi.push(i);
+        if(r.name.startsWith('CDR')) { viewer.setStyle(sel,{cartoon:{color:r.color,opacity:1}}); viewer.addStyle(sel,{stick:{colorscheme:{prop:'resi',map:singleColorMap(r.color)},radius:0.15,opacity:0.7}}); }
+        else viewer.setStyle(sel,{cartoon:{color:r.color,opacity:0.85}});
+    }); addCDRLabels(); viewer.render();
+}
+function colorByPLDDT() {
+    clearStyle(); setActiveBtn('btn-plddt');
+    viewer.setStyle({},{cartoon:{colorfunc:function(a){const b=a.b;if(b>0.9)return'#3fb950';if(b>0.7)return'#d29922';if(b>0.5)return'#f47c3c';return'#e74c3c';},opacity:0.95}});
+    viewer.render();
+}
+function colorByChain() {
+    clearStyle(); setActiveBtn('btn-chain');
+    viewer.setStyle({},{cartoon:{colorscheme:'ssJmol',opacity:0.95}}); viewer.render();
+}
+function showSurface() {
+    if(surfaceOn){viewer.removeAllSurfaces();surfaceOn=false;}
+    else{viewer.addSurface($3Dmol.SurfaceType.VDW,{opacity:0.6,colorfunc:function(a){for(const r of regions)if(a.resi>=r.start&&a.resi<=r.end&&r.name.startsWith('CDR'))return $3Dmol.CC.color(r.color);return $3Dmol.CC.color('#a8d8ea');}});surfaceOn=true;}
+    viewer.render();
+}
+function resetView() { colorByRegion(); viewer.zoomTo(); viewer.zoom(1.2); viewer.render(); }
+function setActiveBtn(id) { document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+document.addEventListener('DOMContentLoaded', initViewer);
+</script>
 </body>
 </html>
