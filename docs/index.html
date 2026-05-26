@@ -315,6 +315,29 @@
             margin-bottom: 4px;
         }
 
+        /* 3D Viewer buttons */
+        .view-btn {
+            background: var(--surface);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .view-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            background: rgba(88,166,255,0.08);
+        }
+        .view-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(88,166,255,0.12);
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -622,6 +645,224 @@
             <div class="detail">Open in PyMOL / ChimeraX</div>
         </div>
     </div>
+
+    <h3>Interactive 3D Structure</h3>
+    <p style="color:var(--text-muted);margin-bottom:12px;font-size:0.9rem">
+        Drag to rotate, scroll to zoom, right-click to translate. Use the buttons to switch coloring modes.
+    </p>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button onclick="colorByRegion()" class="view-btn" id="btn-region">Color by CDR/FR Region</button>
+        <button onclick="colorByPLDDT()" class="view-btn" id="btn-plddt">Color by pLDDT</button>
+        <button onclick="colorByChain()" class="view-btn" id="btn-chain">Color by Secondary Structure</button>
+        <button onclick="showSurface()" class="view-btn" id="btn-surface">Toggle Surface</button>
+        <button onclick="resetView()" class="view-btn" id="btn-reset">Reset View</button>
+    </div>
+
+    <div id="viewer-container" style="position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <div id="viewport" style="width:100%;height:500px"></div>
+        <div id="viewer-legend" style="position:absolute;top:12px;right:12px;background:rgba(13,17,23,0.85);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:0.8rem;line-height:1.6">
+            <div><span style="color:#a8d8ea">&#9632;</span> Framework (FR)</div>
+            <div><span style="color:#e74c3c">&#9632;</span> CDR1 (res 26-35)</div>
+            <div><span style="color:#2ecc71">&#9632;</span> CDR2 (res 51-58)</div>
+            <div><span style="color:#3498db">&#9632;</span> CDR3 (res 100-109)</div>
+        </div>
+    </div>
+
+    <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+    <script>
+    let viewer = null;
+    let pdbData = null;
+    let surfaceOn = false;
+    let surfaceId = null;
+
+    // CDR boundaries (1-based residue numbers)
+    const regions = [
+        { name: 'FR1',  start: 1,   end: 25,  color: '#a8d8ea' },
+        { name: 'CDR1', start: 26,  end: 35,  color: '#e74c3c' },
+        { name: 'FR2',  start: 36,  end: 50,  color: '#a8d8ea' },
+        { name: 'CDR2', start: 51,  end: 58,  color: '#2ecc71' },
+        { name: 'FR3',  start: 59,  end: 99,  color: '#a8d8ea' },
+        { name: 'CDR3', start: 100, end: 109, color: '#3498db' },
+        { name: 'FR4',  start: 110, end: 120, color: '#a8d8ea' },
+    ];
+
+    function initViewer() {
+        const element = document.getElementById('viewport');
+        viewer = $3Dmol.createViewer(element, {
+            backgroundColor: '#161b22',
+            antialias: true,
+        });
+
+        fetch('./vhh_structure_esmfold.pdb')
+            .then(r => r.text())
+            .then(data => {
+                pdbData = data;
+                viewer.addModel(data, 'pdb');
+                colorByRegion();
+                viewer.zoomTo();
+                viewer.zoom(1.2);
+                viewer.render();
+
+                // Add CDR labels
+                addCDRLabels();
+            });
+    }
+
+    function addCDRLabels() {
+        const cdrRegions = regions.filter(r => r.name.startsWith('CDR'));
+        cdrRegions.forEach(r => {
+            const midRes = Math.floor((r.start + r.end) / 2);
+            viewer.addLabel(r.name, {
+                position: viewer.getModel().atoms.find(a => a.resi === midRes && a.atom === 'CA'),
+                backgroundColor: r.color,
+                fontColor: '#ffffff',
+                fontSize: 12,
+                borderRadius: 4,
+                padding: 3,
+                backgroundOpacity: 0.8,
+            });
+        });
+        viewer.render();
+    }
+
+    function clearStyle() {
+        surfaceOn = false;
+        viewer.removeAllSurfaces();
+        viewer.removeAllLabels();
+        viewer.removeAllShapes();
+    }
+
+    function colorByRegion() {
+        clearStyle();
+        setActiveBtn('btn-region');
+
+        // Cartoon for all
+        viewer.setStyle({}, { cartoon: { color: '#a8d8ea', opacity: 0.9 } });
+
+        // Color CDR regions
+        regions.forEach(r => {
+            const sel = { resi: [] };
+            for (let i = r.start; i <= r.end; i++) sel.resi.push(i);
+
+            if (r.name.startsWith('CDR')) {
+                viewer.setStyle(sel, {
+                    cartoon: { color: r.color, opacity: 1.0 },
+                });
+                // Show CDR sidechains as sticks
+                viewer.addStyle(sel, {
+                    stick: { colorscheme: { prop: 'resi', map: singleColorMap(r.color) }, radius: 0.15, opacity: 0.7 }
+                });
+            } else {
+                viewer.setStyle(sel, {
+                    cartoon: { color: r.color, opacity: 0.85 },
+                });
+            }
+        });
+
+        addCDRLabels();
+        viewer.render();
+    }
+
+    function singleColorMap(hex) {
+        const map = {};
+        for (let i = 1; i <= 120; i++) map[i] = hex;
+        return map;
+    }
+
+    function colorByPLDDT() {
+        clearStyle();
+        setActiveBtn('btn-plddt');
+
+        viewer.setStyle({}, {
+            cartoon: {
+                colorfunc: function(atom) {
+                    const b = atom.b;
+                    if (b > 0.9) return '#3fb950';
+                    if (b > 0.7) return '#d29922';
+                    if (b > 0.5) return '#f47c3c';
+                    return '#e74c3c';
+                },
+                opacity: 0.95,
+            }
+        });
+
+        // Update legend
+        const legend = document.getElementById('viewer-legend');
+        legend.innerHTML = `
+            <div style="margin-bottom:4px;font-weight:700;color:#e6edf3">pLDDT Score</div>
+            <div><span style="color:#3fb950">&#9632;</span> Very High (&gt;0.9)</div>
+            <div><span style="color:#d29922">&#9632;</span> High (0.7-0.9)</div>
+            <div><span style="color:#f47c3c">&#9632;</span> Low (0.5-0.7)</div>
+            <div><span style="color:#e74c3c">&#9632;</span> Very Low (&lt;0.5)</div>
+        `;
+
+        viewer.render();
+    }
+
+    function colorByChain() {
+        clearStyle();
+        setActiveBtn('btn-chain');
+
+        viewer.setStyle({}, {
+            cartoon: { colorscheme: 'ssJmol', opacity: 0.95 }
+        });
+
+        const legend = document.getElementById('viewer-legend');
+        legend.innerHTML = `
+            <div style="margin-bottom:4px;font-weight:700;color:#e6edf3">Secondary Structure</div>
+            <div><span style="color:#FF0080">&#9632;</span> Alpha Helix</div>
+            <div><span style="color:#FFC800">&#9632;</span> Beta Sheet</div>
+            <div><span style="color:#FFFFFF">&#9632;</span> Loop / Coil</div>
+        `;
+
+        viewer.render();
+    }
+
+    function showSurface() {
+        if (surfaceOn) {
+            viewer.removeAllSurfaces();
+            surfaceOn = false;
+        } else {
+            viewer.addSurface($3Dmol.SurfaceType.VDW, {
+                opacity: 0.6,
+                colorfunc: function(atom) {
+                    for (const r of regions) {
+                        if (atom.resi >= r.start && atom.resi <= r.end) {
+                            if (r.name.startsWith('CDR')) return $3Dmol.CC.color(r.color);
+                        }
+                    }
+                    return $3Dmol.CC.color('#a8d8ea');
+                }
+            });
+            surfaceOn = true;
+        }
+        viewer.render();
+    }
+
+    function resetView() {
+        colorByRegion();
+        viewer.zoomTo();
+        viewer.zoom(1.2);
+        viewer.render();
+
+        const legend = document.getElementById('viewer-legend');
+        legend.innerHTML = `
+            <div><span style="color:#a8d8ea">&#9632;</span> Framework (FR)</div>
+            <div><span style="color:#e74c3c">&#9632;</span> CDR1 (res 26-35)</div>
+            <div><span style="color:#2ecc71">&#9632;</span> CDR2 (res 51-58)</div>
+            <div><span style="color:#3498db">&#9632;</span> CDR3 (res 100-109)</div>
+        `;
+    }
+
+    function setActiveBtn(id) {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', initViewer);
+    </script>
 
     <h3>Per-Residue Confidence (pLDDT)</h3>
     <div class="fig">
