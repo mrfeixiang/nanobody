@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protenix v2 EGFRvIII Nanobody Design Guide</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #1c2129;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent2: #79c0ff;
+            --green: #3fb950;
+            --yellow: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+            --orange: #f47c3c;
+            --cyan: #39d2c0;
+            --cdr1: #e74c3c;
+            --cdr2: #2ecc71;
+            --cdr3: #3498db;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #0d1117 0%, #11203a 40%, #1a1f2e 70%, #0d2137 100%); border-bottom: 1px solid var(--border); padding: 70px 20px 60px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 70%, rgba(88,166,255,0.04) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(57,210,192,0.03) 0%, transparent 50%); }
+        .hero h1 { font-size: 2.6rem; margin-bottom: 14px; background: linear-gradient(90deg, var(--accent), var(--cyan), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; }
+        .hero .subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 750px; margin: 0 auto 24px; position: relative; }
+        .hero .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; position: relative; }
+        .badge { display: inline-block; padding: 5px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface); }
+        .badge.protenix { border-color: var(--cyan); color: var(--cyan); }
+        .badge.egfr { border-color: var(--red); color: var(--red); }
+        .badge.vhh { border-color: var(--green); color: var(--green); }
+        .badge.design { border-color: var(--purple); color: var(--purple); }
+
+        /* Nav */
+        .nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; position: sticky; top: 0; z-index: 100; overflow-x: auto; white-space: nowrap; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 0; align-items: center; }
+        .nav a { color: var(--text-muted); text-decoration: none; padding: 12px 16px; font-size: 0.88rem; border-bottom: 2px solid transparent; transition: all 0.2s; flex-shrink: 0; }
+        .nav a:hover { color: var(--text); border-bottom-color: var(--accent); }
+        .nav a.home-link { color: var(--accent); font-weight: 600; }
+        .lang-switcher { margin-left: auto; display: flex; gap: 4px; padding: 6px 0; flex-shrink: 0; }
+        .lang-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .lang-btn:hover { border-color: var(--accent); color: var(--text); }
+        .lang-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 50px 0; border-bottom: 1px solid var(--border); }
+        section:last-child { border-bottom: none; }
+
+        /* Typography */
+        h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--text); }
+        h2 .num { color: var(--accent); font-weight: 400; margin-right: 8px; }
+        .section-desc { color: var(--text-muted); margin-bottom: 28px; font-size: 1rem; }
+        h3 { font-size: 1.25rem; margin: 32px 0 14px; color: var(--text); padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+        h4 { font-size: 1.05rem; margin: 20px 0 10px; color: var(--accent2); }
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 10px 0 16px 24px; }
+        li { margin-bottom: 6px; }
+
+        /* Cards */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color 0.2s; }
+        .card:hover { border-color: var(--accent); }
+        .card .label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+        .card .value { font-size: 1.5rem; font-weight: 700; }
+        .card .detail { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* Code */
+        pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 14px 0; font-size: 0.88rem; line-height: 1.6; }
+        code { font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; font-size: 0.88em; }
+        p code, li code, td code { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; }
+        .lang-label { display: inline-block; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 4px 4px 0 0; margin-bottom: -1px; position: relative; top: 1px; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.92rem; }
+        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; background: var(--surface); }
+        tr:hover { background: rgba(88,166,255,0.04); }
+
+        /* Info/Warning boxes */
+        .info { background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.25); border-radius: 8px; padding: 16px 20px; margin: 16px 0; font-size: 0.92rem; }
+        .info .title { font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+        .warn { background: rgba(210,153,34,0.06); border: 1px solid rgba(210,153,34,0.25); border-radius: 8px; padding: 16px 20px; margin: 16px 0; font-size: 0.92rem; }
+        .warn .title { font-weight: 700; color: var(--yellow); margin-bottom: 4px; }
+        .success { background: rgba(63,185,80,0.06); border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; padding: 16px 20px; margin: 16px 0; font-size: 0.92rem; }
+        .success .title { font-weight: 700; color: var(--green); margin-bottom: 4px; }
+
+        /* Flow diagram */
+        .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 20px 0; }
+        .flow-step { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 24px; width: 100%; max-width: 600px; text-align: center; }
+        .flow-step.highlight { border-color: var(--accent); background: rgba(88,166,255,0.06); }
+        .flow-arrow { color: var(--text-muted); font-size: 1.4rem; padding: 4px 0; }
+        .flow-step .step-num { display: inline-block; background: var(--accent); color: #fff; width: 24px; height: 24px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; line-height: 24px; margin-right: 8px; }
+
+        /* Tabs */
+        .tab-container { margin: 20px 0; }
+        .tab-buttons { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
+        .tab-btn { background: transparent; color: var(--text-muted); border: none; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; transition: all 0.2s; }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-content { display: none; padding: 20px 0; }
+        .tab-content.active { display: block; }
+
+        /* Footer */
+        .footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        /* Step list */
+        .step-list { counter-reset: steps; list-style: none; margin-left: 0; }
+        .step-list li { counter-increment: steps; padding: 12px 16px 12px 50px; position: relative; border-left: 2px solid var(--border); margin-left: 12px; }
+        .step-list li::before { content: counter(steps); position: absolute; left: -13px; top: 12px; width: 24px; height: 24px; background: var(--accent); color: #fff; border-radius: 50%; font-size: 0.75rem; font-weight: 700; text-align: center; line-height: 24px; }
+        .step-list li:last-child { border-left-color: transparent; }
+
+        /* JSON tree */
+        .json-key { color: var(--accent2); }
+        .json-str { color: var(--green); }
+        .json-num { color: var(--orange); }
+        .json-comment { color: var(--text-muted); font-style: italic; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.7rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            h2 { font-size: 1.4rem; }
+            pre { font-size: 0.8rem; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1 data-i18n="hero_title">Protenix v2 EGFRvIII Nanobody Design Guide</h1>
+    <p class="subtitle" data-i18n="hero_subtitle">Complete step-by-step guide to designing EGFRvIII-targeting nanobodies using ByteDance's Protenix v2 structure prediction and PXDesign de novo design platform</p>
+    <div class="badges">
+        <span class="badge protenix">Protenix v2 (464M)</span>
+        <span class="badge egfr">EGFRvIII</span>
+        <span class="badge vhh">VHH / Nanobody</span>
+        <span class="badge design">PXDesign</span>
+    </div>
+</div>
+
+<div class="nav">
+    <div class="nav-inner">
+        <a href="./index.html" class="home-link" data-i18n="nav_home">Home</a>
+        <a href="#background" data-i18n="nav_bg">Background</a>
+        <a href="#install" data-i18n="nav_install">Install</a>
+        <a href="#antigen" data-i18n="nav_antigen">Antigen Prep</a>
+        <a href="#prediction" data-i18n="nav_pred">Prediction</a>
+        <a href="#design" data-i18n="nav_design">De Novo Design</a>
+        <a href="#webserver" data-i18n="nav_web">Web Server</a>
+        <a href="#analysis" data-i18n="nav_analysis">Analysis</a>
+        <a href="#workflow" data-i18n="nav_workflow">Workflow</a>
+        <a href="#faq" data-i18n="nav_faq">FAQ</a>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('ko')">한국어</button>
+            <button class="lang-btn" onclick="setLang('zh')">中文</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ==================== Section 1: Background ==================== -->
+<section id="background">
+    <h2><span class="num">01</span><span data-i18n="s1_title">Background</span></h2>
+    <p class="section-desc" data-i18n="s1_desc">Essential knowledge about EGFRvIII, nanobodies, and Protenix v2.</p>
+
+    <h3 data-i18n="h_egfrviii">What is EGFRvIII?</h3>
+    <p data-i18n="p_egfrviii">EGFRvIII (Epidermal Growth Factor Receptor variant III) is the most common extracellular domain truncation mutant of EGFR. It arises from an in-frame deletion of exons 2-7, removing 268 amino acids (positions 6-273 of wild-type) and inserting a novel glycine at the junction. The resulting receptor is constitutively active, binds no known ligand, and is frequently expressed in glioblastoma (GBM) and other cancers. It is a prime therapeutic target.</p>
+
+    <div class="card-grid">
+        <div class="card"><div class="label" data-i18n="c_mutation_type">Mutation Type</div><div class="value" style="font-size:1.2rem" data-i18n="c_exon_del">Exon 2-7 Deletion</div><div class="detail" data-i18n="c_268aa">268 aa removed + novel Gly at junction</div></div>
+        <div class="card"><div class="label" data-i18n="c_activity">Activity</div><div class="value" style="color:var(--red)" data-i18n="c_constitutive">Constitutively Active</div><div class="detail" data-i18n="c_no_ligand">No known ligand binding</div></div>
+        <div class="card"><div class="label">PDB</div><div class="value">8UKX / 8UKV</div><div class="detail" data-i18n="c_pdb_desc">ECR structure / Nanobody 34E5 complex</div></div>
+        <div class="card"><div class="label" data-i18n="c_clinical">Clinical Significance</div><div class="value" data-i18n="c_gbm">GBM Target</div><div class="detail" data-i18n="c_clinical_d">CAR-T, ADC, nanobody therapeutics</div></div>
+    </div>
+
+    <h3 data-i18n="h_nanobody">What is a Nanobody (VHH)?</h3>
+    <p data-i18n="p_nanobody">Nanobodies are the variable domains of heavy-chain-only antibodies (HCAb) found in camelids. At ~15 kDa, they offer superior tissue penetration, high stability, and can access cryptic epitopes that conventional antibodies cannot reach. They contain 3 CDR loops (CDR1, CDR2, CDR3), with CDR3 being the longest and most critical for antigen binding.</p>
+
+    <h3 data-i18n="h_protenix">What is Protenix v2?</h3>
+    <p data-i18n="p_protenix">Protenix v2 is ByteDance's open-source biomolecular structure prediction system (~464M parameters). Key features include:</p>
+    <div class="card-grid">
+        <div class="card"><div class="label" data-i18n="c_accuracy_gain">Accuracy Gain</div><div class="value" style="color:var(--green)">+9-13%</div><div class="detail" data-i18n="c_dockq">DockQ &gt; 0.23 vs Protenix v1</div></div>
+        <div class="card"><div class="label" data-i18n="c_efficiency">Efficiency</div><div class="value" data-i18n="c_5seeds">5 seeds &gt; v1@1000</div><div class="detail" data-i18n="c_efficiency_d">Massive efficiency improvement</div></div>
+        <div class="card"><div class="label">TFG</div><div class="value" data-i18n="c_tfg">Physics Guidance</div><div class="detail" data-i18n="c_tfg_d">Steric, torsion, bond constraints</div></div>
+        <div class="card"><div class="label" data-i18n="c_vhh_design">VHH Design</div><div class="value" data-i18n="c_hitrate">48% Hit Rate</div><div class="detail" data-i18n="c_vhh_d">100% target-level success (VHH-Fc)</div></div>
+    </div>
+</section>
+
+<!-- ==================== Section 2: Installation ==================== -->
+<section id="install">
+    <h2><span class="num">02</span><span data-i18n="s2_title">Installation & Setup</span></h2>
+    <p class="section-desc" data-i18n="s2_desc">Install Protenix v2 and configure your environment for nanobody design.</p>
+
+    <h3 data-i18n="h_requirements">System Requirements</h3>
+    <table>
+        <thead><tr><th data-i18n="th_item">Item</th><th data-i18n="th_minimum">Minimum</th><th data-i18n="th_recommended">Recommended</th></tr></thead>
+        <tbody>
+            <tr><td>Python</td><td>&gt;= 3.11</td><td>3.11</td></tr>
+            <tr><td>GPU</td><td>NVIDIA 6GB+</td><td>A100 40/80GB</td></tr>
+            <tr><td>CUDA</td><td>11.8+</td><td>12.1+</td></tr>
+            <tr><td data-i18n="td_ram">RAM</td><td>16 GB</td><td>64 GB+</td></tr>
+            <tr><td data-i18n="td_disk">Disk</td><td>50 GB</td><td>200 GB+</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_install_methods">Installation Methods</h3>
+
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('pip','install-tabs')">pip (Recommended)</button>
+            <button class="tab-btn" onclick="showTab('github','install-tabs')">GitHub</button>
+            <button class="tab-btn" onclick="showTab('docker','install-tabs')">Docker</button>
+        </div>
+        <div id="install-tabs">
+            <div class="tab-content active" id="tab-pip">
+                <span class="lang-label">BASH</span>
+                <pre><code><span class="json-comment"># Create virtual environment</span>
+conda create -n protenix python=3.11 -y
+conda activate protenix
+
+<span class="json-comment"># Install protenix (use official PyPI for latest version)</span>
+pip install --upgrade protenix --index-url https://pypi.org/simple
+
+<span class="json-comment"># Verify</span>
+protenix --help</code></pre>
+            </div>
+            <div class="tab-content" id="tab-github">
+                <span class="lang-label">BASH</span>
+                <pre><code>git clone https://github.com/bytedance/Protenix.git
+cd Protenix
+pip install -e .</code></pre>
+            </div>
+            <div class="tab-content" id="tab-docker">
+                <span class="lang-label">BASH</span>
+                <pre><code>git clone https://github.com/bytedance/Protenix.git
+cd Protenix
+docker build -t protenix .
+docker run --gpus all -it -v $(pwd)/data:/data protenix bash</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <h3 data-i18n="h_deps">External Dependencies</h3>
+    <span class="lang-label">BASH</span>
+    <pre><code><span class="json-comment"># Ubuntu/Debian</span>
+sudo apt-get install kalign hmmer
+
+<span class="json-comment"># Or via conda</span>
+conda install -c bioconda kalign2 hmmer</code></pre>
+
+    <h3 data-i18n="h_cli_commands">CLI Commands Overview</h3>
+    <table>
+        <thead><tr><th data-i18n="th_command">Command</th><th data-i18n="th_function">Function</th></tr></thead>
+        <tbody>
+            <tr><td><code>protenix pred</code></td><td data-i18n="cmd_pred">Structure prediction / inference</td></tr>
+            <tr><td><code>protenix json</code></td><td data-i18n="cmd_json">Convert PDB/CIF to JSON format</td></tr>
+            <tr><td><code>protenix msa</code></td><td data-i18n="cmd_msa">Generate Multiple Sequence Alignment</td></tr>
+            <tr><td><code>protenix mt</code></td><td data-i18n="cmd_mt">MSA + template search</td></tr>
+            <tr><td><code>protenix prep</code></td><td data-i18n="cmd_prep">Full preprocessing pipeline</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ==================== Section 3: Antigen Preparation ==================== -->
+<section id="antigen">
+    <h2><span class="num">03</span><span data-i18n="s3_title">Prepare EGFRvIII Antigen</span></h2>
+    <p class="section-desc" data-i18n="s3_desc">Obtain the EGFRvIII sequence, structure, and identify key epitope regions.</p>
+
+    <h3 data-i18n="h_get_structure">Download EGFRvIII Structure</h3>
+    <span class="lang-label">BASH</span>
+    <pre><code><span class="json-comment"># EGFRvIII extracellular region crystal structure (pH 7.0)</span>
+wget https://files.rcsb.org/download/8UKX.pdb -O EGFRvIII_8UKX.pdb
+
+<span class="json-comment"># Nanobody 34E5 - EGFRvIII complex (reference)</span>
+wget https://files.rcsb.org/download/8UKV.pdb -O nanobody_EGFRvIII_8UKV.pdb</code></pre>
+
+    <h3 data-i18n="h_convert_json">Convert to Protenix JSON</h3>
+    <span class="lang-label">BASH</span>
+    <pre><code>protenix json --input ./EGFRvIII_8UKX.pdb --out_dir ./egfrviii_json --altloc first</code></pre>
+
+    <h3 data-i18n="h_epitopes">Key Epitope Regions</h3>
+    <table>
+        <thead><tr><th data-i18n="th_region">Region</th><th data-i18n="th_description">Description</th><th data-i18n="th_significance">Significance</th></tr></thead>
+        <tbody>
+            <tr><td data-i18n="epi_junction">Junction Site</td><td data-i18n="epi_junction_d">Exon 1/8 fusion point with novel glycine</td><td style="color:var(--green)" data-i18n="epi_junction_s">EGFRvIII-specific neoepitope</td></tr>
+            <tr><td>Domain I</td><td data-i18n="epi_d1">Retained N-terminal region after truncation</td><td data-i18n="epi_d1_s">Good accessibility</td></tr>
+            <tr><td>Domain IV</td><td data-i18n="epi_d4">C-terminal region</td><td style="color:var(--accent)" data-i18n="epi_d4_s">Target of nanobody 34E5 (selective)</td></tr>
+        </tbody>
+    </table>
+
+    <div class="info">
+        <div class="title" data-i18n="info_34e5_t">About Nanobody 34E5 (PDB: 8UKV)</div>
+        <span data-i18n="info_34e5">The nanobody 34E5 targets Domain IV of EGFRvIII. This epitope is occluded in unliganded intact EGFR but exposed in EGFRvIII due to the truncation, enabling selective binding. This makes it an excellent reference for your designs.</span>
+    </div>
+</section>
+
+<!-- ==================== Section 4: Structure Prediction ==================== -->
+<section id="prediction">
+    <h2><span class="num">04</span><span data-i18n="s4_title">Approach 1: Structure Prediction with CLI</span></h2>
+    <p class="section-desc" data-i18n="s4_desc">Use Protenix v2 CLI to predict nanobody-antigen complex structures when you have candidate VHH sequences.</p>
+
+    <h3 data-i18n="h_input_json">Prepare Input JSON</h3>
+    <p data-i18n="p_input_json">Create a JSON file specifying the nanobody and antigen chains with optional pocket constraints:</p>
+    <span class="lang-label">JSON</span>
+    <pre><code>[
+  {
+    <span class="json-key">"name"</span>: <span class="json-str">"VHH_EGFRvIII_complex"</span>,
+    <span class="json-key">"sequences"</span>: [
+      {
+        <span class="json-key">"proteinChain"</span>: {
+          <span class="json-key">"sequence"</span>: <span class="json-str">"YOUR_VHH_SEQUENCE_HERE"</span>,
+          <span class="json-key">"count"</span>: <span class="json-num">1</span>,
+          <span class="json-key">"id"</span>: [<span class="json-str">"H"</span>]
+        }
+      },
+      {
+        <span class="json-key">"proteinChain"</span>: {
+          <span class="json-key">"sequence"</span>: <span class="json-str">"EGFRVIII_EXTRACELLULAR_DOMAIN_SEQUENCE"</span>,
+          <span class="json-key">"count"</span>: <span class="json-num">1</span>,
+          <span class="json-key">"id"</span>: [<span class="json-str">"A"</span>]
+        }
+      }
+    ],
+    <span class="json-key">"constraint"</span>: {
+      <span class="json-key">"pocket"</span>: {
+        <span class="json-key">"binder_chain"</span>: { <span class="json-key">"entity"</span>: <span class="json-num">1</span>, <span class="json-key">"copy"</span>: <span class="json-num">1</span> },
+        <span class="json-key">"contact_residues"</span>: [
+          { <span class="json-key">"entity"</span>: <span class="json-num">2</span>, <span class="json-key">"copy"</span>: <span class="json-num">1</span>, <span class="json-key">"position"</span>: <span class="json-num">1</span> },
+          { <span class="json-key">"entity"</span>: <span class="json-num">2</span>, <span class="json-key">"copy"</span>: <span class="json-num">1</span>, <span class="json-key">"position"</span>: <span class="json-num">2</span> },
+          { <span class="json-key">"entity"</span>: <span class="json-num">2</span>, <span class="json-key">"copy"</span>: <span class="json-num">1</span>, <span class="json-key">"position"</span>: <span class="json-num">3</span> }
+        ],
+        <span class="json-key">"max_distance"</span>: <span class="json-num">6</span>
+      }
+    }
+  }
+]</code></pre>
+
+    <h3 data-i18n="h_json_fields">JSON Field Reference</h3>
+    <table>
+        <thead><tr><th data-i18n="th_field">Field</th><th data-i18n="th_description">Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>name</code></td><td data-i18n="f_name">Job name (used for output directory naming)</td></tr>
+            <tr><td><code>proteinChain.sequence</code></td><td data-i18n="f_seq">Amino acid sequence (standard 20 + X for unknown)</td></tr>
+            <tr><td><code>proteinChain.count</code></td><td data-i18n="f_count">Number of chain copies</td></tr>
+            <tr><td><code>proteinChain.id</code></td><td data-i18n="f_id">Chain ID labels</td></tr>
+            <tr><td><code>constraint.pocket</code></td><td data-i18n="f_pocket">Define binding interface between binder and epitope</td></tr>
+            <tr><td><code>binder_chain</code></td><td data-i18n="f_binder">The binder chain (nanobody)</td></tr>
+            <tr><td><code>contact_residues</code></td><td data-i18n="f_contact">Antigen epitope residues (1-indexed positions)</td></tr>
+            <tr><td><code>max_distance</code></td><td data-i18n="f_maxdist">Maximum contact distance in Angstroms (typically 6)</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_run_msa">Generate MSA (Multiple Sequence Alignment)</h3>
+    <span class="lang-label">BASH</span>
+    <pre><code><span class="json-comment"># Generate MSA for sequences</span>
+protenix msa --input nanobody.fasta --out_dir ./msa_output --msa_server_mode protenix
+
+<span class="json-comment"># Or use full preprocessing (MSA + template search)</span>
+protenix prep --input nanobody_egfrviii_pred.json --out_dir ./prep_output</code></pre>
+
+    <h3 data-i18n="h_run_pred">Run Structure Prediction</h3>
+    <span class="lang-label">BASH</span>
+    <pre><code><span class="json-comment"># Basic prediction with Protenix v2</span>
+protenix pred \
+  -i nanobody_egfrviii_pred.json \
+  -o ./output_prediction \
+  -n protenix-v2 \
+  -s 101,102,103,104,105
+
+<span class="json-comment"># With template + TFG guidance for enhanced accuracy</span>
+protenix pred \
+  -i nanobody_egfrviii_pred.json \
+  -o ./output_prediction \
+  -n protenix-v2 \
+  -s 101,102,103,104,105 \
+  --use_template true \
+  --use_tfg_guidance true</code></pre>
+
+    <h3 data-i18n="h_params">Key CLI Parameters</h3>
+    <table>
+        <thead><tr><th data-i18n="th_param">Parameter</th><th data-i18n="th_description">Description</th><th data-i18n="th_default">Default</th></tr></thead>
+        <tbody>
+            <tr><td><code>-i / --input</code></td><td data-i18n="p_input">Input JSON file</td><td data-i18n="p_required">Required</td></tr>
+            <tr><td><code>-o / --output</code></td><td data-i18n="p_output">Output directory</td><td data-i18n="p_required">Required</td></tr>
+            <tr><td><code>-n / --model_name</code></td><td data-i18n="p_model">Model name</td><td>protenix-v2</td></tr>
+            <tr><td><code>-s / --seeds</code></td><td data-i18n="p_seeds">Random seeds (comma-separated)</td><td>101</td></tr>
+            <tr><td><code>--use_template</code></td><td data-i18n="p_template">Use structural templates</td><td>false</td></tr>
+            <tr><td><code>--use_msa</code></td><td data-i18n="p_msa">Use MSA</td><td>true</td></tr>
+            <tr><td><code>--use_tfg_guidance</code></td><td data-i18n="p_tfg">Enable Training-Free Guidance</td><td>false</td></tr>
+            <tr><td><code>--dtype</code></td><td data-i18n="p_dtype">Precision (bf16/fp32)</td><td>bf16</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ==================== Section 5: De Novo Design ==================== -->
+<section id="design">
+    <h2><span class="num">05</span><span data-i18n="s5_title">Approach 2: De Novo Design with PXDesign</span></h2>
+    <p class="section-desc" data-i18n="s5_desc">Design entirely new EGFRvIII-targeting nanobodies from scratch using PXDesign's diffusion-based pipeline.</p>
+
+    <h3 data-i18n="h_pxdesign">PXDesign Overview</h3>
+    <p data-i18n="p_pxdesign">PXDesign is ByteDance's de novo protein binder design suite built on the Protenix foundation model, achieving 20-73% experimental success rates (2-6x higher than AlphaProteo and RFdiffusion).</p>
+
+    <h3 data-i18n="h_pipeline">Design Pipeline</h3>
+    <div class="flow">
+        <div class="flow-step highlight">
+            <span class="step-num">1</span>
+            <strong data-i18n="flow1_t">Backbone Generation</strong><br>
+            <small data-i18n="flow1">DiT diffusion model generates target-conditioned binder backbones</small>
+        </div>
+        <div class="flow-arrow">&#8595;</div>
+        <div class="flow-step">
+            <span class="step-num">2</span>
+            <strong data-i18n="flow2_t">Sequence Design</strong><br>
+            <small data-i18n="flow2">ProteinMPNN assigns optimal amino acid sequences</small>
+        </div>
+        <div class="flow-arrow">&#8595;</div>
+        <div class="flow-step">
+            <span class="step-num">3</span>
+            <strong data-i18n="flow3_t">Prediction & Filtering</strong><br>
+            <small data-i18n="flow3">Protenix v2 predicts complex structure; filter by ipTM & consistency</small>
+        </div>
+        <div class="flow-arrow">&#8595;</div>
+        <div class="flow-step">
+            <span class="step-num">4</span>
+            <strong data-i18n="flow4_t">Clustering & Selection</strong><br>
+            <small data-i18n="flow4">Foldseek clusters by structural similarity to preserve diversity</small>
+        </div>
+        <div class="flow-arrow">&#8595;</div>
+        <div class="flow-step highlight">
+            <span class="step-num">&#10003;</span>
+            <strong data-i18n="flow5_t">Final Nanobody Candidates</strong><br>
+            <small data-i18n="flow5">Diverse, high-confidence VHH sequences ready for experimental validation</small>
+        </div>
+    </div>
+
+    <h3 data-i18n="h_access_pxdesign">Access PXDesign</h3>
+    <div class="card-grid">
+        <div class="card" style="border-color:var(--cyan)">
+            <div class="label" data-i18n="c_web_server">Web Server</div>
+            <div class="value" style="font-size:1.1rem"><a href="https://protenix-server.com/" style="color:var(--cyan);text-decoration:none">protenix-server.com</a></div>
+            <div class="detail" data-i18n="c_web_d">Full design + prediction features</div>
+        </div>
+        <div class="card" style="border-color:var(--green)">
+            <div class="label">GitHub</div>
+            <div class="value" style="font-size:1.1rem"><a href="https://github.com/bytedance/PXDesign" style="color:var(--green);text-decoration:none">bytedance/PXDesign</a></div>
+            <div class="detail" data-i18n="c_gh_d">Open-source code</div>
+        </div>
+        <div class="card" style="border-color:var(--purple)">
+            <div class="label" data-i18n="c_docs">Documentation</div>
+            <div class="value" style="font-size:1.1rem"><a href="https://protenix.github.io/pxdesign/" style="color:var(--purple);text-decoration:none">protenix.github.io/pxdesign</a></div>
+            <div class="detail" data-i18n="c_docs_d">Protocols & thresholds</div>
+        </div>
+    </div>
+
+    <h3 data-i18n="h_pxdesign_local">Local PXDesign Setup</h3>
+    <span class="lang-label">BASH</span>
+    <pre><code>git clone https://github.com/bytedance/PXDesign.git
+cd PXDesign
+pip install -e .
+python -m pxdesign --help</code></pre>
+</section>
+
+<!-- ==================== Section 6: Web Server ==================== -->
+<section id="webserver">
+    <h2><span class="num">06</span><span data-i18n="s6_title">Approach 3: Web Server (No GPU Required)</span></h2>
+    <p class="section-desc" data-i18n="s6_desc">Use online platforms for structure prediction when you don't have local GPU resources.</p>
+
+    <h3 data-i18n="h_platforms">Available Platforms</h3>
+    <table>
+        <thead><tr><th data-i18n="th_platform">Platform</th><th>URL</th><th data-i18n="th_features">Features</th></tr></thead>
+        <tbody>
+            <tr><td>Protenix Server</td><td><a href="https://protenix-server.com/" style="color:var(--accent)">protenix-server.com</a></td><td data-i18n="plat_official">Full features including PXDesign</td></tr>
+            <tr><td>ProteinIQ</td><td><a href="https://proteiniq.io/app/protenix" style="color:var(--accent)">proteiniq.io</a></td><td data-i18n="plat_piq">Third-party prediction interface</td></tr>
+            <tr><td>Tamarind Bio</td><td><a href="https://app.tamarind.bio/protenix" style="color:var(--accent)">tamarind.bio</a></td><td data-i18n="plat_tam">Third-party prediction interface</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_web_steps">Web Prediction Steps</h3>
+    <ol class="step-list">
+        <li data-i18n="ws1">Open Protenix Server and create a new "Structure Prediction" task</li>
+        <li data-i18n="ws2">Enter sequences: Chain 1 = VHH nanobody sequence, Chain 2 = EGFRvIII extracellular domain</li>
+        <li data-i18n="ws3">Select model: <code>protenix-v2</code></li>
+        <li data-i18n="ws4">Configure: 5+ seeds, enable MSA search, optionally enable template search</li>
+        <li data-i18n="ws5">Add pocket constraints to specify target epitope residues (optional but recommended)</li>
+        <li data-i18n="ws6">Submit job and wait for completion (minutes to hours depending on queue)</li>
+        <li data-i18n="ws7">Download results: predicted .cif structures + confidence JSON files</li>
+    </ol>
+</section>
+
+<!-- ==================== Section 7: Analysis ==================== -->
+<section id="analysis">
+    <h2><span class="num">07</span><span data-i18n="s7_title">Results Analysis & Validation</span></h2>
+    <p class="section-desc" data-i18n="s7_desc">Evaluate predicted structures using confidence metrics, visualization, and docking quality scores.</p>
+
+    <h3 data-i18n="h_output_files">Output File Structure</h3>
+    <span class="lang-label">FILE TREE</span>
+    <pre><code>output_prediction/
+  VHH_EGFRvIII_complex/
+    101/
+      VHH_EGFRvIII_complex_101_sample_0.cif           <span class="json-comment"># Predicted structure</span>
+      VHH_EGFRvIII_complex_101_summary_confidence_sample_0.json  <span class="json-comment"># Confidence</span>
+    102/
+      ...</code></pre>
+
+    <h3 data-i18n="h_metrics">Confidence Metrics</h3>
+    <table>
+        <thead><tr><th data-i18n="th_metric">Metric</th><th data-i18n="th_description">Description</th><th data-i18n="th_good_value">Good Value</th></tr></thead>
+        <tbody>
+            <tr><td><code>plddt</code></td><td data-i18n="m_plddt">Per-residue confidence</td><td>&gt; 70 (reliable), &gt; 90 (high)</td></tr>
+            <tr><td><code>ptm</code></td><td data-i18n="m_ptm">Predicted TM-score</td><td>&gt; 0.5</td></tr>
+            <tr><td><code>iptm</code></td><td data-i18n="m_iptm">Interface predicted TM-score</td><td>&gt; 0.6 (good docking)</td></tr>
+            <tr><td><code>ranking_score</code></td><td data-i18n="m_rank">Composite ranking score</td><td data-i18n="m_higher">Higher is better</td></tr>
+            <tr><td><code>has_clash</code></td><td data-i18n="m_clash">Steric clashes present</td><td>false</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_analysis_script">Analysis Script</h3>
+    <span class="lang-label">PYTHON</span>
+    <pre><code><span class="json-comment"># analyze_results.py</span>
+import json, glob, os
+
+results = []
+for conf_file in sorted(glob.glob(
+    "output/VHH_EGFRvIII/*/VHH_EGFRvIII_*_summary_confidence_*.json")):
+    with open(conf_file) as f:
+        data = json.load(f)
+    seed = os.path.basename(os.path.dirname(conf_file))
+    results.append({
+        "seed": seed,
+        "iptm": data.get("iptm", "N/A"),
+        "ptm": data.get("ptm", "N/A"),
+        "ranking_score": data.get("ranking_score", "N/A"),
+    })
+
+results.sort(key=lambda x: x.get("ranking_score", 0), reverse=True)
+
+print(f"{'Seed':<8} {'ipTM':<8} {'pTM':<8} {'Ranking':<10}")
+print("-" * 36)
+for r in results:
+    print(f"{r['seed']:<8} {r['iptm']:<8} {r['ptm']:<8} {r['ranking_score']:<10}")</code></pre>
+
+    <h3 data-i18n="h_dockq">DockQ Quality Assessment</h3>
+    <table>
+        <thead><tr><th>DockQ</th><th data-i18n="th_quality">Quality</th></tr></thead>
+        <tbody>
+            <tr><td style="color:var(--green)">&gt; 0.80</td><td data-i18n="q_high">High quality</td></tr>
+            <tr><td style="color:var(--accent)">0.49 - 0.80</td><td data-i18n="q_medium">Medium quality</td></tr>
+            <tr><td style="color:var(--yellow)">0.23 - 0.49</td><td data-i18n="q_acceptable">Acceptable</td></tr>
+            <tr><td style="color:var(--red)">&lt; 0.23</td><td data-i18n="q_poor">Incorrect</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ==================== Section 8: Workflow ==================== -->
+<section id="workflow">
+    <h2><span class="num">08</span><span data-i18n="s8_title">Complete Workflow Example</span></h2>
+    <p class="section-desc" data-i18n="s8_desc">End-to-end example from setup to final analysis.</p>
+
+    <span class="lang-label">BASH</span>
+    <pre><code><span class="json-comment"># Step 1: Setup workspace</span>
+mkdir -p egfrviii_nanobody/{structures,input,output,msa_data,results}
+cd egfrviii_nanobody
+
+<span class="json-comment"># Step 2: Download EGFRvIII structures</span>
+wget https://files.rcsb.org/download/8UKX.pdb -O structures/EGFRvIII_8UKX.pdb
+wget https://files.rcsb.org/download/8UKV.pdb -O structures/nanobody_EGFRvIII_8UKV.pdb
+
+<span class="json-comment"># Step 3: Convert to JSON format</span>
+protenix json --input structures/EGFRvIII_8UKX.pdb --out_dir input/ --altloc first
+
+<span class="json-comment"># Step 4: Prepare input JSON (edit with your sequences + constraints)</span>
+<span class="json-comment"># See Section 04 for JSON format</span>
+
+<span class="json-comment"># Step 5: Preprocessing (MSA + template search)</span>
+protenix prep --input input/design_input.json --out_dir msa_data/
+
+<span class="json-comment"># Step 6: Run prediction</span>
+protenix pred \
+  -i input/design_input.json \
+  -o output/ \
+  -n protenix-v2 \
+  -s 101,102,103,104,105 \
+  --use_template true \
+  --use_tfg_guidance true
+
+<span class="json-comment"># Step 7: Analyze results</span>
+python3 analyze_results.py
+
+<span class="json-comment"># Step 8: Visualize best prediction</span>
+pymol output/VHH_anti_EGFRvIII/101/VHH_anti_EGFRvIII_101_sample_0.cif</code></pre>
+</section>
+
+<!-- ==================== Section 9: FAQ ==================== -->
+<section id="faq">
+    <h2><span class="num">09</span><span data-i18n="s9_title">FAQ & Tips</span></h2>
+    <p class="section-desc" data-i18n="s9_desc">Frequently asked questions and practical tips.</p>
+
+    <h3 data-i18n="faq1_q">GPU Out of Memory?</h3>
+    <span class="lang-label">BASH</span>
+    <pre><code><span class="json-comment"># Use lightweight Protenix-Mini model</span>
+protenix pred --input input.json --model_name protenix_mini_default_v0.5.0</code></pre>
+    <table>
+        <thead><tr><th data-i18n="th_seq_len">Sequence Length</th><th data-i18n="th_vram">Approx. VRAM</th></tr></thead>
+        <tbody>
+            <tr><td>500 tokens</td><td>~6 GB</td></tr>
+            <tr><td>1000 tokens</td><td>~15 GB</td></tr>
+            <tr><td>2000 tokens</td><td>~40 GB</td></tr>
+            <tr><td>4000 tokens</td><td>~78 GB</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="faq2_q">How to Improve Accuracy?</h3>
+    <ul>
+        <li data-i18n="faq2_1">Increase seeds: 5 &rarr; 20-50 for challenging targets</li>
+        <li data-i18n="faq2_2">Enable MSA: run <code>protenix prep</code> for preprocessing</li>
+        <li data-i18n="faq2_3">Enable templates: <code>--use_template true</code></li>
+        <li data-i18n="faq2_4">Use TFG guidance: <code>--use_tfg_guidance true</code></li>
+        <li data-i18n="faq2_5">Add pocket constraints with known epitope residues</li>
+    </ul>
+
+    <h3 data-i18n="faq3_q">Where to Get Nanobody Sequences?</h3>
+    <table>
+        <thead><tr><th data-i18n="th_source">Source</th><th data-i18n="th_description">Description</th></tr></thead>
+        <tbody>
+            <tr><td data-i18n="src_lit">Published Literature</td><td data-i18n="src_lit_d">Known anti-EGFRvIII nanobody sequences from papers</td></tr>
+            <tr><td>PDB (8UKV)</td><td data-i18n="src_pdb_d">Nanobody 34E5 sequence from crystal structure</td></tr>
+            <tr><td data-i18n="src_lib">Immune Library Screening</td><td data-i18n="src_lib_d">Experimentally obtained candidate sequences</td></tr>
+            <tr><td>PXDesign</td><td data-i18n="src_design_d">De novo generated sequences</td></tr>
+            <tr><td data-i18n="src_graft">CDR Grafting</td><td data-i18n="src_graft_d">Known framework + redesigned CDR loops</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="faq4_q">Which Epitope to Target?</h3>
+    <div class="success">
+        <div class="title" data-i18n="faq4_best">Best Choices for EGFRvIII:</div>
+        <ol>
+            <li data-i18n="faq4_1"><strong data-i18n="faq4_1b">Junction region</strong> &mdash; Unique neoepitope not present on wild-type EGFR, enables high specificity</li>
+            <li data-i18n="faq4_2"><strong>Domain IV</strong> &mdash; Exposed on EGFRvIII but occluded on intact EGFR (validated by nanobody 34E5)</li>
+        </ol>
+    </div>
+    <div class="warn">
+        <div class="title" data-i18n="faq4_avoid_t">Avoid:</div>
+        <span data-i18n="faq4_avoid">Conserved regions shared between EGFRvIII and wild-type EGFR &mdash; will cause off-target toxicity.</span>
+    </div>
+
+    <h3 data-i18n="faq5_q">How to Determine contact_residues?</h3>
+    <span class="lang-label">PYTHON</span>
+    <pre><code><span class="json-comment"># Extract interface residues from reference complex (PDB 8UKV)</span>
+from Bio.PDB import PDBParser, NeighborSearch
+
+parser = PDBParser(QUIET=True)
+structure = parser.get_structure("complex", "nanobody_EGFRvIII_8UKV.pdb")
+
+nanobody_atoms, antigen_atoms = [], []
+for chain in structure[0]:
+    for residue in chain:
+        for atom in residue:
+            if chain.id == "H":
+                nanobody_atoms.append(atom)
+            else:
+                antigen_atoms.append(atom)
+
+ns = NeighborSearch(antigen_atoms)
+interface_residues = set()
+for atom in nanobody_atoms:
+    neighbors = ns.search(atom.coord, 5.0)
+    for n in neighbors:
+        interface_residues.add(n.get_parent().id[1])
+
+print("Antigen interface residues:", sorted(interface_residues))</code></pre>
+</section>
+
+<!-- ==================== References ==================== -->
+<section id="references">
+    <h2><span class="num">10</span><span data-i18n="s10_title">References & Resources</span></h2>
+    <p class="section-desc" data-i18n="s10_desc">Papers, repositories, and online tools.</p>
+
+    <h3 data-i18n="h_papers">Papers</h3>
+    <ul>
+        <li><a href="https://www.biorxiv.org/content/10.64898/2026.04.10.717613v1" style="color:var(--accent)">Protenix-v2: Broadening the Reach of Structure Prediction and Biomolecular Design</a> (bioRxiv 2026)</li>
+        <li><a href="https://www.biorxiv.org/content/10.1101/2025.08.15.670450.full.pdf" style="color:var(--accent)">PXDesign: Fast, Modular, and Accurate De Novo Design of Protein Binders</a> (bioRxiv 2025)</li>
+        <li><a href="https://www.cell.com/structure/fulltext/S0969-2126(24)00195-3" style="color:var(--accent)">Structural insights into the role and targeting of EGFRvIII</a> (Structure 2024)</li>
+    </ul>
+
+    <h3 data-i18n="h_repos">Code Repositories</h3>
+    <div class="card-grid">
+        <div class="card"><div class="label">Protenix</div><div class="detail"><a href="https://github.com/bytedance/Protenix" style="color:var(--accent)">github.com/bytedance/Protenix</a></div></div>
+        <div class="card"><div class="label">PXDesign</div><div class="detail"><a href="https://github.com/bytedance/PXDesign" style="color:var(--accent)">github.com/bytedance/PXDesign</a></div></div>
+        <div class="card"><div class="label">PyPI</div><div class="detail"><a href="https://pypi.org/project/protenix/" style="color:var(--accent)">pypi.org/project/protenix</a></div></div>
+    </div>
+
+    <h3 data-i18n="h_structures">PDB Structures</h3>
+    <table>
+        <thead><tr><th>PDB</th><th data-i18n="th_description">Description</th></tr></thead>
+        <tbody>
+            <tr><td><a href="https://www.rcsb.org/structure/8UKX" style="color:var(--accent)">8UKX</a></td><td data-i18n="pdb_8ukx">EGFRvIII extracellular region crystal structure (pH 7.0)</td></tr>
+            <tr><td><a href="https://www.rcsb.org/structure/8UKV" style="color:var(--accent)">8UKV</a></td><td data-i18n="pdb_8ukv">Nanobody 34E5 / EGFRvIII complex crystal structure</td></tr>
+            <tr><td><a href="https://www.rcsb.org/structure/8UKW" style="color:var(--accent)">8UKW</a></td><td data-i18n="pdb_8ukw">EGFRvIII extracellular region crystal structure (pH 5.0)</td></tr>
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+<div class="footer">
+    <p><strong>Protenix v2 EGFRvIII Nanobody Design Guide</strong> &mdash; <a href="https://github.com/mrfeixiang/nanobody">GitHub Repository</a></p>
+    <p style="margin-top:8px" data-i18n="footer">Guide compiled from official Protenix documentation and published research. Computational designs require experimental validation.</p>
+</div>
+
+<script>
+// ============== i18n ==============
+const T = {
+en: {
+    hero_title: "Protenix v2 EGFRvIII Nanobody Design Guide",
+    hero_subtitle: "Complete step-by-step guide to designing EGFRvIII-targeting nanobodies using ByteDance's Protenix v2 structure prediction and PXDesign de novo design platform",
+    nav_home: "Home", nav_bg: "Background", nav_install: "Install", nav_antigen: "Antigen Prep", nav_pred: "Prediction", nav_design: "De Novo Design", nav_web: "Web Server", nav_analysis: "Analysis", nav_workflow: "Workflow", nav_faq: "FAQ",
+
+    s1_title: "Background", s1_desc: "Essential knowledge about EGFRvIII, nanobodies, and Protenix v2.",
+    h_egfrviii: "What is EGFRvIII?",
+    p_egfrviii: "EGFRvIII (Epidermal Growth Factor Receptor variant III) is the most common extracellular domain truncation mutant of EGFR. It arises from an in-frame deletion of exons 2-7, removing 268 amino acids (positions 6-273 of wild-type) and inserting a novel glycine at the junction. The resulting receptor is constitutively active, binds no known ligand, and is frequently expressed in glioblastoma (GBM) and other cancers.",
+    c_mutation_type: "Mutation Type", c_exon_del: "Exon 2-7 Deletion", c_268aa: "268 aa removed + novel Gly at junction", c_activity: "Activity", c_constitutive: "Constitutively Active", c_no_ligand: "No known ligand binding", c_pdb_desc: "ECR structure / Nanobody 34E5 complex", c_clinical: "Clinical Significance", c_gbm: "GBM Target", c_clinical_d: "CAR-T, ADC, nanobody therapeutics",
+    h_nanobody: "What is a Nanobody (VHH)?",
+    p_nanobody: "Nanobodies are the variable domains of heavy-chain-only antibodies (HCAb) found in camelids. At ~15 kDa, they offer superior tissue penetration, high stability, and can access cryptic epitopes that conventional antibodies cannot reach. They contain 3 CDR loops (CDR1, CDR2, CDR3), with CDR3 being the longest and most critical for antigen binding.",
+    h_protenix: "What is Protenix v2?",
+    p_protenix: "Protenix v2 is ByteDance's open-source biomolecular structure prediction system (~464M parameters). Key features include:",
+    c_accuracy_gain: "Accuracy Gain", c_dockq: "DockQ > 0.23 vs Protenix v1", c_efficiency: "Efficiency", c_5seeds: "5 seeds > v1@1000", c_efficiency_d: "Massive efficiency improvement", c_tfg: "Physics Guidance", c_tfg_d: "Steric, torsion, bond constraints", c_vhh_design: "VHH Design", c_hitrate: "48% Hit Rate", c_vhh_d: "100% target-level success (VHH-Fc)",
+
+    s2_title: "Installation & Setup", s2_desc: "Install Protenix v2 and configure your environment for nanobody design.",
+    h_requirements: "System Requirements", th_item: "Item", th_minimum: "Minimum", th_recommended: "Recommended", td_ram: "RAM", td_disk: "Disk",
+    h_install_methods: "Installation Methods",
+    h_deps: "External Dependencies",
+    h_cli_commands: "CLI Commands Overview", th_command: "Command", th_function: "Function",
+    cmd_pred: "Structure prediction / inference", cmd_json: "Convert PDB/CIF to JSON format", cmd_msa: "Generate Multiple Sequence Alignment", cmd_mt: "MSA + template search", cmd_prep: "Full preprocessing pipeline",
+
+    s3_title: "Prepare EGFRvIII Antigen", s3_desc: "Obtain the EGFRvIII sequence, structure, and identify key epitope regions.",
+    h_get_structure: "Download EGFRvIII Structure", h_convert_json: "Convert to Protenix JSON", h_epitopes: "Key Epitope Regions",
+    th_region: "Region", th_description: "Description", th_significance: "Significance",
+    epi_junction: "Junction Site", epi_junction_d: "Exon 1/8 fusion point with novel glycine", epi_junction_s: "EGFRvIII-specific neoepitope",
+    epi_d1: "Retained N-terminal region after truncation", epi_d1_s: "Good accessibility",
+    epi_d4: "C-terminal region", epi_d4_s: "Target of nanobody 34E5 (selective)",
+    info_34e5_t: "About Nanobody 34E5 (PDB: 8UKV)", info_34e5: "The nanobody 34E5 targets Domain IV of EGFRvIII. This epitope is occluded in unliganded intact EGFR but exposed in EGFRvIII due to the truncation, enabling selective binding. This makes it an excellent reference for your designs.",
+
+    s4_title: "Approach 1: Structure Prediction with CLI", s4_desc: "Use Protenix v2 CLI to predict nanobody-antigen complex structures when you have candidate VHH sequences.",
+    h_input_json: "Prepare Input JSON", p_input_json: "Create a JSON file specifying the nanobody and antigen chains with optional pocket constraints:",
+    h_json_fields: "JSON Field Reference", th_field: "Field",
+    f_name: "Job name (used for output directory naming)", f_seq: "Amino acid sequence (standard 20 + X for unknown)", f_count: "Number of chain copies", f_id: "Chain ID labels", f_pocket: "Define binding interface between binder and epitope", f_binder: "The binder chain (nanobody)", f_contact: "Antigen epitope residues (1-indexed positions)", f_maxdist: "Maximum contact distance in Angstroms (typically 6)",
+    h_run_msa: "Generate MSA (Multiple Sequence Alignment)", h_run_pred: "Run Structure Prediction",
+    h_params: "Key CLI Parameters", th_param: "Parameter", th_default: "Default",
+    p_input: "Input JSON file", p_required: "Required", p_output: "Output directory", p_model: "Model name", p_seeds: "Random seeds (comma-separated)", p_template: "Use structural templates", p_msa: "Use MSA", p_tfg: "Enable Training-Free Guidance", p_dtype: "Precision (bf16/fp32)",
+
+    s5_title: "Approach 2: De Novo Design with PXDesign", s5_desc: "Design entirely new EGFRvIII-targeting nanobodies from scratch using PXDesign's diffusion-based pipeline.",
+    h_pxdesign: "PXDesign Overview", p_pxdesign: "PXDesign is ByteDance's de novo protein binder design suite built on the Protenix foundation model, achieving 20-73% experimental success rates (2-6x higher than AlphaProteo and RFdiffusion).",
+    h_pipeline: "Design Pipeline",
+    flow1_t: "Backbone Generation", flow1: "DiT diffusion model generates target-conditioned binder backbones",
+    flow2_t: "Sequence Design", flow2: "ProteinMPNN assigns optimal amino acid sequences",
+    flow3_t: "Prediction & Filtering", flow3: "Protenix v2 predicts complex structure; filter by ipTM & consistency",
+    flow4_t: "Clustering & Selection", flow4: "Foldseek clusters by structural similarity to preserve diversity",
+    flow5_t: "Final Nanobody Candidates", flow5: "Diverse, high-confidence VHH sequences ready for experimental validation",
+    h_access_pxdesign: "Access PXDesign", c_web_server: "Web Server", c_web_d: "Full design + prediction features", c_gh_d: "Open-source code", c_docs: "Documentation", c_docs_d: "Protocols & thresholds",
+    h_pxdesign_local: "Local PXDesign Setup",
+
+    s6_title: "Approach 3: Web Server (No GPU Required)", s6_desc: "Use online platforms for structure prediction when you don't have local GPU resources.",
+    h_platforms: "Available Platforms", th_platform: "Platform", th_features: "Features",
+    plat_official: "Full features including PXDesign", plat_piq: "Third-party prediction interface", plat_tam: "Third-party prediction interface",
+    h_web_steps: "Web Prediction Steps",
+    ws1: "Open Protenix Server and create a new \"Structure Prediction\" task",
+    ws2: "Enter sequences: Chain 1 = VHH nanobody sequence, Chain 2 = EGFRvIII extracellular domain",
+    ws3: "Select model: <code>protenix-v2</code>",
+    ws4: "Configure: 5+ seeds, enable MSA search, optionally enable template search",
+    ws5: "Add pocket constraints to specify target epitope residues (optional but recommended)",
+    ws6: "Submit job and wait for completion (minutes to hours depending on queue)",
+    ws7: "Download results: predicted .cif structures + confidence JSON files",
+
+    s7_title: "Results Analysis & Validation", s7_desc: "Evaluate predicted structures using confidence metrics, visualization, and docking quality scores.",
+    h_output_files: "Output File Structure", h_metrics: "Confidence Metrics", th_metric: "Metric", th_good_value: "Good Value",
+    m_plddt: "Per-residue confidence", m_ptm: "Predicted TM-score", m_iptm: "Interface predicted TM-score", m_rank: "Composite ranking score", m_higher: "Higher is better", m_clash: "Steric clashes present",
+    h_analysis_script: "Analysis Script", h_dockq: "DockQ Quality Assessment", th_quality: "Quality",
+    q_high: "High quality", q_medium: "Medium quality", q_acceptable: "Acceptable", q_poor: "Incorrect",
+
+    s8_title: "Complete Workflow Example", s8_desc: "End-to-end example from setup to final analysis.",
+
+    s9_title: "FAQ & Tips", s9_desc: "Frequently asked questions and practical tips.",
+    faq1_q: "GPU Out of Memory?", th_seq_len: "Sequence Length", th_vram: "Approx. VRAM",
+    faq2_q: "How to Improve Accuracy?", faq2_1: "Increase seeds: 5 → 20-50 for challenging targets", faq2_2: "Enable MSA: run <code>protenix prep</code> for preprocessing", faq2_3: "Enable templates: <code>--use_template true</code>", faq2_4: "Use TFG guidance: <code>--use_tfg_guidance true</code>", faq2_5: "Add pocket constraints with known epitope residues",
+    faq3_q: "Where to Get Nanobody Sequences?", th_source: "Source",
+    src_lit: "Published Literature", src_lit_d: "Known anti-EGFRvIII nanobody sequences from papers", src_pdb_d: "Nanobody 34E5 sequence from crystal structure", src_lib: "Immune Library Screening", src_lib_d: "Experimentally obtained candidate sequences", src_design_d: "De novo generated sequences", src_graft: "CDR Grafting", src_graft_d: "Known framework + redesigned CDR loops",
+    faq4_q: "Which Epitope to Target?", faq4_best: "Best Choices for EGFRvIII:",
+    faq4_1: "<strong>Junction region</strong> — Unique neoepitope not present on wild-type EGFR, enables high specificity",
+    faq4_1b: "Junction region",
+    faq4_2: "<strong>Domain IV</strong> — Exposed on EGFRvIII but occluded on intact EGFR (validated by nanobody 34E5)",
+    faq4_avoid_t: "Avoid:", faq4_avoid: "Conserved regions shared between EGFRvIII and wild-type EGFR — will cause off-target toxicity.",
+    faq5_q: "How to Determine contact_residues?",
+
+    s10_title: "References & Resources", s10_desc: "Papers, repositories, and online tools.",
+    h_papers: "Papers", h_repos: "Code Repositories", h_structures: "PDB Structures",
+    pdb_8ukx: "EGFRvIII extracellular region crystal structure (pH 7.0)", pdb_8ukv: "Nanobody 34E5 / EGFRvIII complex crystal structure", pdb_8ukw: "EGFRvIII extracellular region crystal structure (pH 5.0)",
+
+    footer: "Guide compiled from official Protenix documentation and published research. Computational designs require experimental validation."
+},
+ko: {
+    hero_title: "Protenix v2 EGFRvIII 나노바디 설계 가이드",
+    hero_subtitle: "ByteDance의 Protenix v2 구조 예측 및 PXDesign 드노보 설계 플랫폼을 사용한 EGFRvIII 표적 나노바디 설계 완전 가이드",
+    nav_home: "홈", nav_bg: "배경지식", nav_install: "설치", nav_antigen: "항원 준비", nav_pred: "구조 예측", nav_design: "드노보 설계", nav_web: "웹 서버", nav_analysis: "결과 분석", nav_workflow: "워크플로우", nav_faq: "FAQ",
+
+    s1_title: "배경지식", s1_desc: "EGFRvIII, 나노바디, Protenix v2에 대한 필수 지식.",
+    h_egfrviii: "EGFRvIII란?",
+    p_egfrviii: "EGFRvIII (표피 성장 인자 수용체 변이체 III)는 EGFR의 가장 흔한 세포외 도메인 절단 돌연변이입니다. 엑손 2-7의 프레임 내 결실로 발생하며, 야생형의 6-273번 위치에서 268개 아미노산이 제거되고 접합부에 새로운 글리신이 삽입됩니다. 결과 수용체는 구성적으로 활성화되며, 알려진 리간드가 결합하지 않으며, 교모세포종(GBM) 및 기타 암에서 빈번하게 발현됩니다.",
+    c_mutation_type: "돌연변이 유형", c_exon_del: "엑손 2-7 결실", c_268aa: "268 aa 제거 + 접합부 신규 Gly", c_activity: "활성", c_constitutive: "구성적 활성화", c_no_ligand: "알려진 리간드 결합 없음", c_pdb_desc: "ECR 구조 / 나노바디 34E5 복합체", c_clinical: "임상적 의의", c_gbm: "GBM 표적", c_clinical_d: "CAR-T, ADC, 나노바디 치료제",
+    h_nanobody: "나노바디(VHH)란?",
+    p_nanobody: "나노바디는 낙타과 동물에서 발견되는 중쇄 전용 항체(HCAb)의 가변 도메인입니다. ~15 kDa로 우수한 조직 침투력, 높은 안정성을 가지며, 일반 항체가 접근할 수 없는 은밀한 에피토프에 접근할 수 있습니다. CDR1, CDR2, CDR3의 3개 CDR 루프를 포함하며, CDR3가 가장 길고 항원 결합에 가장 중요합니다.",
+    h_protenix: "Protenix v2란?",
+    p_protenix: "Protenix v2는 ByteDance의 오픈소스 생체분자 구조 예측 시스템(~464M 매개변수)입니다. 주요 특징:",
+    c_accuracy_gain: "정확도 향상", c_dockq: "DockQ > 0.23 기준 v1 대비", c_efficiency: "효율성", c_5seeds: "5 seeds > v1@1000", c_efficiency_d: "대폭적인 효율 향상", c_tfg: "물리 가이던스", c_tfg_d: "입체, 비틀림, 결합 제약 조건", c_vhh_design: "VHH 설계", c_hitrate: "48% 히트율", c_vhh_d: "100% 표적 수준 성공 (VHH-Fc)",
+
+    s2_title: "설치 및 환경 구성", s2_desc: "Protenix v2를 설치하고 나노바디 설계를 위한 환경을 구성합니다.",
+    h_requirements: "시스템 요구사항", th_item: "항목", th_minimum: "최소", th_recommended: "권장", td_ram: "메모리", td_disk: "디스크",
+    h_install_methods: "설치 방법",
+    h_deps: "외부 의존성",
+    h_cli_commands: "CLI 명령어 개요", th_command: "명령어", th_function: "기능",
+    cmd_pred: "구조 예측 / 추론", cmd_json: "PDB/CIF를 JSON 형식으로 변환", cmd_msa: "다중 서열 정렬 생성", cmd_mt: "MSA + 템플릿 검색", cmd_prep: "전체 전처리 파이프라인",
+
+    s3_title: "EGFRvIII 항원 준비", s3_desc: "EGFRvIII 서열과 구조를 얻고 주요 에피토프 영역을 확인합니다.",
+    h_get_structure: "EGFRvIII 구조 다운로드", h_convert_json: "Protenix JSON으로 변환", h_epitopes: "주요 에피토프 영역",
+    th_region: "영역", th_description: "설명", th_significance: "중요성",
+    epi_junction: "접합부", epi_junction_d: "엑손 1/8 융합 지점에 신규 글리신 포함", epi_junction_s: "EGFRvIII 특이적 신생 에피토프",
+    epi_d1: "절단 후 보존된 N-말단 영역", epi_d1_s: "접근성 양호",
+    epi_d4: "C-말단 영역", epi_d4_s: "나노바디 34E5의 표적 (선택적)",
+    info_34e5_t: "나노바디 34E5 소개 (PDB: 8UKV)", info_34e5: "나노바디 34E5는 EGFRvIII의 Domain IV를 표적으로 합니다. 이 에피토프는 비결합 상태의 온전한 EGFR에서는 가려져 있지만, 절단으로 인해 EGFRvIII에서는 노출되어 선택적 결합이 가능합니다.",
+
+    s4_title: "방법 1: CLI를 이용한 구조 예측", s4_desc: "후보 VHH 서열이 있을 때 Protenix v2 CLI로 나노바디-항원 복합체 구조를 예측합니다.",
+    h_input_json: "입력 JSON 준비", p_input_json: "나노바디와 항원 체인을 지정하는 JSON 파일을 생성합니다 (포켓 제약 조건 옵션 포함):",
+    h_json_fields: "JSON 필드 참조", th_field: "필드",
+    f_name: "작업 이름 (출력 디렉토리 명명에 사용)", f_seq: "아미노산 서열 (표준 20종 + X는 미확인)", f_count: "체인 복사 수", f_id: "체인 ID 레이블", f_pocket: "결합자와 에피토프 간 결합 인터페이스 정의", f_binder: "결합자 체인 (나노바디)", f_contact: "항원 에피토프 잔기 (1-인덱스 위치)", f_maxdist: "최대 접촉 거리(옹스트롬, 일반적으로 6)",
+    h_run_msa: "MSA (다중 서열 정렬) 생성", h_run_pred: "구조 예측 실행",
+    h_params: "주요 CLI 매개변수", th_param: "매개변수", th_default: "기본값",
+    p_input: "입력 JSON 파일", p_required: "필수", p_output: "출력 디렉토리", p_model: "모델 이름", p_seeds: "랜덤 시드 (쉼표 구분)", p_template: "구조 템플릿 사용", p_msa: "MSA 사용", p_tfg: "Training-Free Guidance 활성화", p_dtype: "정밀도 (bf16/fp32)",
+
+    s5_title: "방법 2: PXDesign을 이용한 드노보 설계", s5_desc: "PXDesign의 확산 기반 파이프라인을 사용하여 EGFRvIII 표적 나노바디를 처음부터 설계합니다.",
+    h_pxdesign: "PXDesign 개요", p_pxdesign: "PXDesign은 Protenix 기반 모델 위에 구축된 ByteDance의 드노보 단백질 결합자 설계 도구로, 20-73%의 실험적 성공률을 달성합니다 (AlphaProteo 및 RFdiffusion 대비 2-6배 높음).",
+    h_pipeline: "설계 파이프라인",
+    flow1_t: "백본 생성", flow1: "DiT 확산 모델이 표적 조건부 결합자 백본을 생성",
+    flow2_t: "서열 설계", flow2: "ProteinMPNN이 최적 아미노산 서열을 할당",
+    flow3_t: "예측 및 필터링", flow3: "Protenix v2가 복합체 구조를 예측; ipTM 및 일관성으로 필터링",
+    flow4_t: "클러스터링 및 선택", flow4: "Foldseek이 구조적 유사성으로 클러스터링하여 다양성 보존",
+    flow5_t: "최종 나노바디 후보", flow5: "실험적 검증 준비가 된 다양하고 높은 신뢰도의 VHH 서열",
+    h_access_pxdesign: "PXDesign 접근", c_web_server: "웹 서버", c_web_d: "전체 설계 + 예측 기능", c_gh_d: "오픈소스 코드", c_docs: "문서", c_docs_d: "프로토콜 및 임계값",
+    h_pxdesign_local: "로컬 PXDesign 설정",
+
+    s6_title: "방법 3: 웹 서버 (GPU 불필요)", s6_desc: "로컬 GPU 리소스가 없을 때 온라인 플랫폼을 사용하여 구조를 예측합니다.",
+    h_platforms: "사용 가능한 플랫폼", th_platform: "플랫폼", th_features: "기능",
+    plat_official: "PXDesign 포함 전체 기능", plat_piq: "서드파티 예측 인터페이스", plat_tam: "서드파티 예측 인터페이스",
+    h_web_steps: "웹 예측 단계",
+    ws1: "Protenix Server를 열고 새 \"Structure Prediction\" 작업을 생성합니다",
+    ws2: "서열 입력: Chain 1 = VHH 나노바디 서열, Chain 2 = EGFRvIII 세포외 도메인",
+    ws3: "모델 선택: <code>protenix-v2</code>",
+    ws4: "설정: 5개 이상 시드, MSA 검색 활성화, 선택적으로 템플릿 검색 활성화",
+    ws5: "표적 에피토프 잔기를 지정하는 포켓 제약 조건 추가 (선택 사항이나 권장)",
+    ws6: "작업을 제출하고 완료를 기다립니다 (대기열에 따라 수 분에서 수 시간)",
+    ws7: "결과 다운로드: 예측된 .cif 구조 + 신뢰도 JSON 파일",
+
+    s7_title: "결과 분석 및 검증", s7_desc: "신뢰도 지표, 시각화, 도킹 품질 점수를 사용하여 예측 구조를 평가합니다.",
+    h_output_files: "출력 파일 구조", h_metrics: "신뢰도 지표", th_metric: "지표", th_good_value: "양호 값",
+    m_plddt: "잔기별 신뢰도", m_ptm: "예측 TM-score", m_iptm: "인터페이스 예측 TM-score", m_rank: "종합 순위 점수", m_higher: "높을수록 좋음", m_clash: "입체 충돌 존재",
+    h_analysis_script: "분석 스크립트", h_dockq: "DockQ 품질 평가", th_quality: "품질",
+    q_high: "고품질", q_medium: "중간 품질", q_acceptable: "수용 가능", q_poor: "부정확",
+
+    s8_title: "완전한 워크플로우 예시", s8_desc: "설정부터 최종 분석까지의 종단간 예시.",
+
+    s9_title: "FAQ 및 팁", s9_desc: "자주 묻는 질문과 실용적인 팁.",
+    faq1_q: "GPU 메모리 부족?", th_seq_len: "서열 길이", th_vram: "대략적 VRAM",
+    faq2_q: "정확도를 높이는 방법?", faq2_1: "시드 증가: 어려운 표적의 경우 5 → 20-50", faq2_2: "MSA 활성화: <code>protenix prep</code>로 전처리 실행", faq2_3: "템플릿 활성화: <code>--use_template true</code>", faq2_4: "TFG 가이던스 사용: <code>--use_tfg_guidance true</code>", faq2_5: "알려진 에피토프 잔기로 포켓 제약 조건 추가",
+    faq3_q: "나노바디 서열은 어디서 구하나요?", th_source: "출처",
+    src_lit: "발표된 문헌", src_lit_d: "논문에서 알려진 항-EGFRvIII 나노바디 서열", src_pdb_d: "결정 구조에서 나노바디 34E5 서열", src_lib: "면역 라이브러리 스크리닝", src_lib_d: "실험적으로 획득한 후보 서열", src_design_d: "드노보 생성 서열", src_graft: "CDR 이식", src_graft_d: "알려진 프레임워크 + 재설계된 CDR 루프",
+    faq4_q: "어떤 에피토프를 표적으로 해야 하나요?", faq4_best: "EGFRvIII에 가장 좋은 선택:",
+    faq4_1: "<strong>접합부 영역</strong> — 야생형 EGFR에는 없는 고유한 신생 에피토프로, 높은 특이성 확보 가능",
+    faq4_1b: "접합부 영역",
+    faq4_2: "<strong>Domain IV</strong> — EGFRvIII에서는 노출되지만 온전한 EGFR에서는 가려짐 (나노바디 34E5로 검증됨)",
+    faq4_avoid_t: "피해야 할 영역:", faq4_avoid: "EGFRvIII와 야생형 EGFR 사이의 공통 보존 영역 — 표적 이탈 독성을 유발합니다.",
+    faq5_q: "contact_residues는 어떻게 결정하나요?",
+
+    s10_title: "참고 자료 및 리소스", s10_desc: "논문, 코드 저장소, 온라인 도구.",
+    h_papers: "논문", h_repos: "코드 저장소", h_structures: "PDB 구조",
+    pdb_8ukx: "EGFRvIII 세포외 영역 결정 구조 (pH 7.0)", pdb_8ukv: "나노바디 34E5 / EGFRvIII 복합체 결정 구조", pdb_8ukw: "EGFRvIII 세포외 영역 결정 구조 (pH 5.0)",
+
+    footer: "공식 Protenix 문서와 발표된 연구를 기반으로 작성된 가이드입니다. 계산 설계는 실험적 검증이 필요합니다."
+},
+zh: {
+    hero_title: "Protenix v2 EGFRvIII 纳米抗体设计指南",
+    hero_subtitle: "使用字节跳动 Protenix v2 结构预测和 PXDesign 从头设计平台设计靶向 EGFRvIII 纳米抗体的完整分步指南",
+    nav_home: "首页", nav_bg: "背景知识", nav_install: "安装", nav_antigen: "抗原准备", nav_pred: "结构预测", nav_design: "从头设计", nav_web: "Web服务", nav_analysis: "结果分析", nav_workflow: "完整流程", nav_faq: "常见问题",
+
+    s1_title: "背景知识", s1_desc: "关于 EGFRvIII、纳米抗体和 Protenix v2 的必要知识。",
+    h_egfrviii: "什么是 EGFRvIII？",
+    p_egfrviii: "EGFRvIII（表皮生长因子受体变体III）是 EGFR 最常见的胞外结构域截短突变体。由外显子2-7的框内缺失导致，野生型第6-273位的268个氨基酸被删除，并在接合处插入一个新的甘氨酸。所产生的受体具有组成型活化特性，不结合任何已知配体，在胶质母细胞瘤（GBM）等癌症中频繁表达。",
+    c_mutation_type: "突变类型", c_exon_del: "外显子2-7缺失", c_268aa: "删除268 aa + 接合处新甘氨酸", c_activity: "活性", c_constitutive: "组成型活化", c_no_ligand: "无已知配体结合", c_pdb_desc: "ECR结构 / 纳米抗体34E5复合物", c_clinical: "临床意义", c_gbm: "GBM靶点", c_clinical_d: "CAR-T, ADC, 纳米抗体药物",
+    h_nanobody: "什么是纳米抗体（VHH）？",
+    p_nanobody: "纳米抗体是骆驼科动物中发现的仅重链抗体（HCAb）的可变域。仅约15 kDa，具有优越的组织穿透力、高稳定性，可以到达传统抗体无法触及的隐蔽表位。包含3个CDR环（CDR1, CDR2, CDR3），其中CDR3最长且对抗原结合最为关键。",
+    h_protenix: "什么是 Protenix v2？",
+    p_protenix: "Protenix v2 是字节跳动的开源生物分子结构预测系统（约464M参数）。主要特性包括：",
+    c_accuracy_gain: "准确度提升", c_dockq: "DockQ > 0.23 相比 v1", c_efficiency: "效率", c_5seeds: "5 seeds > v1@1000", c_efficiency_d: "效率大幅提升", c_tfg: "物理引导", c_tfg_d: "立体、扭转、键约束", c_vhh_design: "VHH设计", c_hitrate: "48%命中率", c_vhh_d: "100%靶标级成功率 (VHH-Fc)",
+
+    s2_title: "安装与环境配置", s2_desc: "安装 Protenix v2 并配置纳米抗体设计环境。",
+    h_requirements: "系统要求", th_item: "项目", th_minimum: "最低", th_recommended: "推荐", td_ram: "内存", td_disk: "磁盘",
+    h_install_methods: "安装方法",
+    h_deps: "外部依赖",
+    h_cli_commands: "CLI 命令概览", th_command: "命令", th_function: "功能",
+    cmd_pred: "结构预测/推理", cmd_json: "PDB/CIF转JSON格式", cmd_msa: "生成多序列比对", cmd_mt: "MSA + 模板搜索", cmd_prep: "完整预处理流程",
+
+    s3_title: "准备 EGFRvIII 抗原", s3_desc: "获取 EGFRvIII 序列和结构，确定关键表位区域。",
+    h_get_structure: "下载 EGFRvIII 结构", h_convert_json: "转换为 Protenix JSON", h_epitopes: "关键表位区域",
+    th_region: "区域", th_description: "描述", th_significance: "重要性",
+    epi_junction: "融合接点", epi_junction_d: "外显子1/8融合点含新甘氨酸", epi_junction_s: "EGFRvIII特异性新表位",
+    epi_d1: "截短后保留的N端区域", epi_d1_s: "可及性好",
+    epi_d4: "C端区域", epi_d4_s: "纳米抗体34E5的靶点（选择性）",
+    info_34e5_t: "关于纳米抗体 34E5 (PDB: 8UKV)", info_34e5: "纳米抗体34E5靶向EGFRvIII的Domain IV。该表位在未结合配体的完整EGFR中被遮蔽，但在EGFRvIII中由于截短而暴露，从而实现选择性结合。这使其成为设计的绝佳参考。",
+
+    s4_title: "方案一：使用CLI进行结构预测", s4_desc: "当有候选VHH序列时，使用Protenix v2 CLI预测纳米抗体-抗原复合物结构。",
+    h_input_json: "准备输入JSON", p_input_json: "创建指定纳米抗体和抗原链的JSON文件（可含口袋约束）：",
+    h_json_fields: "JSON字段参考", th_field: "字段",
+    f_name: "任务名称（用于输出目录命名）", f_seq: "氨基酸序列（标准20种 + X表示未知）", f_count: "链拷贝数", f_id: "链ID标签", f_pocket: "定义结合物与表位之间的结合界面", f_binder: "结合物链（纳米抗体）", f_contact: "抗原表位残基（1-索引位置）", f_maxdist: "最大接触距离（埃，通常为6）",
+    h_run_msa: "生成MSA（多序列比对）", h_run_pred: "运行结构预测",
+    h_params: "关键CLI参数", th_param: "参数", th_default: "默认值",
+    p_input: "输入JSON文件", p_required: "必填", p_output: "输出目录", p_model: "模型名称", p_seeds: "随机种子（逗号分隔）", p_template: "使用结构模板", p_msa: "使用MSA", p_tfg: "启用Training-Free Guidance", p_dtype: "精度 (bf16/fp32)",
+
+    s5_title: "方案二：使用PXDesign从头设计", s5_desc: "使用PXDesign的扩散模型管线从头设计全新的EGFRvIII靶向纳米抗体。",
+    h_pxdesign: "PXDesign 概述", p_pxdesign: "PXDesign是基于Protenix基础模型构建的字节跳动从头蛋白结合物设计套件，实验成功率达20-73%（比AlphaProteo和RFdiffusion高2-6倍）。",
+    h_pipeline: "设计流程",
+    flow1_t: "骨架生成", flow1: "DiT扩散模型生成靶标条件化的结合物骨架",
+    flow2_t: "序列设计", flow2: "ProteinMPNN分配最优氨基酸序列",
+    flow3_t: "预测与筛选", flow3: "Protenix v2预测复合物结构；通过ipTM和一致性筛选",
+    flow4_t: "聚类与选择", flow4: "Foldseek按结构相似性聚类以保持多样性",
+    flow5_t: "最终纳米抗体候选", flow5: "多样化、高置信度的VHH序列，可进行实验验证",
+    h_access_pxdesign: "访问PXDesign", c_web_server: "Web服务器", c_web_d: "完整设计+预测功能", c_gh_d: "开源代码", c_docs: "文档", c_docs_d: "协议和阈值",
+    h_pxdesign_local: "本地PXDesign安装",
+
+    s6_title: "方案三：Web服务器（无需GPU）", s6_desc: "没有本地GPU资源时使用在线平台进行结构预测。",
+    h_platforms: "可用平台", th_platform: "平台", th_features: "功能",
+    plat_official: "完整功能含PXDesign", plat_piq: "第三方预测接口", plat_tam: "第三方预测接口",
+    h_web_steps: "在线预测步骤",
+    ws1: "打开Protenix Server并创建新的\"Structure Prediction\"任务",
+    ws2: "输入序列：Chain 1 = VHH纳米抗体序列，Chain 2 = EGFRvIII胞外域",
+    ws3: "选择模型：<code>protenix-v2</code>",
+    ws4: "配置：5+个seeds，启用MSA搜索，可选启用模板搜索",
+    ws5: "添加口袋约束以指定靶标表位残基（可选但推荐）",
+    ws6: "提交任务并等待完成（取决于队列，几分钟到几小时）",
+    ws7: "下载结果：预测的.cif结构 + 置信度JSON文件",
+
+    s7_title: "结果分析与验证", s7_desc: "使用置信度指标、可视化和对接质量分数评估预测结构。",
+    h_output_files: "输出文件结构", h_metrics: "置信度指标", th_metric: "指标", th_good_value: "理想值",
+    m_plddt: "每残基置信度", m_ptm: "预测TM分数", m_iptm: "界面预测TM分数", m_rank: "综合排名分数", m_higher: "越高越好", m_clash: "是否存在空间冲突",
+    h_analysis_script: "分析脚本", h_dockq: "DockQ质量评估", th_quality: "质量",
+    q_high: "高质量", q_medium: "中等质量", q_acceptable: "可接受", q_poor: "不合格",
+
+    s8_title: "完整工作流程示例", s8_desc: "从设置到最终分析的端到端示例。",
+
+    s9_title: "常见问题与技巧", s9_desc: "常见问题和实用技巧。",
+    faq1_q: "GPU显存不足？", th_seq_len: "序列长度", th_vram: "大致显存需求",
+    faq2_q: "如何提高准确性？", faq2_1: "增加seeds：困难靶标用5 → 20-50", faq2_2: "启用MSA：运行 <code>protenix prep</code> 预处理", faq2_3: "启用模板：<code>--use_template true</code>", faq2_4: "使用TFG引导：<code>--use_tfg_guidance true</code>", faq2_5: "用已知表位残基添加口袋约束",
+    faq3_q: "纳米抗体序列从哪里获取？", th_source: "来源",
+    src_lit: "已发表文献", src_lit_d: "论文中已知的抗EGFRvIII纳米抗体序列", src_pdb_d: "晶体结构中纳米抗体34E5的序列", src_lib: "免疫文库筛选", src_lib_d: "实验获得的候选序列", src_design_d: "从头生成的序列", src_graft: "CDR嫁接", src_graft_d: "已知框架 + 重新设计的CDR环",
+    faq4_q: "应该靶向哪个表位？", faq4_best: "EGFRvIII的最佳选择：",
+    faq4_1: "<strong>融合接点区域</strong> — 野生型EGFR上不存在的独特新表位，可实现高特异性",
+    faq4_1b: "融合接点区域",
+    faq4_2: "<strong>Domain IV</strong> — 在EGFRvIII中暴露但在完整EGFR中被遮蔽（已由纳米抗体34E5验证）",
+    faq4_avoid_t: "应避免：", faq4_avoid: "EGFRvIII和野生型EGFR共有的保守区域——会导致脱靶毒性。",
+    faq5_q: "如何确定contact_residues？",
+
+    s10_title: "参考资源", s10_desc: "论文、代码仓库和在线工具。",
+    h_papers: "论文", h_repos: "代码仓库", h_structures: "PDB结构",
+    pdb_8ukx: "EGFRvIII胞外区晶体结构 (pH 7.0)", pdb_8ukv: "纳米抗体34E5 / EGFRvIII复合物晶体结构", pdb_8ukw: "EGFRvIII胞外区晶体结构 (pH 5.0)",
+
+    footer: "指南基于官方Protenix文档和已发表研究编写。计算设计需要实验验证。"
+}
+};
+
+let currentLang = 'en';
+function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.documentElement.lang = lang === 'ko' ? 'ko' : lang === 'zh' ? 'zh-CN' : 'en';
+}
+
+// ============== Tabs ==============
+function showTab(tabId, containerId) {
+    const container = document.getElementById(containerId);
+    container.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    container.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
