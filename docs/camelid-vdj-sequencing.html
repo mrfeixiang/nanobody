@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camelid VDJ Germline & Sequencing Technology Report</title>
+    <style>
+        :root {
+            --bg: #0d1117; --surface: #161b22; --surface2: #1c2129; --border: #30363d;
+            --text: #e6edf3; --text-muted: #8b949e; --accent: #58a6ff; --accent2: #79c0ff;
+            --green: #3fb950; --yellow: #d29922; --red: #f85149; --purple: #bc8cff;
+            --orange: #f47c3c; --cyan: #39d2c0; --pink: #f778ba;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+
+        .hero { background: linear-gradient(135deg,#0d1117 0%,#0f1d2e 30%,#162030 60%,#0d2137 100%); border-bottom:1px solid var(--border); padding:70px 20px 55px; text-align:center; position:relative; overflow:hidden; }
+        .hero::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background: radial-gradient(circle at 25% 75%,rgba(57,210,192,0.04) 0%,transparent 50%), radial-gradient(circle at 75% 25%,rgba(188,140,255,0.03) 0%,transparent 50%); }
+        .hero h1 { font-size:2.4rem; margin-bottom:14px; background:linear-gradient(90deg,var(--cyan),var(--accent),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; position:relative; }
+        .hero .subtitle { font-size:1.05rem; color:var(--text-muted); max-width:800px; margin:0 auto 24px; position:relative; }
+        .hero .badges { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; position:relative; }
+        .badge { padding:5px 14px; border-radius:20px; font-size:0.8rem; font-weight:600; border:1px solid var(--border); background:var(--surface); }
+
+        .nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 20px; position:sticky; top:0; z-index:100; overflow-x:auto; white-space:nowrap; }
+        .nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; }
+        .nav a { color:var(--text-muted); text-decoration:none; padding:12px 14px; font-size:0.85rem; border-bottom:2px solid transparent; transition:all .2s; flex-shrink:0; }
+        .nav a:hover { color:var(--text); border-bottom-color:var(--accent); }
+        .nav a.home-link { color:var(--accent); font-weight:600; }
+        .lang-switcher { margin-left:auto; display:flex; gap:4px; padding:6px 0; flex-shrink:0; }
+        .lang-btn { background:transparent; color:var(--text-muted); border:1px solid var(--border); border-radius:4px; padding:4px 10px; font-size:0.8rem; cursor:pointer; transition:all .2s; font-family:inherit; }
+        .lang-btn:hover { border-color:var(--accent); color:var(--text); }
+        .lang-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+        .container { max-width:1200px; margin:0 auto; padding:0 20px; }
+        section { padding:50px 0; border-bottom:1px solid var(--border); }
+        section:last-child { border-bottom:none; }
+        h2 { font-size:1.75rem; margin-bottom:8px; } h2 .num { color:var(--accent); font-weight:400; margin-right:8px; }
+        .section-desc { color:var(--text-muted); margin-bottom:28px; font-size:1rem; }
+        h3 { font-size:1.2rem; margin:30px 0 14px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+        h4 { font-size:1rem; margin:18px 0 8px; color:var(--accent2); }
+        p { margin-bottom:12px; } ul,ol { margin:10px 0 16px 24px; } li { margin-bottom:5px; }
+
+        .card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin:20px 0; }
+        .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px; transition:border-color .2s; }
+        .card:hover { border-color:var(--accent); }
+        .card .label { font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; }
+        .card .value { font-size:1.4rem; font-weight:700; }
+        .card .detail { font-size:0.83rem; color:var(--text-muted); margin-top:4px; }
+
+        table { width:100%; border-collapse:collapse; margin:14px 0; font-size:0.9rem; }
+        th,td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+        th { color:var(--text-muted); font-size:0.76rem; text-transform:uppercase; letter-spacing:.05em; background:var(--surface); }
+        tr:hover { background:rgba(88,166,255,0.04); }
+        td code { background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:1px 5px; font-family:'SF Mono','Courier New',monospace; font-size:0.85em; }
+
+        .info { background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:14px 18px; margin:16px 0; font-size:0.9rem; }
+        .info .title { font-weight:700; color:var(--accent); margin-bottom:3px; }
+        .warn { background:rgba(210,153,34,0.06); border:1px solid rgba(210,153,34,0.25); border-radius:8px; padding:14px 18px; margin:16px 0; font-size:0.9rem; }
+        .warn .title { font-weight:700; color:var(--yellow); margin-bottom:3px; }
+
+        /* Comparison bars */
+        .bar-chart { margin:16px 0; }
+        .bar-row { display:flex; align-items:center; margin:8px 0; gap:10px; }
+        .bar-label { width:140px; font-size:0.85rem; flex-shrink:0; text-align:right; }
+        .bar-track { flex:1; height:28px; background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; position:relative; }
+        .bar-fill { height:100%; border-radius:5px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:0.75rem; font-weight:700; color:#fff; transition:width .6s ease; }
+        .bar-note { font-size:0.78rem; color:var(--text-muted); width:100px; flex-shrink:0; }
+
+        /* Species icons */
+        .species-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin:20px 0; }
+        .species-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; }
+        .species-card h4 { margin-top:0; border:none; padding:0; color:var(--text); font-size:1.1rem; }
+        .species-card .sci { color:var(--text-muted); font-style:italic; font-size:0.88rem; margin-bottom:10px; }
+        .gene-tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:600; margin:2px; }
+        .gene-tag.vhh { background:rgba(57,210,192,0.15); color:var(--cyan); border:1px solid rgba(57,210,192,0.3); }
+        .gene-tag.conv { background:rgba(188,140,255,0.15); color:var(--purple); border:1px solid rgba(188,140,255,0.3); }
+
+        /* Product cards */
+        .product-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; margin:12px 0; }
+        .product-card .product-name { font-size:1.15rem; font-weight:700; margin-bottom:6px; }
+        .product-card .specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:10px; }
+        .spec { text-align:center; }
+        .spec .spec-val { font-size:1.2rem; font-weight:700; }
+        .spec .spec-label { font-size:0.75rem; color:var(--text-muted); }
+
+        .footer { text-align:center; padding:40px 20px; color:var(--text-muted); font-size:0.85rem; border-top:1px solid var(--border); }
+        .footer a { color:var(--accent); text-decoration:none; }
+        .link { color:var(--accent); text-decoration:none; } .link:hover { text-decoration:underline; }
+
+        @media (max-width:768px) { .hero h1 { font-size:1.6rem; } .card-grid { grid-template-columns:1fr; } .species-grid { grid-template-columns:1fr; } .bar-label { width:90px; font-size:0.78rem; } .bar-note { width:70px; } }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1 data-i18n="hero_title">Camelid VDJ Germline & Sequencing Technology Report</h1>
+    <p class="subtitle" data-i18n="hero_subtitle">Comprehensive dataset of camel, llama, and alpaca germline VDJ genes, tissue sources for VHH library construction, sequencing platform accuracy comparison (PacBio / Illumina / Nanopore), and Chinese nanopore technology landscape</p>
+    <div class="badges">
+        <span class="badge" style="border-color:var(--cyan);color:var(--cyan)">Camelid VDJ</span>
+        <span class="badge" style="border-color:var(--green);color:var(--green)">PacBio HiFi</span>
+        <span class="badge" style="border-color:var(--purple);color:var(--purple)">Illumina</span>
+        <span class="badge" style="border-color:var(--orange);color:var(--orange)">Nanopore</span>
+        <span class="badge" style="border-color:var(--pink);color:var(--pink)">Qitan Tech</span>
+    </div>
+</div>
+
+<div class="nav">
+    <div class="nav-inner">
+        <a href="./index.html" class="home-link" data-i18n="nav_home">Home</a>
+        <a href="#germline" data-i18n="nav_germline">Germline VDJ</a>
+        <a href="#tissue" data-i18n="nav_tissue">Tissue Sources</a>
+        <a href="#platforms" data-i18n="nav_platforms">Sequencing Platforms</a>
+        <a href="#accuracy" data-i18n="nav_accuracy">Accuracy</a>
+        <a href="#nanopore-china" data-i18n="nav_china">China Nanopore</a>
+        <a href="#qitan" data-i18n="nav_qitan">Qitan Tech</a>
+        <a href="#patents" data-i18n="nav_patents">Patents</a>
+        <a href="#references" data-i18n="nav_refs">References</a>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('ko')">한국어</button>
+            <button class="lang-btn" onclick="setLang('zh')">中文</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ==================== Section 1: Germline VDJ ==================== -->
+<section id="germline">
+    <h2><span class="num">01</span><span data-i18n="s1_title">Camelid Germline VDJ Gene Dataset</span></h2>
+    <p class="section-desc" data-i18n="s1_desc">IMGT reference directory for camelid immunoglobulin heavy chain germline genes. All camelid IGHV genes belong to the IGHV3 subgroup (closest to human VH3).</p>
+
+    <div class="info">
+        <div class="title" data-i18n="info_two_sets_t">Two Distinct IGHV Gene Sets in Camelids</div>
+        <span data-i18n="info_two_sets"><strong>Set 1 (Conventional IgG1):</strong> IGHV3S1-S41 &mdash; expressed in conventional tetrameric IgG1 with light chains.<br>
+        <strong>Set 2 (VHH / Heavy-Chain-Only):</strong> IGHV3S42-S74 &mdash; expressed in gamma-2 and gamma-3 chains lacking CH1 domain. These carry the hallmark hydrophilic substitutions at FR2 positions 42, 49, 50, 52 (IMGT numbering), enabling VHH to function without a light chain.</span>
+    </div>
+
+    <h3 data-i18n="h_species">Species-Specific Germline Configuration</h3>
+    <div class="species-grid">
+        <div class="species-card">
+            <h4>Arabian Camel</h4>
+            <div class="sci">Camelus dromedarius</div>
+            <table>
+                <tr><th data-i18n="th_gene">Gene</th><th data-i18n="th_count">Count</th><th data-i18n="th_set">Set</th></tr>
+                <tr><td>IGHV</td><td style="font-weight:700">~74 genes</td><td><span class="gene-tag conv">S1-S41 (Conv.)</span> <span class="gene-tag vhh">S42-S74 (VHH)</span></td></tr>
+                <tr><td>IGHD</td><td>~10 genes</td><td data-i18n="td_shared">Shared</td></tr>
+                <tr><td>IGHJ</td><td>~6 genes</td><td data-i18n="td_shared">Shared</td></tr>
+                <tr><td>IGHC</td><td>IgG1, IgG2, IgG3</td><td><span class="gene-tag conv">IgG1</span> <span class="gene-tag vhh">IgG2/3 (HCAb)</span></td></tr>
+            </table>
+            <div class="detail" style="margin-top:8px;font-size:0.83rem;color:var(--text-muted)" data-i18n="camel_note">Both domestic and wild Bactrian camels share similar VDJ repertoires. IGHV sequence identity to human VH3: ~81%.</div>
+        </div>
+
+        <div class="species-card">
+            <h4>Llama</h4>
+            <div class="sci">Lama glama</div>
+            <table>
+                <tr><th data-i18n="th_gene">Gene</th><th data-i18n="th_count">Count</th><th data-i18n="th_set">Set</th></tr>
+                <tr><td>IGHV</td><td style="font-weight:700">~8 genes</td><td><span class="gene-tag conv">S6-S8 (Conv.)</span> <span class="gene-tag vhh">S1-S5 (VHH)</span></td></tr>
+                <tr><td>IGHD</td><td>~7 genes</td><td data-i18n="td_shared">Shared</td></tr>
+                <tr><td>IGHJ</td><td>~6 genes</td><td data-i18n="td_shared">Shared</td></tr>
+                <tr><td>IGHC</td><td>IgG1, IgG2, IgG3</td><td><span class="gene-tag conv">IgG1</span> <span class="gene-tag vhh">IgG2/3 (HCAb)</span></td></tr>
+            </table>
+            <div class="detail" style="margin-top:8px;font-size:0.83rem;color:var(--text-muted)" data-i18n="llama_note">Fewer annotated IGHV genes in IMGT. VHH sequence identity to human VH: ~79%.</div>
+        </div>
+
+        <div class="species-card">
+            <h4>Alpaca</h4>
+            <div class="sci">Vicugna pacos</div>
+            <table>
+                <tr><th data-i18n="th_gene">Gene</th><th data-i18n="th_count">Count</th><th data-i18n="th_set">Set</th></tr>
+                <tr><td>IGHV</td><td style="font-weight:700">~19 genes</td><td><span class="gene-tag conv">IGHV3-3 etc.</span> <span class="gene-tag vhh">S53-S68 (VHH)</span></td></tr>
+                <tr><td>IGHD</td><td>~8 genes</td><td data-i18n="td_shared">Shared</td></tr>
+                <tr><td>IGHJ</td><td>~6 genes</td><td data-i18n="td_shared">Shared</td></tr>
+                <tr><td>IGHC</td><td>IgG1, IgG2, IgG3</td><td><span class="gene-tag conv">IgG1</span> <span class="gene-tag vhh">IgG2/3 (HCAb)</span></td></tr>
+            </table>
+            <div class="detail" style="margin-top:8px;font-size:0.83rem;color:var(--text-muted)" data-i18n="alpaca_note">Most commonly used species for nanobody discovery platforms.</div>
+        </div>
+    </div>
+
+    <h3 data-i18n="h_hallmarks">VHH Hallmark Residues (FR2)</h3>
+    <table>
+        <thead><tr><th data-i18n="th_position">IMGT Position</th><th data-i18n="th_conv_vh">Conventional VH</th><th>VHH</th><th data-i18n="th_significance">Significance</th></tr></thead>
+        <tbody>
+            <tr><td>42</td><td style="color:var(--purple)">Val (V)</td><td style="color:var(--cyan);font-weight:700">Phe/Tyr (F/Y)</td><td data-i18n="sig_42">Replaces VH-VL interface residue</td></tr>
+            <tr><td>49</td><td style="color:var(--purple)">Gly (G)</td><td style="color:var(--cyan);font-weight:700">Glu/Gln (E/Q)</td><td data-i18n="sig_49">Hydrophilic substitution</td></tr>
+            <tr><td>50</td><td style="color:var(--purple)">Leu (L)</td><td style="color:var(--cyan);font-weight:700">Arg/Cys (R/C)</td><td data-i18n="sig_50">Compensates for absent VL domain</td></tr>
+            <tr><td>52</td><td style="color:var(--purple)">Trp (W)</td><td style="color:var(--cyan);font-weight:700">Gly/Ser (G/S)</td><td data-i18n="sig_52">Key VHH identifier</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_databases">Reference Databases</h3>
+    <div class="card-grid">
+        <div class="card"><div class="label">IMGT</div><div class="value" style="font-size:1rem"><a class="link" href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=arabian_camel&group=IGHV">Camel IGHV</a></div><div class="detail" data-i18n="db_imgt">Gold-standard germline reference</div></div>
+        <div class="card"><div class="label">IMGT</div><div class="value" style="font-size:1rem"><a class="link" href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=Llama&group=IGHV">Llama IGHV</a></div><div class="detail" data-i18n="db_imgt">Gold-standard germline reference</div></div>
+        <div class="card"><div class="label">IMGT</div><div class="value" style="font-size:1rem"><a class="link" href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=Vicugna_pacos&group=IGHV">Alpaca IGHV</a></div><div class="detail" data-i18n="db_imgt">Gold-standard germline reference</div></div>
+        <div class="card"><div class="label">PLAbDab-nano</div><div class="value" style="font-size:1rem"><a class="link" href="https://opig.stats.ox.ac.uk/webapps/plabdab-nano/">Database</a></div><div class="detail" data-i18n="db_plabdab">Curated camelid & shark nanobodies</div></div>
+    </div>
+</section>
+
+<!-- ==================== Section 2: Tissue Sources ==================== -->
+<section id="tissue">
+    <h2><span class="num">02</span><span data-i18n="s2_title">Tissue Sources for VHH Library Construction</span></h2>
+    <p class="section-desc" data-i18n="s2_desc">Where samples come from for constructing camelid nanobody libraries (immune and naive).</p>
+
+    <h3 data-i18n="h_immune_lib">Immunized Library Construction</h3>
+    <table>
+        <thead><tr><th data-i18n="th_tissue">Tissue / Source</th><th data-i18n="th_collection">Collection Method</th><th data-i18n="th_usage">Usage</th><th data-i18n="th_advantage">Advantage</th></tr></thead>
+        <tbody>
+            <tr><td style="font-weight:700;color:var(--green)" data-i18n="t_pbmc">Peripheral Blood (PBMC)</td><td data-i18n="t_pbmc_c">Jugular vein, 50-100 mL, Ficoll gradient</td><td data-i18n="t_pbmc_u">Primary source for immunized libraries</td><td data-i18n="t_pbmc_a">Non-invasive, repeatable, standard protocol</td></tr>
+            <tr><td style="font-weight:700;color:var(--cyan)" data-i18n="t_ln">Lymph Nodes</td><td data-i18n="t_ln_c">Surgical biopsy, draining LN</td><td data-i18n="t_ln_u">Enriched for antigen-specific B cells</td><td data-i18n="t_ln_a">Higher affinity clones, germinal center enrichment</td></tr>
+            <tr><td style="font-weight:700;color:var(--purple)" data-i18n="t_spleen">Spleen</td><td data-i18n="t_spleen_c">Post-mortem collection</td><td data-i18n="t_spleen_u">Large B cell reservoir</td><td data-i18n="t_spleen_a">Highest diversity, large cell numbers</td></tr>
+            <tr><td style="font-weight:700;color:var(--orange)" data-i18n="t_bm">Bone Marrow</td><td data-i18n="t_bm_c">Aspiration from iliac crest</td><td data-i18n="t_bm_u">Long-lived plasma cells</td><td data-i18n="t_bm_a">Mature, high-affinity antibodies</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_naive_lib">Naive Library Construction</h3>
+    <div class="info">
+        <div class="title" data-i18n="info_naive_t">Naive (Non-immunized) Libraries</div>
+        <span data-i18n="info_naive">Naive libraries are constructed from non-immunized animals using PBMCs and/or spleens. A landmark mega-diverse library used whole blood from <strong>75 camelids</strong> (51 alpacas + 13 llamas + 11 Bactrian camels) plus spleens from 2 Bactrian camels, achieving high diversity without target-specific immunization.</span>
+    </div>
+
+    <h3 data-i18n="h_protocol">Standard VHH Library Workflow</h3>
+    <table>
+        <thead><tr><th data-i18n="th_step">Step</th><th data-i18n="th_procedure">Procedure</th><th data-i18n="th_details">Details</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td data-i18n="step1">Immunize camelid</td><td data-i18n="step1_d">4-6 injections over 8-12 weeks with target antigen</td></tr>
+            <tr><td>2</td><td data-i18n="step2">Collect blood / tissue</td><td data-i18n="step2_d">50-100 mL blood from jugular vein, isolate PBMCs</td></tr>
+            <tr><td>3</td><td data-i18n="step3">Extract total RNA</td><td data-i18n="step3_d">TRIzol or kit-based extraction from PBMCs/tissue</td></tr>
+            <tr><td>4</td><td data-i18n="step4">RT-PCR amplify VHH</td><td data-i18n="step4_d">Nested PCR with IgG2/3 hinge-specific primers</td></tr>
+            <tr><td>5</td><td data-i18n="step5">Construct phage library</td><td data-i18n="step5_d">Clone into phagemid vector (pMECS, pHEN, etc.)</td></tr>
+            <tr><td>6</td><td data-i18n="step6">Biopanning / Selection</td><td data-i18n="step6_d">3-4 rounds of phage display selection</td></tr>
+            <tr><td>7</td><td data-i18n="step7">Sequencing & Screening</td><td data-i18n="step7_d">Sanger, Illumina, or PacBio sequencing of enriched clones</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_sra">Representative NCBI SRA Datasets</h3>
+    <table>
+        <thead><tr><th>BioProject</th><th data-i18n="th_species">Species</th><th data-i18n="th_tissue">Tissue</th><th data-i18n="th_platform">Platform</th><th data-i18n="th_description">Description</th></tr></thead>
+        <tbody>
+            <tr><td><a class="link" href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA516512">PRJNA516512</a></td><td data-i18n="sp_camel">Dromedary Camel</td><td>PBMC</td><td>Illumina MiSeq</td><td data-i18n="sra1">VHH phage display library NGS</td></tr>
+            <tr><td><a class="link" href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP124616">SRP124616</a></td><td data-i18n="sp_llama">Llama</td><td>PBMC</td><td>PacBio CCS</td><td data-i18n="sra2">Single-clone VHH full-length sequencing</td></tr>
+        </tbody>
+    </table>
+    <div class="warn">
+        <div class="title" data-i18n="warn_search_t">SRA Search Tips</div>
+        <span data-i18n="warn_search">Use these search strings in NCBI SRA:<br>
+        <code>"Camelus dromedarius" AND "VHH" AND "repertoire"</code><br>
+        <code>"Lama glama" AND "heavy chain only" AND "IGHV"</code><br>
+        <code>"Vicugna pacos" AND "VHH" AND "Next Generation Sequencing"</code></span>
+    </div>
+</section>
+
+<!-- ==================== Section 3: Sequencing Platforms ==================== -->
+<section id="platforms">
+    <h2><span class="num">03</span><span data-i18n="s3_title">Sequencing Platforms for VHH Repertoire Analysis</span></h2>
+    <p class="section-desc" data-i18n="s3_desc">Comparison of Illumina (short-read), PacBio HiFi (long-read), and Oxford Nanopore (long-read) for antibody/nanobody repertoire sequencing.</p>
+
+    <table>
+        <thead><tr>
+            <th data-i18n="th_feature">Feature</th>
+            <th style="color:var(--purple)">Illumina</th>
+            <th style="color:var(--green)">PacBio HiFi</th>
+            <th style="color:var(--orange)">Nanopore (ONT)</th>
+        </tr></thead>
+        <tbody>
+            <tr><td data-i18n="f_read_len">Read Length</td><td>150-300 bp (PE)</td><td>10-25 kb</td><td>Unlimited (&gt;4 Mb)</td></tr>
+            <tr><td data-i18n="f_raw_acc">Raw Read Accuracy</td><td style="color:var(--green);font-weight:700">&gt;99.9% (Q30+)</td><td style="color:var(--green);font-weight:700">&gt;99.9% (Q30+ HiFi)</td><td style="color:var(--yellow);font-weight:700">~95-99% (R10.4.1 Q20+)</td></tr>
+            <tr><td data-i18n="f_consensus">Consensus Accuracy</td><td>&gt;99.99%</td><td>&gt;99.99%</td><td>99.9% (30x)</td></tr>
+            <tr><td data-i18n="f_error_type">Dominant Error Type</td><td data-i18n="e_sub">Substitutions</td><td data-i18n="e_stochastic">Stochastic (random)</td><td data-i18n="e_indel">Indels (homopolymers)</td></tr>
+            <tr><td data-i18n="f_throughput">Throughput</td><td>~600 Gb (NovaSeq)</td><td>~30 Gb (Revio)</td><td>~50-290 Gb (PromethION)</td></tr>
+            <tr><td data-i18n="f_cost_gb">Cost per Gb</td><td style="color:var(--green)">~$5-10</td><td style="color:var(--yellow)">~$30-50</td><td style="color:var(--yellow)">~$15-30</td></tr>
+            <tr><td data-i18n="f_vdj_cover">Full VDJ Coverage</td><td style="color:var(--red)" data-i18n="f_partial">Partial (needs assembly)</td><td style="color:var(--green)" data-i18n="f_single">Single read, full length</td><td style="color:var(--green)" data-i18n="f_single">Single read, full length</td></tr>
+            <tr><td data-i18n="f_turnaround">Turnaround Time</td><td>1-3 days</td><td>~24 hours</td><td data-i18n="f_realtime">Real-time (minutes-hours)</td></tr>
+            <tr><td data-i18n="f_equipment">Equipment Cost</td><td>$250K-$1M</td><td>~$600K (Revio)</td><td>$1K (MinION) - $225K</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ==================== Section 4: Accuracy Comparison ==================== -->
+<section id="accuracy">
+    <h2><span class="num">04</span><span data-i18n="s4_title">Sequencing Accuracy Deep Dive</span></h2>
+    <p class="section-desc" data-i18n="s4_desc">Detailed accuracy metrics and error profiles for each platform, with specific relevance to VHH/antibody sequencing.</p>
+
+    <h3 data-i18n="h_raw_accuracy">Raw Single-Read Accuracy</h3>
+    <div class="bar-chart">
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--purple)">Illumina</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--purple),#a78bfa)">99.9%</div></div>
+            <div class="bar-note">Q30+</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--green)">PacBio HiFi</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--green),#6ee7b7)">99.9%</div></div>
+            <div class="bar-note">Q30+ CCS</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--orange)">PacBio CLR</div>
+            <div class="bar-track"><div class="bar-fill" style="width:85%;background:linear-gradient(90deg,var(--orange),#fbbf24)">~85%</div></div>
+            <div class="bar-note">Raw subreads</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--cyan)">ONT R10.4.1</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99%;background:linear-gradient(90deg,var(--cyan),#67e8f9)">~99%</div></div>
+            <div class="bar-note">Q20+ (Kit14)</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--yellow)">ONT R9.4.1</div>
+            <div class="bar-track"><div class="bar-fill" style="width:93%;background:linear-gradient(90deg,var(--yellow),#fcd34d)">~93%</div></div>
+            <div class="bar-note">Legacy</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--pink)">ONT Duplex</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--pink),#f9a8d4)">99.9%</div></div>
+            <div class="bar-note">Q30+ (both strands)</div>
+        </div>
+    </div>
+
+    <h3 data-i18n="h_error_profile">Error Profile Comparison</h3>
+    <table>
+        <thead><tr><th data-i18n="th_platform">Platform</th><th data-i18n="th_sub">Substitution</th><th data-i18n="th_ins">Insertion</th><th data-i18n="th_del">Deletion</th><th data-i18n="th_dominant">Dominant Issue</th></tr></thead>
+        <tbody>
+            <tr><td style="color:var(--purple)">Illumina</td><td style="color:var(--red)">Primary</td><td>Low</td><td>Low</td><td data-i18n="e_gc">GC-bias, index hopping</td></tr>
+            <tr><td style="color:var(--green)">PacBio HiFi</td><td>Low</td><td>Low</td><td>Low</td><td data-i18n="e_random">Random, no systematic bias</td></tr>
+            <tr><td style="color:var(--orange)">Nanopore</td><td>Moderate</td><td style="color:var(--red)">Moderate</td><td style="color:var(--red)">Primary</td><td data-i18n="e_homo">Homopolymer runs (AAAA, CCCC)</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_vhh_implications">Implications for VHH Sequencing</h3>
+    <div class="card-grid">
+        <div class="card" style="border-color:var(--purple)">
+            <div class="label" style="color:var(--purple)">Illumina</div>
+            <div class="value" style="font-size:1rem" data-i18n="impl_illumina_v">Best for: High-throughput repertoire profiling</div>
+            <div class="detail" data-i18n="impl_illumina">Highest accuracy for SNV/SHM detection. Cannot cover full VHH (~360 nt) in single read with MiSeq 2x250bp without paired-end overlap assembly. Dominant platform for CDR3 profiling.</div>
+        </div>
+        <div class="card" style="border-color:var(--green)">
+            <div class="label" style="color:var(--green)">PacBio HiFi</div>
+            <div class="value" style="font-size:1rem" data-i18n="impl_pacbio_v">Best for: Full-length VDJ with high accuracy</div>
+            <div class="detail" data-i18n="impl_pacbio">Full VHH + constant region in single HiFi read with >99.9% accuracy. Ideal for paired VDJ + isotype analysis. FLAIRR-seq workflow enables full immunoglobulin repertoire. Higher cost per sample.</div>
+        </div>
+        <div class="card" style="border-color:var(--orange)">
+            <div class="label" style="color:var(--orange)">Nanopore</div>
+            <div class="value" style="font-size:1rem" data-i18n="impl_ont_v">Best for: Rapid, portable full-length sequencing</div>
+            <div class="detail" data-i18n="impl_ont">Full-length VDJ in single read. FLIRseq workflow validated for B/T cell receptor sequencing. Real-time analysis enables adaptive sampling. Homopolymer errors may affect CDR calling accuracy. Improving rapidly with R10.4.1+.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== Section 5: China Nanopore Landscape ==================== -->
+<section id="nanopore-china">
+    <h2><span class="num">05</span><span data-i18n="s5_title">Chinese Nanopore Sequencing Landscape</span></h2>
+    <p class="section-desc" data-i18n="s5_desc">Overview of China's domestic nanopore sequencing companies, products, and technological achievements (2024-2025 review).</p>
+
+    <h3 data-i18n="h_companies">Major Chinese Nanopore Companies</h3>
+    <table>
+        <thead><tr><th data-i18n="th_company">Company</th><th data-i18n="th_location">Location</th><th data-i18n="th_products">Key Products</th><th data-i18n="th_acc_claimed">Accuracy (Claimed)</th><th data-i18n="th_throughput">Max Throughput</th><th>Status</th></tr></thead>
+        <tbody>
+            <tr>
+                <td style="font-weight:700;color:var(--pink)">Qitan Technology<br><small style="color:var(--text-muted)">齐碳科技</small></td>
+                <td>Chengdu</td>
+                <td>QNome, QPursue, QPinnacle2</td>
+                <td style="color:var(--green)">99% raw (O2 chemistry)</td>
+                <td>800 Gb</td>
+                <td style="color:var(--green)" data-i18n="st_commercial">Commercial</td>
+            </tr>
+            <tr>
+                <td style="font-weight:700;color:var(--cyan)">BGI / MGI<br><small style="color:var(--text-muted)">华大智造</small></td>
+                <td>Shenzhen</td>
+                <td>CycloneSEQ G100-ER, G400-ER</td>
+                <td style="color:var(--green)">97-99% raw</td>
+                <td>400 Gb</td>
+                <td style="color:var(--green)" data-i18n="st_commercial">Commercial</td>
+            </tr>
+            <tr>
+                <td style="font-weight:700;color:var(--orange)">Axbio Biotechnology<br><small style="color:var(--text-muted)">安序源</small></td>
+                <td>Shenzhen</td>
+                <td>AXP100</td>
+                <td>~95% raw</td>
+                <td>-</td>
+                <td style="color:var(--yellow)" data-i18n="st_early">Early commercial</td>
+            </tr>
+            <tr>
+                <td style="font-weight:700;color:var(--accent)">Geneus Tech<br><small style="color:var(--text-muted)">今是科技</small></td>
+                <td>-</td>
+                <td>Gseq-500</td>
+                <td>-</td>
+                <td>-</td>
+                <td style="color:var(--yellow)" data-i18n="st_early">Early commercial</td>
+            </tr>
+            <tr>
+                <td style="font-weight:700;color:var(--green)">Polyseq<br><small style="color:var(--text-muted)">普译生物</small></td>
+                <td>-</td>
+                <td>PolyseqOne</td>
+                <td>-</td>
+                <td>-</td>
+                <td style="color:var(--yellow)" data-i18n="st_development">Development</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ==================== Section 6: Qitan Technology ==================== -->
+<section id="qitan">
+    <h2><span class="num">06</span><span data-i18n="s6_title">Qitan Technology (齐碳科技) Deep Dive</span></h2>
+    <p class="section-desc" data-i18n="s6_desc">China's first and most advanced domestic nanopore sequencing company. Founded 2016 in Chengdu, shipped first commercial device in late 2021.</p>
+
+    <div class="card-grid">
+        <div class="card"><div class="label" data-i18n="c_founded">Founded</div><div class="value">2016</div><div class="detail">Chengdu, China</div></div>
+        <div class="card"><div class="label" data-i18n="c_funding">Total Funding</div><div class="value">~$186M</div><div class="detail" data-i18n="c_series_c">Series C (RMB 700M in 2022)</div></div>
+        <div class="card"><div class="label" data-i18n="c_patents_q">Patents</div><div class="value">~30</div><div class="detail" data-i18n="c_global">Global patent portfolio</div></div>
+        <div class="card"><div class="label" data-i18n="c_capacity">Production Capacity</div><div class="value" data-i18n="c_2000">2,000/yr</div><div class="detail" data-i18n="c_flowcells">+ 1M flow cells/kits annually</div></div>
+    </div>
+
+    <h3 data-i18n="h_product_line">Product Line</h3>
+
+    <div class="product-card" style="border-color:var(--cyan)">
+        <div class="product-name" style="color:var(--cyan)">QNome-3841 <span style="font-size:0.8rem;color:var(--text-muted)" data-i18n="tier_low">Low-Throughput / Portable</span></div>
+        <div class="specs">
+            <div class="spec"><div class="spec-val">~1.5 Gb</div><div class="spec-label" data-i18n="spec_output">Output / 8h</div></div>
+            <div class="spec"><div class="spec-val">~90%</div><div class="spec-label" data-i18n="spec_raw">Raw Accuracy</div></div>
+            <div class="spec"><div class="spec-val">99.9%</div><div class="spec-label" data-i18n="spec_consensus">Consensus</div></div>
+            <div class="spec"><div class="spec-val">&gt;300 kb</div><div class="spec-label" data-i18n="spec_reads">Max Read Length</div></div>
+            <div class="spec"><div class="spec-val">QCell-384</div><div class="spec-label" data-i18n="spec_flowcell">Flow Cell</div></div>
+            <div class="spec"><div class="spec-val">300+</div><div class="spec-label" data-i18n="spec_users">Users in China</div></div>
+        </div>
+    </div>
+
+    <div class="product-card" style="border-color:var(--purple)">
+        <div class="product-name" style="color:var(--purple)">QPursue-6k <span style="font-size:0.8rem;color:var(--text-muted)" data-i18n="tier_mid">Medium-Throughput</span></div>
+        <div class="specs">
+            <div class="spec"><div class="spec-val">~60 Gb</div><div class="spec-label" data-i18n="spec_per_cell">Per Flow Cell</div></div>
+            <div class="spec"><div class="spec-val">360 Gb</div><div class="spec-label" data-i18n="spec_max_6x">Max (6x cells)</div></div>
+            <div class="spec"><div class="spec-val">Q20</div><div class="spec-label" data-i18n="spec_raw">Raw Accuracy</div></div>
+            <div class="spec"><div class="spec-val">Mb-scale</div><div class="spec-label" data-i18n="spec_reads">Max Read Length</div></div>
+            <div class="spec"><div class="spec-val">QCell-6k</div><div class="spec-label" data-i18n="spec_flowcell">Flow Cell</div></div>
+            <div class="spec"><div class="spec-val">200+</div><div class="spec-label" data-i18n="spec_users">Users in China</div></div>
+        </div>
+    </div>
+
+    <div class="product-card" style="border-color:var(--green)">
+        <div class="product-name" style="color:var(--green)">QPinnacle2 <span style="font-size:0.8rem;color:var(--text-muted)" data-i18n="tier_high">High-Throughput (Sept 2025)</span></div>
+        <div class="specs">
+            <div class="spec"><div class="spec-val" style="color:var(--green)">800 Gb</div><div class="spec-label" data-i18n="spec_max_2x">Max (2x chips)</div></div>
+            <div class="spec"><div class="spec-val">6 Gb/hr</div><div class="spec-label" data-i18n="spec_speed">Generation Speed</div></div>
+            <div class="spec"><div class="spec-val" style="color:var(--green)">99%</div><div class="spec-label" data-i18n="spec_raw_o2">Raw (O2 Chemistry)</div></div>
+            <div class="spec"><div class="spec-val">Q50</div><div class="spec-label" data-i18n="spec_consensus_20x">Consensus (20x)</div></div>
+            <div class="spec"><div class="spec-val">400 Gb</div><div class="spec-label" data-i18n="spec_per_chip">Per Chip</div></div>
+            <div class="spec"><div class="spec-val" data-i18n="spec_independent">Independent</div><div class="spec-label" data-i18n="spec_dual">Dual Chip Operation</div></div>
+        </div>
+    </div>
+
+    <h3 data-i18n="h_o2_chemistry">O2 Biochemistry System (2025)</h3>
+    <div class="info">
+        <div class="title" data-i18n="info_o2_t">O2 System - Biggest Chemistry Overhaul</div>
+        <span data-i18n="info_o2">Launched with QPinnacle2 in September 2025, the O2 system is Qitan's most significant pore-and-chemistry update:</span>
+    </div>
+    <div class="card-grid">
+        <div class="card"><div class="label" data-i18n="o2_pore">Redesigned Pore Protein</div><div class="detail" data-i18n="o2_pore_d">Cleaner per-base current steps for better signal discrimination</div></div>
+        <div class="card"><div class="label" data-i18n="o2_motor">New Motor Protein</div><div class="detail" data-i18n="o2_motor_d">Reduced pore-blockage rates for longer sustained sequencing</div></div>
+        <div class="card"><div class="label" data-i18n="o2_membrane">Polymer Membrane</div><div class="detail" data-i18n="o2_membrane_d">~20% noise reduction, >90% high-quality membrane formation rate</div></div>
+        <div class="card"><div class="label" data-i18n="o2_retrofit">Retrofit Plan</div><div class="detail" data-i18n="o2_retrofit_d">O2 being deployed across all QNome and QPursue platforms</div></div>
+    </div>
+
+    <h3 data-i18n="h_vs_ont">Qitan vs Oxford Nanopore Comparison</h3>
+    <table>
+        <thead><tr><th data-i18n="th_feature">Feature</th><th style="color:var(--pink)">Qitan Tech</th><th style="color:var(--orange)">Oxford Nanopore</th></tr></thead>
+        <tbody>
+            <tr><td data-i18n="vs_first">First Commercial Device</td><td>Dec 2021 (QNome-3841)</td><td>2014 (MinION)</td></tr>
+            <tr><td data-i18n="vs_top_output">Top Throughput</td><td>800 Gb (QPinnacle2)</td><td>~14 Tb (PromethION P48)</td></tr>
+            <tr><td data-i18n="vs_raw_best">Best Raw Accuracy</td><td>99% (O2)</td><td>99%+ (R10.4.1, Kit14)</td></tr>
+            <tr><td data-i18n="vs_duplex">Duplex / Both-Strand</td><td data-i18n="vs_na">Not yet available</td><td>Q30+ duplex</td></tr>
+            <tr><td data-i18n="vs_rna">Direct RNA</td><td data-i18n="vs_na">Not yet available</td><td data-i18n="vs_yes">Available</td></tr>
+            <tr><td data-i18n="vs_adaptive">Adaptive Sampling</td><td data-i18n="vs_limited">Limited</td><td data-i18n="vs_mature">Mature (Read Until)</td></tr>
+            <tr><td data-i18n="vs_software">Software Ecosystem</td><td data-i18n="vs_developing">Developing</td><td data-i18n="vs_rich">Rich (MinKNOW, Dorado, EPI2ME, Medaka)</td></tr>
+            <tr><td data-i18n="vs_portable">Portable Device</td><td>QNome (~MinION class)</td><td>MinION, Flongle, Mk1D</td></tr>
+            <tr><td data-i18n="vs_users">User Base</td><td data-i18n="vs_china500">~500+ users (China-focused)</td><td data-i18n="vs_global">Global (thousands)</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_bgi_cyclone">BGI CycloneSEQ Platform</h3>
+    <div class="product-card" style="border-color:var(--cyan)">
+        <div class="product-name" style="color:var(--cyan)">CycloneSEQ (BGI Research / MGI)</div>
+        <div class="specs">
+            <div class="spec"><div class="spec-val">50 Gb</div><div class="spec-label" data-i18n="spec_per_cell">Per Flow Cell</div></div>
+            <div class="spec"><div class="spec-val">97%</div><div class="spec-label" data-i18n="spec_modal">Modal Identity</div></div>
+            <div class="spec"><div class="spec-val">33.6 kb</div><div class="spec-label">N50</div></div>
+            <div class="spec"><div class="spec-val">107 hr</div><div class="spec-label" data-i18n="spec_runtime">Single-chip Runtime</div></div>
+            <div class="spec"><div class="spec-val">28.9/mm<sup>2</sup></div><div class="spec-label" data-i18n="spec_density">Pore Density</div></div>
+            <div class="spec"><div class="spec-val">200 um</div><div class="spec-label" data-i18n="spec_pitch">Pitch</div></div>
+        </div>
+        <div style="margin-top:12px;font-size:0.88rem">
+            <strong data-i18n="bgi_products">Product Variants:</strong>
+            <ul style="margin:6px 0 0 20px">
+                <li><strong>G100-ER</strong> (Sept 2024): 85 Gb x2 throughput, 99% accuracy</li>
+                <li><strong>G400-ER</strong> (Mar 2025): 400 Gb throughput, 99% accuracy</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== Section 7: Patents ==================== -->
+<section id="patents">
+    <h2><span class="num">07</span><span data-i18n="s7_title">Nanopore Sequencing Patent Landscape</span></h2>
+    <p class="section-desc" data-i18n="s7_desc">Overview of the global nanopore sequencing patent landscape with focus on Chinese IP activity.</p>
+
+    <h3 data-i18n="h_patent_overview">Global Patent Distribution</h3>
+    <div class="card-grid">
+        <div class="card"><div class="label" data-i18n="c_asia_patents">Asia (China + Japan)</div><div class="value" style="color:var(--cyan)">~500</div><div class="detail" data-i18n="c_asia_d">Rapidly growing, government-backed</div></div>
+        <div class="card"><div class="label" data-i18n="c_key_players">Key Global Players</div><div class="value" style="font-size:1rem">ONT, PacBio, Illumina, BGI, Qitan</div><div class="detail" data-i18n="c_players_d">Thermo Fisher, Roche also active</div></div>
+        <div class="card"><div class="label" data-i18n="c_qitan_patents">Qitan Patents</div><div class="value" style="color:var(--pink)">~30</div><div class="detail" data-i18n="c_qitan_d">Global portfolio, pore + chemistry + hardware</div></div>
+        <div class="card"><div class="label" data-i18n="c_trends">Recent Trends (2022-2024)</div><div class="value" style="font-size:0.95rem" data-i18n="c_trends_v">5 Key Directions</div><div class="detail" data-i18n="c_trends_d">Adaptive sampling, real-time signal, direct RNA, portable compute, clinical scale</div></div>
+    </div>
+
+    <h3 data-i18n="h_patent_innovation">Key Innovation Directions in Patents (2022-2024)</h3>
+    <table>
+        <thead><tr><th data-i18n="th_direction">Direction</th><th data-i18n="th_description">Description</th><th data-i18n="th_key_filers">Key Filers</th></tr></thead>
+        <tbody>
+            <tr><td data-i18n="pat1">Adaptive Sampling at Clinical Scale</td><td data-i18n="pat1_d">Real-time enrichment without PCR; eject unwanted molecules mid-read</td><td>ONT</td></tr>
+            <tr><td data-i18n="pat2">Real-time Raw Signal Analysis</td><td data-i18n="pat2_d">On-device basecalling with GPU/FPGA acceleration</td><td>ONT, BGI</td></tr>
+            <tr><td data-i18n="pat3">Direct RNA Sequencing</td><td data-i18n="pat3_d">Native RNA reading without reverse transcription</td><td>ONT</td></tr>
+            <tr><td data-i18n="pat4">Pore Protein Engineering</td><td data-i18n="pat4_d">Novel pore designs for improved current discrimination</td><td>Qitan, ONT, BGI</td></tr>
+            <tr><td data-i18n="pat5">Portable Hardware + Compute</td><td data-i18n="pat5_d">Integration of sequencing with edge computing for field deployment</td><td>ONT, Qitan</td></tr>
+        </tbody>
+    </table>
+
+    <h3 data-i18n="h_china_ip">China IP Landscape</h3>
+    <div class="info">
+        <div class="title" data-i18n="info_china_ip_t">China's Strategic Position</div>
+        <span data-i18n="info_china_ip">China has seen rapid growth in nanopore sequencing patent filings, driven by government backing in biotechnology self-sufficiency. Qitan Technology holds ~30 global patents covering pore proteins, membrane chemistry, and hardware design. BGI/MGI has independently developed CycloneSEQ with proprietary pore engineering, chip design, and basecalling algorithms developed over a decade of R&D. This positions China as the only country besides the UK (Oxford Nanopore) with fully domestic commercial nanopore sequencing capabilities.</span>
+    </div>
+</section>
+
+<!-- ==================== Section 8: References ==================== -->
+<section id="references">
+    <h2><span class="num">08</span><span data-i18n="s8_title">References & Resources</span></h2>
+    <p class="section-desc" data-i18n="s8_desc">Key publications, databases, and resources cited in this report.</p>
+
+    <h3 data-i18n="h_germline_refs">Camelid Germline & VHH</h3>
+    <ul>
+        <li><a class="link" href="https://www.imgt.org/IMGTbiotechnology/Camel_IgG.html">IMGT Camelidae IgG Biotechnology Page</a></li>
+        <li><a class="link" href="https://www.nature.com/articles/s42003-023-05241-y">VHH CDR-H3 conformation is determined by VH germline usage</a> (Comm. Biology 2023)</li>
+        <li><a class="link" href="https://www.sciencedirect.com/science/article/abs/pii/S1673852722001308">Characterization of heavy-chain antibody gene repertoires in Bactrian camels</a> (2022)</li>
+        <li><a class="link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10958182/">From Llama to Nanobody: A Streamlined Workflow</a> (2024)</li>
+        <li><a class="link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4622956/">Camelid Ig V genes reveal significant human homology</a> (2015)</li>
+        <li><a class="link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11701533/">PLAbDab-nano: database of camelid and shark nanobodies</a> (2024)</li>
+    </ul>
+
+    <h3 data-i18n="h_seq_refs">Sequencing Technology</h3>
+    <ul>
+        <li><a class="link" href="https://www.cd-genomics.com/blog/pacbio-nanopore-error-rate-correction-strategies/">Error Rate of PacBio vs Nanopore</a> (CD Genomics 2024)</li>
+        <li><a class="link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10926689/">Benchmarking viromics: Illumina, Nanopore, PacBio</a> (2024)</li>
+        <li><a class="link" href="https://www.pacb.com/blog/the-hifi-difference-immunology-with-a-flairr/">The HiFi Difference: Immunology with FLAIRR</a> (PacBio)</li>
+        <li><a class="link" href="https://academic.oup.com/clinchem/article/71/2/274/7759349">Full-Length Immune Repertoire Reconstruction Using Long-Read Sequencing</a> (2025)</li>
+        <li><a class="link" href="https://journals.aai.org/immunohorizons/article/8/9/635/267134/">Bovine IgM Repertoire Using Oxford Nanopore MinION</a> (2024)</li>
+    </ul>
+
+    <h3 data-i18n="h_china_refs">Chinese Nanopore Technology</h3>
+    <ul>
+        <li><a class="link" href="https://labcritics.com/blog/2026/05/04/qitan-tech-vs-oxford-nanopore-inside-the-two-horse-race-for-the-future-of-nanopore-sequencing/">Qitan Tech vs Oxford Nanopore: Inside the Two-Horse Race</a> (Labcritics 2026)</li>
+        <li><a class="link" href="https://www.sciencedirect.com/science/article/abs/pii/S1673852724002443">Nanopore sequencing: flourishing in its teenage years</a> (2024 Review)</li>
+        <li><a class="link" href="https://www.biorxiv.org/content/10.64898/2026.04.29.721586v1">Performance Test of the QNome Nanopore Sequencer</a> (bioRxiv 2026)</li>
+        <li><a class="link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11621993/">Analytical Performance of Novel Nanopore Sequencing for SARS-CoV-2</a> (2024)</li>
+        <li><a class="link" href="https://www.biorxiv.org/content/10.1101/2024.08.19.608720v1">A single-molecule nanopore sequencing platform (BGI CycloneSEQ)</a> (bioRxiv 2024)</li>
+        <li><a class="link" href="https://www.patsnap.com/resources/blog/articles/nanopore-dna-sequencing-technology-landscape-2026/">Nanopore DNA sequencing technology landscape 2026</a> (PatSnap)</li>
+    </ul>
+
+    <h3 data-i18n="h_tools_refs">Analysis Tools</h3>
+    <ul>
+        <li><a class="link" href="https://www.imgt.org">IMGT / V-QUEST & HighV-QUEST</a> &mdash; V(D)J assignment for camelid species</li>
+        <li><a class="link" href="https://www.ncbi.nlm.nih.gov/igblast/">IgBLAST (NCBI)</a> &mdash; Immunoglobulin BLAST with custom germline support</li>
+        <li><a class="link" href="https://immcantation.readthedocs.io">Immcantation Suite (Change-O / SHazaM)</a> &mdash; SHM analysis and clonal lineage</li>
+        <li>MiXCR &mdash; V(D)J extraction from raw SRA datasets</li>
+    </ul>
+</section>
+
+</div>
+
+<div class="footer">
+    <p><strong>Camelid VDJ Germline & Sequencing Technology Report</strong> &mdash; <a href="https://github.com/mrfeixiang/nanobody">GitHub Repository</a></p>
+    <p style="margin-top:8px" data-i18n="footer">Data compiled from IMGT, NCBI, published literature, and manufacturer specifications. Last updated May 2026.</p>
+</div>
+
+<script>
+const T = {
+en: {},
+ko: {
+    hero_title: "낙타과 VDJ Germline 및 시퀀싱 기술 보고서",
+    hero_subtitle: "낙타, 라마, 알파카 germline VDJ 유전자 데이터셋, VHH 라이브러리 구축 조직 출처, 시퀀싱 플랫폼 정확도 비교 (PacBio / Illumina / Nanopore), 중국 나노포어 기술 동향",
+    nav_home: "홈", nav_germline: "Germline VDJ", nav_tissue: "조직 출처", nav_platforms: "시퀀싱 플랫폼", nav_accuracy: "정확도", nav_china: "중국 나노포어", nav_qitan: "치탄 테크", nav_patents: "특허", nav_refs: "참고자료",
+    s1_title: "낙타과 Germline VDJ 유전자 데이터셋", s1_desc: "낙타과 면역글로불린 중쇄 germline 유전자에 대한 IMGT 참조 디렉토리. 모든 낙타과 IGHV 유전자는 IGHV3 서브그룹에 속합니다 (인간 VH3와 가장 유사).",
+    s2_title: "VHH 라이브러리 구축 조직 출처", s2_desc: "낙타과 나노바디 라이브러리 구축을 위한 샘플 출처 (면역화 및 비면역화).",
+    s3_title: "VHH 레퍼토리 분석을 위한 시퀀싱 플랫폼", s3_desc: "항체/나노바디 레퍼토리 시퀀싱을 위한 Illumina (단편), PacBio HiFi (장편), Oxford Nanopore (장편) 비교.",
+    s4_title: "시퀀싱 정확도 심층 분석", s4_desc: "각 플랫폼의 상세 정확도 지표 및 오류 프로파일, VHH/항체 시퀀싱과의 관련성.",
+    s5_title: "중국 나노포어 시퀀싱 동향", s5_desc: "중국 국내 나노포어 시퀀싱 기업, 제품 및 기술 성과 개요 (2024-2025 리뷰).",
+    s6_title: "치탄 테크놀로지 (齐碳科技) 심층 분석", s6_desc: "중국 최초의 가장 진보된 국산 나노포어 시퀀싱 기업. 2016년 청두 설립, 2021년 말 첫 상용 장비 출시.",
+    s7_title: "나노포어 시퀀싱 특허 현황", s7_desc: "중국 IP 활동에 초점을 맞춘 글로벌 나노포어 시퀀싱 특허 현황 개요.",
+    s8_title: "참고자료 및 리소스", s8_desc: "이 보고서에서 인용한 주요 논문, 데이터베이스 및 리소스.",
+    footer: "IMGT, NCBI, 발표된 문헌 및 제조사 사양에서 수집한 데이터. 2026년 5월 최종 업데이트."
+},
+zh: {
+    hero_title: "骆驼科 VDJ Germline 及测序技术报告",
+    hero_subtitle: "骆驼、羊驼 germline VDJ 基因数据集，VHH 文库构建组织来源，测序平台准确度对比（PacBio / Illumina / Nanopore），中国纳米孔测序技术全景",
+    nav_home: "首页", nav_germline: "Germline VDJ", nav_tissue: "组织来源", nav_platforms: "测序平台", nav_accuracy: "准确度", nav_china: "中国纳米孔", nav_qitan: "齐碳科技", nav_patents: "专利", nav_refs: "参考资料",
+    s1_title: "骆驼科 Germline VDJ 基因数据集", s1_desc: "骆驼科免疫球蛋白重链 germline 基因的 IMGT 参考目录。所有骆驼科 IGHV 基因属于 IGHV3 亚组（与人 VH3 最相似）。",
+    s2_title: "VHH 文库构建组织来源", s2_desc: "构建骆驼科纳米抗体文库的样本来源（免疫和非免疫）。",
+    s3_title: "VHH 库分析测序平台", s3_desc: "用于抗体/纳米抗体库测序的 Illumina（短读长）、PacBio HiFi（长读长）和 Oxford Nanopore（长读长）比较。",
+    s4_title: "测序准确度深度分析", s4_desc: "各平台的详细准确度指标和错误特征，以及与 VHH/抗体测序的相关性。",
+    s5_title: "中国纳米孔测序技术全景", s5_desc: "中国国产纳米孔测序公司、产品及技术成就概览（2024-2025年综述）。",
+    s6_title: "齐碳科技深度分析", s6_desc: "中国首家也是最先进的国产纳米孔测序公司。2016年成都成立，2021年底推出首款商业化设备。",
+    s7_title: "纳米孔测序专利格局", s7_desc: "聚焦中国知识产权活动的全球纳米孔测序专利概览。",
+    s8_title: "参考资源", s8_desc: "本报告引用的主要论文、数据库和资源。",
+    footer: "数据来自 IMGT、NCBI、已发表文献和制造商规格。2026年5月最后更新。"
+}
+};
+
+let currentLang = 'en';
+function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.documentElement.lang = lang === 'ko' ? 'ko' : lang === 'zh' ? 'zh-CN' : 'en';
+}
+</script>
+</body>
+</html>
