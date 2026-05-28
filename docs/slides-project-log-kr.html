@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나노바디 프로젝트 로그 | 교수 미팅 슬라이드</title>
+    <style>
+        :root {
+            --bg:#0a0e17;--surface:#12161f;--surface2:#1a1f2c;--border:#2a2f3d;
+            --text:#e8edf5;--muted:#8892a4;--accent:#58a6ff;--accent2:#79c0ff;
+            --green:#3fb950;--yellow:#d29922;--red:#f85149;--purple:#bc8cff;
+            --orange:#f47c3c;--cyan:#39d2c0;--pink:#f778ba;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{height:100%;overflow:hidden;}
+        body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);}
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        .slide{width:100%;height:100%;position:absolute;top:0;left:0;display:flex;flex-direction:column;padding:50px 70px 70px;opacity:0;pointer-events:none;transition:opacity .45s,transform .45s;transform:translateX(30px);overflow-y:auto;}
+        .slide.active{opacity:1;pointer-events:auto;transform:translateX(0);}
+        .slide.prev{transform:translateX(-30px);}
+
+        .controls{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:100;background:rgba(18,22,31,.92);border:1px solid var(--border);border-radius:10px;padding:6px 18px;backdrop-filter:blur(8px);}
+        .ctrl-btn{background:transparent;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:7px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;}
+        .ctrl-btn:hover{border-color:var(--accent);color:var(--text);background:rgba(88,166,255,.08);}
+        .slide-counter{color:var(--muted);font-size:.83rem;min-width:55px;text-align:center;}
+        .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--accent),var(--purple));transition:width .4s;z-index:101;}
+
+        .topbar{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:10px 20px;z-index:99;background:rgba(10,14,23,.85);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);}
+        .topbar .logo{font-size:.8rem;color:var(--muted);} .topbar .logo a{color:var(--accent);text-decoration:none;}
+        .topbar-links{display:flex;gap:8px;} .topbar-links a{color:var(--muted);text-decoration:none;font-size:.78rem;padding:3px 8px;border:1px solid var(--border);border-radius:4px;transition:all .2s;} .topbar-links a:hover{color:var(--text);border-color:var(--accent);}
+
+        .slide h1{font-size:2.6rem;font-weight:900;margin-bottom:10px;line-height:1.2;}
+        .slide h2{font-size:1.9rem;font-weight:700;margin-bottom:8px;}
+        .slide h3{font-size:1.15rem;font-weight:500;color:var(--muted);margin-bottom:16px;}
+        .slide p{font-size:1rem;line-height:1.75;max-width:1050px;}
+        .small{font-size:.85rem;color:var(--muted);}
+
+        .grad1{background:linear-gradient(90deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .grad2{background:linear-gradient(90deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .grad3{background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .grad4{background:linear-gradient(90deg,var(--orange),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+        .full{width:100%;max-width:1100px;} .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1100px;} .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;width:100%;max-width:1100px;}
+        .left{align-items:flex-start;text-align:left;}
+
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;transition:border-color .3s;}
+        .card:hover{border-color:var(--accent);}
+        .card .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+        .card .val{font-size:1.3rem;font-weight:700;}
+        .card .det{font-size:.82rem;color:var(--muted);margin-top:4px;}
+        .card.hl{border-color:var(--accent);background:rgba(88,166,255,.04);}
+        .card a{color:var(--accent);text-decoration:none;font-size:.82rem;} .card a:hover{text-decoration:underline;}
+
+        table{width:100%;border-collapse:collapse;font-size:.88rem;margin:10px 0;}
+        th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+        th{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;background:var(--surface);}
+        tr:hover{background:rgba(88,166,255,.03);}
+        td a{color:var(--accent);text-decoration:none;} td a:hover{text-decoration:underline;}
+        td code{background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:1px 4px;font-family:'SF Mono','Courier New',monospace;font-size:.84em;}
+
+        .tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.75rem;font-weight:600;margin:2px;}
+        .tag.done{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25);}
+        .tag.prog{background:rgba(210,153,34,.12);color:var(--yellow);border:1px solid rgba(210,153,34,.25);}
+        .tag.todo{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.25);}
+        .tag.info{background:rgba(88,166,255,.12);color:var(--accent);border:1px solid rgba(88,166,255,.25);}
+        .tag.plat{background:rgba(188,140,255,.12);color:var(--purple);border:1px solid rgba(188,140,255,.25);}
+
+        .info-box{background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.2);border-radius:8px;padding:14px 18px;font-size:.9rem;margin:10px 0;max-width:1100px;width:100%;}
+        .info-box .info-t{font-weight:700;color:var(--accent);margin-bottom:3px;}
+        .warn-box{background:rgba(210,153,34,.05);border:1px solid rgba(210,153,34,.2);border-radius:8px;padding:14px 18px;font-size:.9rem;margin:10px 0;max-width:1100px;width:100%;}
+        .warn-box .warn-t{font-weight:700;color:var(--yellow);margin-bottom:3px;}
+        .finding-box{background:rgba(63,185,80,.05);border:1px solid rgba(63,185,80,.2);border-radius:8px;padding:14px 18px;font-size:.9rem;margin:10px 0;max-width:1100px;width:100%;}
+        .finding-box .find-t{font-weight:700;color:var(--green);margin-bottom:3px;}
+
+        .fig{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:10px 0;}
+        .fig img{width:100%;display:block;max-height:300px;object-fit:contain;background:#111;}
+        .fig .cap{padding:8px 12px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border);}
+
+        .bar-row{display:flex;align-items:center;margin:7px 0;gap:10px;}
+        .bar-lbl{width:140px;text-align:right;font-size:.85rem;flex-shrink:0;}
+        .bar-trk{flex:1;height:26px;background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+        .bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:.75rem;font-weight:700;color:#fff;}
+
+        pre{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:12px 16px;font-size:.82rem;overflow-x:auto;font-family:'SF Mono','Courier New',monospace;line-height:1.5;margin:8px 0;}
+        .cmd{color:var(--green);} .cmt{color:var(--muted);font-style:italic;}
+
+        .checklist{list-style:none;margin:8px 0 0 0;} .checklist li{padding:4px 0;font-size:.92rem;} .checklist li::before{content:'';display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-radius:4px;margin-right:8px;vertical-align:middle;} .checklist li.done::before{background:var(--green);border-color:var(--green);content:'';background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 11.5L3 8l1-1 2.5 2.5L12 4l1 1z'/%3E%3C/svg%3E");background-size:12px;background-repeat:no-repeat;background-position:center;}
+        .checklist li.prog::before{background:var(--yellow);border-color:var(--yellow);}
+
+        .kb-hint{position:fixed;bottom:20px;right:20px;font-size:.72rem;color:var(--muted);z-index:100;}
+        .kb-hint kbd{background:var(--surface);border:1px solid var(--border);padding:2px 5px;border-radius:3px;font-family:inherit;}
+
+        @media(max-width:768px){.slide{padding:35px 20px 65px;}.slide h1{font-size:1.8rem;}.slide h2{font-size:1.4rem;}.two-col,.three-col{grid-template-columns:1fr;}}
+    </style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="topbar">
+    <div class="logo">나노바디 프로젝트 로그 | <a href="./index.html">Project Home</a></div>
+    <div class="topbar-links">
+        <a href="./camelid-vdj-sequencing.html">VDJ 보고서</a>
+        <a href="./slides-camelid-vdj-kr.html">기술 슬라이드</a>
+        <a href="./protenix-guide.html">Protenix 가이드</a>
+    </div>
+</div>
+
+<div class="slide-deck" id="deck">
+
+<!-- ===== S1: Title ===== -->
+<div class="slide active left" id="s1">
+    <h1><span class="grad1">나노바디 프로젝트 로그</span></h1>
+    <h2 style="font-weight:400;color:var(--muted)">교수님 미팅 보고 자료</h2>
+    <h3 style="margin-top:20px">낙타과 VDJ Germline 데이터셋 연구, 시퀀싱 플랫폼 비교,<br>중국 나노포어 기술, IgBLAST/IMGT 분석 파이프라인</h3>
+    <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap">
+        <span class="tag done">SRP124616 분석 완료</span>
+        <span class="tag done">IMGT/IgBLAST 학습</span>
+        <span class="tag done">데이터셋 조사</span>
+        <span class="tag done">시퀀싱 정확도 비교</span>
+        <span class="tag done">중국 나노포어 조사</span>
+    </div>
+    <p class="small" style="margin-top:30px">
+        <a href="https://github.com/mrfeixiang/nanobody" style="color:var(--accent)">GitHub: mrfeixiang/nanobody</a> &bull;
+        <a href="https://mrfeixiang.github.io/nanobody/" style="color:var(--accent)">프로젝트 웹사이트</a>
+    </p>
+</div>
+
+<!-- ===== S2: To-Do Checklist ===== -->
+<div class="slide left" id="s2">
+    <h2><span class="grad2">01</span> 연구 To-Do 리스트 & 진행 현황</h2>
+    <div class="two-col" style="margin-top:12px">
+        <div>
+            <h3 style="color:var(--text);border:none;padding:0">데이터셋 연구</h3>
+            <ul class="checklist">
+                <li class="done">SRP124616 분석 (PacBio CCS, 인간 scFv)</li>
+                <li class="done">Llama PacBio 데이터셋 조사</li>
+                <li class="done">Camel Nanopore/Illumina 데이터셋 조사</li>
+                <li class="done">IMGT Database 학습 (낙타과 VDJ)</li>
+                <li class="done">IgBLAST 학습 및 적용</li>
+                <li class="done">PacBio alignment method 조사</li>
+                <li class="done">논문 기반 데이터셋 탐색</li>
+                <li class="done">HiFi SRA tissue case study (Camel/Llama)</li>
+            </ul>
+        </div>
+        <div>
+            <h3 style="color:var(--text);border:none;padding:0">기술 분석</h3>
+            <ul class="checklist">
+                <li class="done">Germline VDJ 조직 출처 (liver, muscle, skin)</li>
+                <li class="done">Illumina dataset (camel/llama) 조사</li>
+                <li class="done">Nanopore 데이터셋 & 중국 기업 연구</li>
+                <li class="done">Nanopore 2024 리뷰 논문 분석</li>
+                <li class="done">시퀀싱 정확도 비교 (PacBio/Illumina/ONT)</li>
+                <li class="done">Tissue → BCR → IMGT → SHM 파이프라인</li>
+                <li class="done">IgBLAST 사용법 이해 및 실습</li>
+            </ul>
+        </div>
+    </div>
+    <div class="finding-box" style="margin-top:14px">
+        <div class="find-t">핵심 발견</div>
+        낙타과 VHH 시퀀싱 분야는 <strong>Illumina MiSeq 단편 리드</strong>가 지배적. PacBio/Nanopore 장편 리드 공개 데이터셋은 <strong>사실상 없음</strong> &mdash; 연구 갭 존재.
+    </div>
+</div>
+
+<!-- ===== S3: SRP124616 Analysis ===== -->
+<div class="slide left" id="s3">
+    <h2><span class="grad1">02</span> SRP124616 분석 결과</h2>
+    <div class="two-col">
+        <div>
+            <div class="card hl" style="margin-bottom:12px">
+                <div class="lbl">프로젝트 정보</div>
+                <table style="margin:6px 0">
+                    <tr><td style="color:var(--muted)">BioProject</td><td><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA417020">PRJNA417020</a></td></tr>
+                    <tr><td style="color:var(--muted)">SRA</td><td><a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP124616">SRP124616</a></td></tr>
+                    <tr><td style="color:var(--muted)">플랫폼</td><td><span class="tag plat">PacBio RS II (CCS)</span></td></tr>
+                    <tr><td style="color:var(--muted)">리드 수</td><td><strong>85 reads</strong></td></tr>
+                    <tr><td style="color:var(--muted)">품질</td><td>평균 Q91.6 (범위 Q82-Q93)</td></tr>
+                    <tr><td style="color:var(--muted)">VHH 추출</td><td>83/85 (97.6%)</td></tr>
+                    <tr><td style="color:var(--muted)">고유 VHH</td><td>2개 (단일 클론)</td></tr>
+                </table>
+            </div>
+            <div class="warn-box">
+                <div class="warn-t">주요 트러블슈팅</div>
+                FR2의 <strong>amber stop codon (TAG)</strong>으로 ORF 탐색 실패 &rarr; 보존 모티프 검색으로 해결<br>
+                IgBLAST D/J DB 누락 &rarr; 수동 BLAST DB 구축
+            </div>
+        </div>
+        <div>
+            <div class="fig"><img src="./01_read_stats.png" alt="Read stats"><div class="cap">리드 길이 분포 & 품질 점수 (PacBio CCS Q90+)</div></div>
+            <div class="fig"><img src="./06_vhh_structure.png" alt="VHH structure"><div class="cap">VHH 도메인 구조: FR1-CDR1-FR2-CDR2-FR3-CDR3-FR4</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S4: SRP124616 IgBLAST Results ===== -->
+<div class="slide left" id="s4">
+    <h2><span class="grad1">03</span> SRP124616 IgBLAST & 구조 예측 결과</h2>
+    <div class="two-col">
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">IgBLAST V(D)J 할당</h3>
+            <div class="card" style="margin-bottom:10px">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+                    <div><div class="lbl">V Gene</div><div class="val" style="color:var(--red);font-size:1.1rem">IGHV6-1*01</div><div class="det">97.7% germline 일치</div></div>
+                    <div><div class="lbl">D Gene</div><div class="val" style="color:var(--green);font-size:1.1rem">IGHD1-26*01</div><div class="det">다양성 분절</div></div>
+                    <div><div class="lbl">J Gene</div><div class="val" style="color:var(--accent);font-size:1.1rem">IGHJ4*02</div><div class="det">91.3% germline 일치</div></div>
+                </div>
+            </div>
+            <table>
+                <thead><tr><th>영역</th><th>길이</th><th>일치</th><th>불일치</th><th>동일성</th></tr></thead>
+                <tbody>
+                    <tr><td>FR1-IMGT</td><td>75 nt</td><td>75</td><td>0</td><td style="color:var(--green)">100%</td></tr>
+                    <tr><td style="color:var(--red)">CDR1-IMGT</td><td>30 nt</td><td>26</td><td>4</td><td>86.7%</td></tr>
+                    <tr><td>FR2-IMGT</td><td>51 nt</td><td>50</td><td>1</td><td>98.0%</td></tr>
+                    <tr><td style="color:var(--green)">CDR2-IMGT</td><td>27 nt</td><td>27</td><td>0</td><td style="color:var(--green)">100%</td></tr>
+                    <tr><td>FR3-IMGT</td><td>114 nt</td><td>112</td><td>2</td><td>98.2%</td></tr>
+                    <tr><td style="font-weight:700">합계</td><td>303 nt</td><td>296</td><td>7</td><td><strong>97.7%</strong></td></tr>
+                </tbody>
+            </table>
+            <div class="det" style="margin-top:6px">SHM Rate = 1 - 0.977 = <strong>2.3%</strong> (303 nt 중 7개 돌연변이)</div>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">ESMFold 3D 구조 예측</h3>
+            <div class="fig"><img src="./10_esmfold_summary.png" alt="ESMFold summary"><div class="cap">다중 패널 구조 분석: pLDDT, 영역 길이, CDR 표면 노출</div></div>
+            <div class="card" style="margin-top:10px">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+                    <div><div class="lbl">전체 pLDDT</div><div class="val" style="color:var(--green)">0.838</div></div>
+                    <div><div class="lbl">잔기 &gt;0.7</div><div class="val">87.4%</div></div>
+                    <div><div class="lbl">CDR3 pLDDT</div><div class="val">0.807</div></div>
+                </div>
+            </div>
+            <p class="small" style="margin-top:8px">
+                <a href="./index.html#structure" style="color:var(--accent)">인터랙티브 3D 구조 보기 &rarr;</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S5: IMGT Database ===== -->
+<div class="slide left" id="s5">
+    <h2><span class="grad3">04</span> IMGT 데이터베이스 학습 결과</h2>
+    <h3>낙타과 IGHV 유전자: 2개 세트 분류 체계</h3>
+    <div class="two-col">
+        <div>
+            <div class="card" style="border-color:var(--purple);margin-bottom:12px">
+                <div class="lbl" style="color:var(--purple)">Set 1: 기존형 IgG1 (VH)</div>
+                <div class="val" style="font-size:1.1rem">IGHV3S1 ~ S41</div>
+                <div class="det">기존 4쇄 항체 (VH + VL)<br>경쇄 필요, CH1 도메인 보유</div>
+            </div>
+            <div class="card" style="border-color:var(--cyan);margin-bottom:12px">
+                <div class="lbl" style="color:var(--cyan)">Set 2: VHH형 IgG2/3 (HCAb)</div>
+                <div class="val" style="font-size:1.1rem">IGHV3S42 ~ S74</div>
+                <div class="det">중쇄 전용 항체<br>경쇄 불필요, CH1 도메인 결여<br>FR2 할마크 잔기 (42,49,50,52)</div>
+            </div>
+            <div class="info-box">
+                <div class="info-t">종별 IGHV 유전자 수</div>
+                <strong>아라비안 낙타:</strong> ~74개 | <strong>라마:</strong> ~8개 | <strong>알파카:</strong> ~19개<br>
+                모든 낙타과 IGHV는 인간 VH3 서브그룹에 해당 (동일성 79-81%)
+            </div>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 10px">참고 링크</h3>
+            <div class="card" style="margin-bottom:8px"><a href="https://www.imgt.org/IMGTbiotechnology/Camel_IgG.html" target="_blank">IMGT Camelidae IgG 바이오테크 페이지</a><div class="det">종합 낙타과 항체 정보</div></div>
+            <div class="card" style="margin-bottom:8px"><a href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=arabian_camel&group=IGHV" target="_blank">IMGT Camel IGHV Gene Table</a><div class="det">74개 IGHV 유전자 목록</div></div>
+            <div class="card" style="margin-bottom:8px"><a href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=Llama&group=IGHV" target="_blank">IMGT Llama IGHV Gene Table</a><div class="det">8개 IGHV 유전자 목록</div></div>
+            <div class="card" style="margin-bottom:8px"><a href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=Vicugna_pacos&group=IGHV" target="_blank">IMGT Alpaca IGHV Gene Table</a><div class="det">19개 IGHV 유전자 목록</div></div>
+            <div class="card"><a href="https://www.nature.com/articles/s42003-023-05241-y" target="_blank">VHH CDR-H3 conformation & germline (2023)</a><div class="det">VHH CDR-H3 구조가 V germline에 의해 결정</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S6: IgBLAST Pipeline ===== -->
+<div class="slide left" id="s6">
+    <h2><span class="grad3">05</span> IgBLAST 사용법 & BCR→SHM 파이프라인</h2>
+    <div class="two-col">
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">IgBLAST 실행 방법</h3>
+            <pre><span class="cmt"># 1. Germline DB 준비</span>
+<span class="cmd">makeblastdb</span> -parse_seqids -dbtype nucl \
+  -in imgt_camelid_V.fasta -out V
+<span class="cmd">makeblastdb</span> -parse_seqids -dbtype nucl \
+  -in imgt_camelid_D.fasta -out D
+<span class="cmd">makeblastdb</span> -parse_seqids -dbtype nucl \
+  -in imgt_camelid_J.fasta -out J
+
+<span class="cmt"># 2. IgBLAST 실행</span>
+<span class="cmd">igblastn</span> -germline_db_V V \
+  -germline_db_D D -germline_db_J J \
+  -organism camel -domain_system imgt \
+  -query input.fasta \
+  -outfmt 19 -out results.tsv
+
+<span class="cmt"># 3. SHM 계산</span>
+<span class="cmt"># v_identity 필드에서:</span>
+<span class="cmt"># SHM rate = 1 - v_identity</span></pre>
+            <p class="small"><a href="https://www.ncbi.nlm.nih.gov/igblast/" style="color:var(--accent)" target="_blank">NCBI IgBLAST &rarr;</a></p>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">전체 파이프라인</h3>
+            <div style="display:flex;flex-direction:column;gap:0;align-items:center">
+                <div class="card" style="width:100%;text-align:center;padding:10px"><strong style="color:var(--cyan)">조직 수집</strong><br><span class="small">PBMC / 림프절 / 비장 / 골수</span></div>
+                <div style="color:var(--muted);font-size:1.2rem">&#8595;</div>
+                <div class="card" style="width:100%;text-align:center;padding:10px"><strong style="color:var(--green)">BCR 시퀀싱</strong><br><span class="small">Illumina / PacBio / Nanopore</span></div>
+                <div style="color:var(--muted);font-size:1.2rem">&#8595;</div>
+                <div class="card" style="width:100%;text-align:center;padding:10px"><strong style="color:var(--accent)">QC & 전처리</strong><br><span class="small">pRESTO / UMI 처리</span></div>
+                <div style="color:var(--muted);font-size:1.2rem">&#8595;</div>
+                <div class="card hl" style="width:100%;text-align:center;padding:10px"><strong style="color:var(--accent)">IMGT/V-QUEST 또는 IgBLAST</strong><br><span class="small">V(D)J 할당, FR/CDR 주석</span></div>
+                <div style="color:var(--muted);font-size:1.2rem">&#8595;</div>
+                <div class="card" style="width:100%;text-align:center;padding:10px"><strong style="color:var(--purple)">SHM 분석</strong><br><span class="small">Immcantation (Change-O / SHazaM)<br>R vs S 돌연변이, 클론 계통</span></div>
+            </div>
+            <p class="small" style="margin-top:8px"><a href="https://immcantation.readthedocs.io" style="color:var(--accent)" target="_blank">Immcantation Suite &rarr;</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S7: Dataset Survey Results ===== -->
+<div class="slide left" id="s7">
+    <h2><span class="grad2">06</span> 낙타과 VHH 공개 데이터셋 조사 결과</h2>
+    <h3>NCBI SRA 검색 결과 - 주요 Illumina 데이터셋</h3>
+    <div class="full" style="font-size:.84rem;overflow-x:auto">
+        <table>
+            <thead><tr><th>BioProject</th><th>종</th><th>조직</th><th>플랫폼</th><th>설명</th><th>연도</th></tr></thead>
+            <tbody>
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA321369">PRJNA321369</a></td><td>쌍봉낙타</td><td>PBMC</td><td><span class="tag plat">MiSeq 2x300</span></td><td>기존/중쇄 면역레퍼토리 비교</td><td>2016</td></tr>
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA516512">PRJNA516512</a></td><td>단봉낙타</td><td>파지 라이브러리</td><td><span class="tag plat">MiSeq 2x150</span></td><td>LPS 면역 나노바디 NGS</td><td>2021</td></tr>
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJEB7678">PRJEB7678</a></td><td>라마</td><td>PBMC</td><td><span class="tag plat">MiSeq 2x250</span></td><td>면역 라이브러리 다양성</td><td>2017</td></tr>
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1148326">PRJNA1148326</a></td><td>알파카 (22마리)</td><td>PBMC</td><td><span class="tag plat">MiSeq 2x300</span></td><td>VHH 유형 다양성</td><td>2024</td></tr>
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1291406">PRJNA1291406</a></td><td>라마+낙타</td><td>PBMC</td><td><span class="tag plat">MiSeq 2x300</span></td><td>CDR3 길이 패턴 비교</td><td>2025</td></tr>
+                <tr><td><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJDB11899">PRJDB11899</a></td><td>알파카</td><td>말초 림프구</td><td><span class="tag plat">MiSeq v3</span></td><td>VHH 진화 추적</td><td>2024</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="warn-box" style="margin-top:10px">
+        <div class="warn-t">중요 발견: PacBio/Nanopore 장편 리드 데이터 부재</div>
+        공개 SRA에서 낙타과 VHH용 <strong>PacBio HiFi 또는 Nanopore 데이터셋은 발견되지 않음</strong>. 모든 공개 데이터는 Illumina MiSeq 기반. 이는 장편 리드 연구의 기회를 시사.
+    </div>
+</div>
+
+<!-- ===== S8: Tissue Sources & Germline ===== -->
+<div class="slide left" id="s8">
+    <h2><span class="grad3">07</span> 조직 출처 & Germline VDJ 조사</h2>
+    <div class="two-col">
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">VHH 라이브러리 조직 출처</h3>
+            <table>
+                <thead><tr><th>조직</th><th>사용 빈도</th><th>특징</th></tr></thead>
+                <tbody>
+                    <tr><td style="color:var(--green);font-weight:700">PBMC (말초혈)</td><td><span class="tag done">주요 소스</span></td><td>비침습적, 표준 프로토콜</td></tr>
+                    <tr><td style="color:var(--cyan);font-weight:700">림프절</td><td><span class="tag info">보조 소스</span></td><td>항원 특이적 농축</td></tr>
+                    <tr><td style="color:var(--purple);font-weight:700">비장</td><td><span class="tag info">Naive 라이브러리</span></td><td>최고 다양성</td></tr>
+                    <tr><td style="color:var(--orange);font-weight:700">골수</td><td><span class="tag prog">드물게 사용</span></td><td>장기 생존 형질세포</td></tr>
+                </tbody>
+            </table>
+            <div class="warn-box" style="margin-top:10px">
+                <div class="warn-t">Liver / Muscle / Skin 조직</div>
+                간, 근육, 피부에서의 VHH 라이브러리 구축은 <strong>공개 문헌에서 보고된 바 없음</strong>. 이들 조직은 B세포/형질세포 밀도가 낮아 항체 레퍼토리 분석에 비적합.
+            </div>
+        </div>
+        <div>
+            <div class="fig"><img src="./02_cdr_length_distribution.png" alt="CDR length"><div class="cap">CDR 길이 분포 (SRP124616 단일 클론 - 균일 분포)</div></div>
+            <div class="fig"><img src="./05_cdr3_position_freq.png" alt="CDR3 freq"><div class="cap">CDR3 위치별 아미노산 빈도 히트맵</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S9: Sequencing Accuracy ===== -->
+<div class="slide left" id="s9">
+    <h2><span class="grad4">08</span> 시퀀싱 정확도 비교 & 2024 리뷰</h2>
+    <h3>출처: "Nanopore sequencing: flourishing in its teenage years" (J Genet Genomics, 2024)</h3>
+    <div class="two-col">
+        <div>
+            <div class="bar-row"><div class="bar-lbl" style="color:var(--purple)">Illumina</div><div class="bar-trk"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--purple),#a78bfa)">99.9%</div></div></div>
+            <div class="bar-row"><div class="bar-lbl" style="color:var(--green)">PacBio HiFi</div><div class="bar-trk"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--green),#6ee7b7)">&gt;99.9%</div></div></div>
+            <div class="bar-row"><div class="bar-lbl" style="color:var(--cyan)">ONT R10 Simplex</div><div class="bar-trk"><div class="bar-fill" style="width:97.2%;background:linear-gradient(90deg,var(--cyan),#67e8f9)">~97.2%</div></div></div>
+            <div class="bar-row"><div class="bar-lbl" style="color:var(--pink)">ONT Duplex</div><div class="bar-trk"><div class="bar-fill" style="width:99.5%;background:linear-gradient(90deg,var(--pink),#f9a8d4)">~99.5%</div></div></div>
+            <div class="bar-row"><div class="bar-lbl" style="color:var(--orange)">CycloneSEQ (BGI)</div><div class="bar-trk"><div class="bar-fill" style="width:97%;background:linear-gradient(90deg,var(--orange),#fbbf24)">~97%</div></div></div>
+            <div class="bar-row"><div class="bar-lbl" style="color:var(--pink)">Qitan O2</div><div class="bar-trk"><div class="bar-fill" style="width:99%;background:linear-gradient(90deg,var(--pink),#e879f9)">99%</div></div></div>
+
+            <p class="small" style="margin-top:12px">
+                <a href="https://www.sciencedirect.com/science/article/abs/pii/S1673852724002443" style="color:var(--accent)" target="_blank">2024 Review 논문 원문 &rarr;</a>
+            </p>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">오류 유형 프로파일</h3>
+            <table>
+                <thead><tr><th>플랫폼</th><th>치환</th><th>삽입</th><th>결실</th><th>주요 문제</th></tr></thead>
+                <tbody>
+                    <tr><td style="color:var(--purple)">Illumina</td><td style="color:var(--red)">주요</td><td>낮음</td><td>낮음</td><td>GC 편향</td></tr>
+                    <tr><td style="color:var(--green)">PacBio HiFi</td><td>낮음</td><td>낮음</td><td>낮음</td><td>무작위</td></tr>
+                    <tr><td style="color:var(--orange)">Nanopore</td><td>중간</td><td style="color:var(--red)">중간</td><td style="color:var(--red)">주요</td><td>호모폴리머</td></tr>
+                </tbody>
+            </table>
+            <div class="finding-box" style="margin-top:10px">
+                <div class="find-t">VHH에 대한 시사점</div>
+                VHH는 ~360 nt로 비교적 짧지만, SHM 검출을 위해 <strong>단일 염기 수준의 정확도</strong>가 필수. PacBio HiFi가 최적이나, Illumina 2x250bp도 VHH 전장 커버 가능. Nanopore는 호모폴리머 오류로 CDR 호출 정확도 주의 필요.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S10: PacBio Alignment & FLAIRR-seq ===== -->
+<div class="slide left" id="s10">
+    <h2><span class="grad1">09</span> PacBio Alignment & FLAIRR-seq</h2>
+    <div class="two-col">
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">PacBio CCS/HiFi 원리</h3>
+            <div class="card" style="margin-bottom:12px">
+                <div class="det" style="color:var(--text)">
+                    1. 헤어핀 어댑터로 <strong>원형 템플릿</strong> 생성<br>
+                    2. 폴리머라제가 여러 번 원형 통과<br>
+                    3. 각 패스는 독립적 오류 &rarr; <strong>합의 시퀀스</strong><br>
+                    4. 결과: Q30+ (>99.9%) 정확도, 최대 25 kb
+                </div>
+            </div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">관련 도구</h3>
+            <table style="font-size:.84rem">
+                <tr><td><code>ccs</code></td><td>서브리드 → HiFi 합의</td></tr>
+                <tr><td><code>lima</code></td><td>바코드 분리</td></tr>
+                <tr><td><code>pbmm2</code></td><td>HiFi 리드 정렬 (minimap2 래퍼)</td></tr>
+                <tr><td><code>minimap2</code></td><td>장편 리드 범용 정렬</td></tr>
+                <tr><td><code>IgBLAST</code></td><td>VDJ 주석</td></tr>
+            </table>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">FLAIRR-seq 워크플로우</h3>
+            <div class="info-box">
+                <div class="info-t">FLAIRR-seq (Full-Length AIRR Sequencing)</div>
+                5' RACE 표적 증폭 + PacBio HiFi로 <strong>~2 kb</strong> 면역글로불린 중쇄 전장 시퀀싱. IGHV + IGHD + IGHJ + IGHC 영역 동시 분석. 단편 리드 AIRR-seq (≤600 nt)의 한계 극복.
+            </div>
+            <div class="card" style="margin-top:10px">
+                <div class="lbl">VHH에서 PacBio의 이점</div>
+                <div class="det" style="color:var(--text)">
+                    VHH는 ~400 bp로 비교적 짧아 <strong>PacBio의 장점(장편 리드)이 제한적</strong>. 그러나:
+                    <ul style="margin:6px 0 0 16px;font-size:.88rem">
+                        <li>VHH + 상수영역 전장 동시 분석 가능</li>
+                        <li>IgG1 vs IgG2/3 아이소타입 구분 단일 리드</li>
+                        <li>99.9%+ 정확도로 SHM 검출 최적</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="small" style="margin-top:8px">
+                <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10152037/" style="color:var(--accent)" target="_blank">FLAIRR-seq 논문 (J Immunol 2023) &rarr;</a><br>
+                <a href="https://www.pacb.com/blog/the-hifi-difference-immunology-with-a-flairr/" style="color:var(--accent)" target="_blank">PacBio FLAIRR 블로그 &rarr;</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S11: China Nanopore ===== -->
+<div class="slide left" id="s11">
+    <h2><span class="grad4">10</span> 중국 나노포어 기술 & 齐碳科技</h2>
+    <div class="two-col">
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">齐碳科技 (Qitan Technology) 제품</h3>
+            <table style="font-size:.84rem">
+                <thead><tr><th>제품</th><th>등급</th><th>처리량</th><th>정확도</th></tr></thead>
+                <tbody>
+                    <tr><td style="color:var(--cyan)">QNome-3841</td><td>저</td><td>~1.5 Gb/8h</td><td>~90%</td></tr>
+                    <tr><td style="color:var(--purple)">QPursue-6k</td><td>중</td><td>~360 Gb</td><td>Q20</td></tr>
+                    <tr><td style="color:var(--green);font-weight:700">QPinnacle2</td><td>고</td><td style="color:var(--green)">800 Gb</td><td style="color:var(--green)">99% (O2)</td></tr>
+                </tbody>
+            </table>
+            <div class="card" style="margin-top:10px;border-color:var(--green)">
+                <div class="lbl" style="color:var(--green)">O2 생화학 시스템 (2025.09)</div>
+                <div class="det" style="color:var(--text)">
+                    재설계된 포어 단백질 + 새 모터 단백질 + 폴리머 막<br>
+                    노이즈 ~20% 감소, 컨센서스 Q50 달성<br>
+                    <strong>중국 나노포어 최초 99% 원시 정확도</strong>
+                </div>
+            </div>
+            <p class="small" style="margin-top:8px">
+                <a href="https://labcritics.com/blog/2026/05/04/qitan-tech-vs-oxford-nanopore-inside-the-two-horse-race-for-the-future-of-nanopore-sequencing/" style="color:var(--accent)" target="_blank">Qitan vs ONT 비교 기사 &rarr;</a><br>
+                <a href="https://www.biorxiv.org/content/10.64898/2026.04.29.721586v1" style="color:var(--accent)" target="_blank">QNome 성능 테스트 (bioRxiv 2026) &rarr;</a>
+            </p>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">BGI CycloneSEQ</h3>
+            <div class="card" style="border-color:var(--cyan);margin-bottom:12px">
+                <div class="lbl" style="color:var(--cyan)">CycloneSEQ (BGI/MGI)</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+                    <div><span class="small">G100-ER:</span> <strong>85Gb x2, 99%</strong></div>
+                    <div><span class="small">G400-ER:</span> <strong>400Gb, 99%</strong></div>
+                    <div><span class="small">N50:</span> <strong>33.6 kb</strong></div>
+                    <div><span class="small">밀도:</span> <strong>28.9/mm<sup>2</sup></strong></div>
+                </div>
+            </div>
+            <h3 style="border:none;padding:0;margin:0 0 8px">특허 현황</h3>
+            <div class="card">
+                <div class="det" style="color:var(--text)">
+                    아시아 나노포어 특허: <strong>~500개</strong><br>
+                    齐碳科技 보유 특허: <strong>~30개</strong> (글로벌)<br>
+                    주요 혁신: 포어 엔지니어링, 적응적 샘플링, 직접 RNA, 휴대용 컴퓨팅<br><br>
+                    <strong>전략적 의미:</strong> 영국(ONT) 외 완전한 국산 나노포어 역량 보유 유일 국가
+                </div>
+            </div>
+            <p class="small" style="margin-top:8px">
+                <a href="https://www.biorxiv.org/content/10.1101/2024.08.19.608720v1" style="color:var(--accent)" target="_blank">CycloneSEQ 논문 &rarr;</a><br>
+                <a href="https://www.patsnap.com/resources/blog/articles/nanopore-dna-sequencing-technology-landscape-2026/" style="color:var(--accent)" target="_blank">PatSnap 특허 분석 &rarr;</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== S12: Summary & Next Steps ===== -->
+<div class="slide left" id="s12">
+    <h2><span class="grad1">11</span> 요약 & 향후 계획</h2>
+    <div class="two-col" style="margin-top:12px">
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 10px;color:var(--green)">완료된 작업</h3>
+            <div class="card" style="margin-bottom:10px">
+                <div class="det" style="color:var(--text);font-size:.9rem">
+                    <strong>1. SRP124616 분석:</strong> PacBio CCS 85 리드 → VHH 추출 → IgBLAST VDJ 할당 → ESMFold 3D 구조 예측 완료<br><br>
+                    <strong>2. IMGT 학습:</strong> 낙타과 2-set IGHV 체계, FR2 할마크 잔기, 종별 유전자 수 정리<br><br>
+                    <strong>3. 데이터셋 조사:</strong> 6개 주요 Illumina 데이터셋 확인. PacBio/Nanopore 공개 데이터 부재 확인<br><br>
+                    <strong>4. 시퀀싱 비교:</strong> 3 플랫폼 정확도, 오류 유형, VHH 적용성 분석<br><br>
+                    <strong>5. 중국 나노포어:</strong> Qitan 3제품 + BGI CycloneSEQ + 3사 조사, O2 화학 시스템, 특허 현황
+                </div>
+            </div>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 10px;color:var(--yellow)">핵심 발견 & 기회</h3>
+            <div class="finding-box" style="margin-bottom:10px">
+                <div class="find-t">연구 갭 발견</div>
+                낙타과 VHH용 <strong>장편 리드 공개 데이터셋 전무</strong>. PacBio HiFi 또는 Nanopore를 이용한 낙타과 VHH 전장 레퍼토리 연구는 최초 사례가 될 수 있음.
+            </div>
+            <h3 style="border:none;padding:0;margin:0 0 10px;color:var(--accent)">향후 계획 (제안)</h3>
+            <ul style="font-size:.9rem;margin-left:16px">
+                <li>기존 Illumina 데이터셋 다운로드 및 재분석</li>
+                <li>IMGT/HighV-QUEST 대규모 분석 실행</li>
+                <li>Immcantation으로 SHM 정량 분석</li>
+                <li>PacBio HiFi VHH 시퀀싱 프로토콜 설계</li>
+                <li>Protenix v2로 설계 나노바디 구조 예측</li>
+            </ul>
+        </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+        <a href="./camelid-vdj-sequencing.html" class="tag info" style="text-decoration:none">전체 보고서 &rarr;</a>
+        <a href="./slides-camelid-vdj-kr.html" class="tag info" style="text-decoration:none">기술 슬라이드 &rarr;</a>
+        <a href="./protenix-guide.html" class="tag info" style="text-decoration:none">Protenix 가이드 &rarr;</a>
+        <a href="https://github.com/mrfeixiang/nanobody" class="tag info" style="text-decoration:none">GitHub &rarr;</a>
+    </div>
+</div>
+
+</div>
+
+<div class="controls">
+    <button class="ctrl-btn" onclick="prevSlide()">&#9664;</button>
+    <div class="slide-counter"><span id="current">1</span> / <span id="total">12</span></div>
+    <button class="ctrl-btn" onclick="nextSlide()">&#9654;</button>
+    <button class="ctrl-btn" onclick="toggleFullscreen()" title="전체화면">&#x26F6;</button>
+</div>
+<div class="kb-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> 이동 &bull; <kbd>F</kbd> 전체화면</div>
+
+<script>
+const slides=document.querySelectorAll('.slide'),total=slides.length;let current=0;
+document.getElementById('total').textContent=total;
+function showSlide(n){slides.forEach((s,i)=>{s.classList.remove('active','prev');if(i<n)s.classList.add('prev');});slides[n].classList.add('active');current=n;document.getElementById('current').textContent=n+1;document.getElementById('progress').style.width=((n+1)/total*100)+'%';}
+function nextSlide(){if(current<total-1)showSlide(current+1);}
+function prevSlide(){if(current>0)showSlide(current-1);}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide();}else if(e.key==='ArrowLeft'){e.preventDefault();prevSlide();}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home')showSlide(0);else if(e.key==='End')showSlide(total-1);});
+let tx=0;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;});document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50){if(d>0)nextSlide();else prevSlide();}});
+showSlide(0);
+</script>
+</body>
+</html>
