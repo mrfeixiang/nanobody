@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>낙타과 VDJ Germline 및 시퀀싱 기술 | 슬라이드</title>
+    <style>
+        :root {
+            --bg: #0a0e17; --surface: #12161f; --surface2: #1a1f2c; --border: #2a2f3d;
+            --text: #e8edf5; --muted: #8892a4; --accent: #58a6ff; --accent2: #79c0ff;
+            --green: #3fb950; --yellow: #d29922; --red: #f85149; --purple: #bc8cff;
+            --orange: #f47c3c; --cyan: #39d2c0; --pink: #f778ba;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { height:100%; overflow:hidden; }
+        body { font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        /* Slide system */
+        .slide-deck { width:100%; height:100%; position:relative; }
+        .slide { width:100%; height:100%; position:absolute; top:0; left:0; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:60px 80px; opacity:0; pointer-events:none; transition: opacity 0.5s ease, transform 0.5s ease; transform: translateX(40px); }
+        .slide.active { opacity:1; pointer-events:auto; transform:translateX(0); }
+        .slide.prev { transform:translateX(-40px); }
+
+        /* Controls */
+        .controls { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:16px; z-index:100; background:rgba(18,22,31,0.9); border:1px solid var(--border); border-radius:12px; padding:8px 20px; backdrop-filter:blur(10px); }
+        .ctrl-btn { background:transparent; border:1px solid var(--border); color:var(--muted); width:36px; height:36px; border-radius:8px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all .2s; font-family:inherit; }
+        .ctrl-btn:hover { border-color:var(--accent); color:var(--text); background:rgba(88,166,255,0.08); }
+        .slide-counter { color:var(--muted); font-size:0.85rem; min-width:60px; text-align:center; }
+        .progress { position:fixed; top:0; left:0; height:3px; background:var(--accent); transition:width .4s ease; z-index:101; }
+
+        /* Top bar */
+        .topbar { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between; align-items:center; padding:12px 24px; z-index:99; background:rgba(10,14,23,0.8); backdrop-filter:blur(8px); }
+        .topbar .logo { font-size:0.82rem; color:var(--muted); }
+        .topbar .logo a { color:var(--accent); text-decoration:none; }
+        .topbar-links { display:flex; gap:12px; }
+        .topbar-links a { color:var(--muted); text-decoration:none; font-size:0.8rem; padding:4px 10px; border:1px solid var(--border); border-radius:4px; transition:all .2s; }
+        .topbar-links a:hover { color:var(--text); border-color:var(--accent); }
+
+        /* Typography */
+        .slide h1 { font-size:3rem; font-weight:900; margin-bottom:16px; line-height:1.2; }
+        .slide h2 { font-size:2.2rem; font-weight:700; margin-bottom:12px; line-height:1.3; }
+        .slide h3 { font-size:1.4rem; font-weight:500; color:var(--muted); margin-bottom:24px; }
+        .slide p { font-size:1.1rem; line-height:1.8; color:var(--text); max-width:900px; }
+        .slide .small { font-size:0.9rem; color:var(--muted); }
+
+        /* Gradient text */
+        .grad1 { background:linear-gradient(90deg,var(--cyan),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .grad2 { background:linear-gradient(90deg,var(--accent),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .grad3 { background:linear-gradient(90deg,var(--green),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .grad4 { background:linear-gradient(90deg,var(--orange),var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+        /* Layout helpers */
+        .full-width { width:100%; max-width:1100px; }
+        .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1100px; }
+        .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; width:100%; max-width:1100px; }
+        .left-align { align-items:flex-start; text-align:left; }
+
+        /* Cards */
+        .s-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; transition:border-color .3s; }
+        .s-card:hover { border-color:var(--accent); }
+        .s-card .s-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+        .s-card .s-value { font-size:1.8rem; font-weight:700; }
+        .s-card .s-detail { font-size:0.85rem; color:var(--muted); margin-top:6px; }
+        .s-card.highlight { border-color:var(--accent); background:rgba(88,166,255,0.04); }
+        .s-card a { color:var(--accent); text-decoration:none; font-size:0.85rem; }
+        .s-card a:hover { text-decoration:underline; }
+
+        /* Tables */
+        .s-table { width:100%; border-collapse:collapse; font-size:0.92rem; }
+        .s-table th, .s-table td { padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
+        .s-table th { color:var(--muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:.04em; background:var(--surface); }
+        .s-table tr:hover { background:rgba(88,166,255,0.03); }
+
+        /* Bars */
+        .bar-row { display:flex; align-items:center; margin:10px 0; gap:12px; }
+        .bar-label { width:160px; text-align:right; font-size:0.9rem; flex-shrink:0; }
+        .bar-track { flex:1; height:32px; background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+        .bar-fill { height:100%; border-radius:7px; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; font-size:0.8rem; font-weight:700; color:#fff; }
+        .bar-note { font-size:0.8rem; color:var(--muted); width:90px; flex-shrink:0; }
+
+        /* Tags */
+        .tag { display:inline-block; padding:3px 10px; border-radius:6px; font-size:0.78rem; font-weight:600; margin:2px; }
+        .tag.vhh { background:rgba(57,210,192,0.12); color:var(--cyan); border:1px solid rgba(57,210,192,0.25); }
+        .tag.conv { background:rgba(188,140,255,0.12); color:var(--purple); border:1px solid rgba(188,140,255,0.25); }
+        .tag.green { background:rgba(63,185,80,0.12); color:var(--green); border:1px solid rgba(63,185,80,0.25); }
+        .tag.red { background:rgba(248,81,73,0.12); color:var(--red); border:1px solid rgba(248,81,73,0.25); }
+        .tag.yellow { background:rgba(210,153,34,0.12); color:var(--yellow); border:1px solid rgba(210,153,34,0.25); }
+
+        /* Info box */
+        .info-box { background:rgba(88,166,255,0.05); border:1px solid rgba(88,166,255,0.2); border-radius:10px; padding:16px 20px; font-size:0.92rem; margin:12px 0; width:100%; max-width:1100px; }
+        .info-box .info-title { font-weight:700; color:var(--accent); margin-bottom:4px; }
+
+        /* Link cards */
+        .link-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; width:100%; max-width:1100px; }
+        .link-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; transition:all .2s; }
+        .link-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+        .link-card a { color:var(--accent); text-decoration:none; font-weight:600; font-size:0.92rem; display:block; margin-bottom:6px; }
+        .link-card .link-desc { font-size:0.8rem; color:var(--muted); }
+
+        /* Product specs */
+        .product-specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; margin-top:12px; }
+        .spec-item { text-align:center; }
+        .spec-item .spec-val { font-size:1.3rem; font-weight:700; }
+        .spec-item .spec-lbl { font-size:0.72rem; color:var(--muted); }
+
+        /* Keyboard hint */
+        .kb-hint { position:fixed; bottom:24px; right:24px; font-size:0.75rem; color:var(--muted); z-index:100; }
+        .kb-hint kbd { background:var(--surface); border:1px solid var(--border); padding:2px 6px; border-radius:3px; font-family:inherit; }
+
+        @media (max-width:768px) {
+            .slide { padding:40px 24px; }
+            .slide h1 { font-size:2rem; }
+            .slide h2 { font-size:1.5rem; }
+            .two-col, .three-col { grid-template-columns:1fr; }
+            .bar-label { width:100px; font-size:0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="topbar">
+    <div class="logo">낙타과 VDJ & 시퀀싱 | <a href="./index.html">nanobody project</a></div>
+    <div class="topbar-links">
+        <a href="./camelid-vdj-sequencing.html">전체 보고서</a>
+        <a href="./protenix-guide.html">Protenix 가이드</a>
+        <a href="./index.html">메인</a>
+    </div>
+</div>
+
+<div class="slide-deck" id="deck">
+
+<!-- ============ SLIDE 1: Title ============ -->
+<div class="slide active" id="s1">
+    <h1><span class="grad1">낙타과 VDJ Germline</span></h1>
+    <h1><span class="grad2">& 시퀀싱 기술 보고서</span></h1>
+    <h3 style="margin-top:20px">낙타 / 라마 / 알파카 Germline VDJ 유전자 데이터셋<br>PacBio / Illumina / Nanopore 정확도 비교<br>중국 나노포어 기술 동향 (齐碳科技, BGI CycloneSEQ)</h3>
+    <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;justify-content:center">
+        <span class="tag vhh">VHH / Nanobody</span>
+        <span class="tag conv">Germline VDJ</span>
+        <span class="tag green">IMGT Database</span>
+        <span class="tag yellow">2024 Review</span>
+    </div>
+    <p class="small" style="margin-top:30px">
+        <a href="./camelid-vdj-sequencing.html" style="color:var(--accent)">전체 보고서 보기</a> &bull;
+        <a href="https://github.com/mrfeixiang/nanobody" style="color:var(--accent)">GitHub Repository</a>
+    </p>
+</div>
+
+<!-- ============ SLIDE 2: What is VHH ============ -->
+<div class="slide left-align" id="s2">
+    <h2><span class="grad1">01</span> 나노바디(VHH)란?</h2>
+    <div class="two-col" style="margin-top:20px">
+        <div>
+            <p>낙타과 동물(낙타, 라마, 알파카)에서 발견되는 <strong>중쇄 전용 항체(HCAb)</strong>의 가변 도메인</p>
+            <ul style="margin-top:12px;font-size:0.95rem">
+                <li><strong>~15 kDa</strong> &mdash; 기존 항체의 1/10 크기</li>
+                <li><strong>높은 안정성</strong> &mdash; 열, pH에 강함</li>
+                <li><strong>은밀한 에피토프 접근</strong> &mdash; 기존 항체 불가능한 영역 결합</li>
+                <li><strong>3개 CDR 루프</strong> &mdash; CDR3가 항원 특이성 핵심</li>
+                <li><strong>경쇄(VL) 불필요</strong> &mdash; FR2 할마크 잔기로 보상</li>
+            </ul>
+            <div class="info-box" style="margin-top:16px">
+                <div class="info-title">IgG 아이소타입</div>
+                <strong>IgG1</strong>: 기존 4쇄 항체 (VH+VL)<br>
+                <strong>IgG2/IgG3</strong>: 중쇄 전용 (VHH), CH1 도메인 결여
+            </div>
+        </div>
+        <div>
+            <div class="s-card highlight" style="margin-bottom:14px">
+                <div class="s-label">FR2 할마크 잔기 (IMGT 번호)</div>
+                <table class="s-table" style="margin:8px 0 0">
+                    <tr><th>위치</th><th>기존 VH</th><th>VHH</th></tr>
+                    <tr><td>42</td><td style="color:var(--purple)">Val</td><td style="color:var(--cyan);font-weight:700">Phe/Tyr</td></tr>
+                    <tr><td>49</td><td style="color:var(--purple)">Gly</td><td style="color:var(--cyan);font-weight:700">Glu/Gln</td></tr>
+                    <tr><td>50</td><td style="color:var(--purple)">Leu</td><td style="color:var(--cyan);font-weight:700">Arg/Cys</td></tr>
+                    <tr><td>52</td><td style="color:var(--purple)">Trp</td><td style="color:var(--cyan);font-weight:700">Gly/Ser</td></tr>
+                </table>
+            </div>
+            <p class="small"><a href="https://www.imgt.org/IMGTbiotechnology/Camel_IgG.html" style="color:var(--accent)" target="_blank">IMGT Camelidae IgG 페이지 &rarr;</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- ============ SLIDE 3: Germline VDJ Dataset ============ -->
+<div class="slide left-align" id="s3">
+    <h2><span class="grad1">02</span> 낙타과 Germline VDJ 유전자 데이터셋</h2>
+    <h3>모든 낙타과 IGHV는 <strong>IGHV3 서브그룹</strong>에 속함 (인간 VH3와 가장 유사)</h3>
+    <div class="three-col">
+        <div class="s-card">
+            <div class="s-label">Arabian Camel</div>
+            <div style="font-style:italic;color:var(--muted);font-size:0.85rem;margin-bottom:8px">Camelus dromedarius</div>
+            <div class="s-value" style="color:var(--cyan)">~74 IGHV</div>
+            <div class="s-detail">
+                <span class="tag conv">S1-S41 기존형</span><br>
+                <span class="tag vhh">S42-S74 VHH형</span>
+            </div>
+            <div class="s-detail">IGHD ~10 | IGHJ ~6</div>
+            <div class="s-detail">인간 VH3 대비 동일성: <strong>81%</strong></div>
+            <p style="margin-top:8px"><a href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=arabian_camel&group=IGHV" style="color:var(--accent);font-size:0.82rem" target="_blank">IMGT Gene Table &rarr;</a></p>
+        </div>
+        <div class="s-card">
+            <div class="s-label">Llama</div>
+            <div style="font-style:italic;color:var(--muted);font-size:0.85rem;margin-bottom:8px">Lama glama</div>
+            <div class="s-value" style="color:var(--purple)">~8 IGHV</div>
+            <div class="s-detail">
+                <span class="tag conv">S6-S8 기존형</span><br>
+                <span class="tag vhh">S1-S5 VHH형</span>
+            </div>
+            <div class="s-detail">IGHD ~7 | IGHJ ~6</div>
+            <div class="s-detail">인간 VH 대비 동일성: <strong>79%</strong></div>
+            <p style="margin-top:8px"><a href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=Llama&group=IGHV" style="color:var(--accent);font-size:0.82rem" target="_blank">IMGT Gene Table &rarr;</a></p>
+        </div>
+        <div class="s-card">
+            <div class="s-label">Alpaca</div>
+            <div style="font-style:italic;color:var(--muted);font-size:0.85rem;margin-bottom:8px">Vicugna pacos</div>
+            <div class="s-value" style="color:var(--green)">~19 IGHV</div>
+            <div class="s-detail">
+                <span class="tag conv">IGHV3-3 등</span><br>
+                <span class="tag vhh">S53-S68 VHH형</span>
+            </div>
+            <div class="s-detail">IGHD ~8 | IGHJ ~6</div>
+            <div class="s-detail">나노바디 발견에 가장 많이 사용</div>
+            <p style="margin-top:8px"><a href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=Vicugna_pacos&group=IGHV" style="color:var(--accent);font-size:0.82rem" target="_blank">IMGT Gene Table &rarr;</a></p>
+        </div>
+    </div>
+    <div class="info-box" style="margin-top:16px">
+        <div class="info-title">2개 유전자 세트 구분</div>
+        <strong>Set 1 (기존 IgG1):</strong> IGHV3S1-S41 &mdash; 기존 4쇄 IgG1에서 발현 &nbsp;|&nbsp;
+        <strong>Set 2 (VHH/HCAb):</strong> IGHV3S42-S74 &mdash; CH1 도메인 결여된 IgG2/3에서 발현
+    </div>
+</div>
+
+<!-- ============ SLIDE 4: Tissue Sources ============ -->
+<div class="slide left-align" id="s4">
+    <h2><span class="grad3">03</span> VHH 라이브러리 구축 조직 출처</h2>
+    <div class="full-width" style="margin-top:16px">
+        <table class="s-table">
+            <thead><tr><th>조직</th><th>수집 방법</th><th>용도</th><th>장점</th></tr></thead>
+            <tbody>
+                <tr><td style="font-weight:700;color:var(--green)">말초혈 (PBMC)</td><td>경정맥, 50-100 mL, Ficoll 분리</td><td>면역화 라이브러리의 주요 소스</td><td>비침습적, 반복 채혈 가능</td></tr>
+                <tr><td style="font-weight:700;color:var(--cyan)">림프절</td><td>외과적 생검, 배출 림프절</td><td>항원 특이적 B세포 농축</td><td>높은 친화도 클론, 배중심 농축</td></tr>
+                <tr><td style="font-weight:700;color:var(--purple)">비장</td><td>사후 수집</td><td>대량 B세포 저장소</td><td>최고 다양성, 대량 세포 확보</td></tr>
+                <tr><td style="font-weight:700;color:var(--orange)">골수</td><td>장골릉 흡인</td><td>장기 생존 형질세포</td><td>성숙, 고친화도 항체</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="info-box" style="margin-top:16px">
+        <div class="info-title">비면역화(Naive) 라이브러리 사례</div>
+        <strong>75마리 낙타과 동물</strong>(알파카 51 + 라마 13 + 쌍봉낙타 11) + 비장 2개에서 메가다이버스 라이브러리 구축 &mdash; 특정 항원 면역화 없이 고다양성 달성
+    </div>
+    <div style="margin-top:12px">
+        <p class="small">
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10958182/" style="color:var(--accent)" target="_blank">From Llama to Nanobody Workflow (2024) &rarr;</a> &bull;
+            <a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP124616" style="color:var(--accent)" target="_blank">NCBI SRA: SRP124616 &rarr;</a>
+        </p>
+    </div>
+</div>
+
+<!-- ============ SLIDE 5: Platform Overview ============ -->
+<div class="slide left-align" id="s5">
+    <h2><span class="grad2">04</span> 시퀀싱 플랫폼 비교</h2>
+    <div class="full-width" style="margin-top:16px">
+        <table class="s-table">
+            <thead><tr>
+                <th>특성</th>
+                <th style="color:var(--purple)">Illumina</th>
+                <th style="color:var(--green)">PacBio HiFi</th>
+                <th style="color:var(--orange)">Nanopore (ONT)</th>
+            </tr></thead>
+            <tbody>
+                <tr><td>리드 길이</td><td>150-300 bp (PE)</td><td>10-25 kb</td><td>무제한 (&gt;4 Mb)</td></tr>
+                <tr><td>원시 정확도</td><td style="color:var(--green);font-weight:700">&gt;99.9% (Q30+)</td><td style="color:var(--green);font-weight:700">&gt;99.9% (Q30+)</td><td style="color:var(--yellow);font-weight:700">~95-99% (R10.4.1)</td></tr>
+                <tr><td>컨센서스 정확도</td><td>&gt;99.99%</td><td>&gt;99.99%</td><td>99.9% (30x)</td></tr>
+                <tr><td>주요 오류 유형</td><td style="color:var(--red)">치환 (Substitution)</td><td>무작위 (Stochastic)</td><td style="color:var(--red)">Indel (호모폴리머)</td></tr>
+                <tr><td>처리량</td><td>~600 Gb (NovaSeq)</td><td>~30 Gb (Revio)</td><td>~290 Gb (PromethION)</td></tr>
+                <tr><td>VDJ 전장 커버</td><td style="color:var(--red)">부분적 (조립 필요)</td><td style="color:var(--green)">단일 리드, 전장</td><td style="color:var(--green)">단일 리드, 전장</td></tr>
+                <tr><td>장비 가격</td><td>$250K-$1M</td><td>~$600K</td><td>$1K-$225K</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top:12px">
+        <p class="small">
+            <a href="https://www.cd-genomics.com/blog/pacbio-nanopore-error-rate-correction-strategies/" style="color:var(--accent)" target="_blank">PacBio vs Nanopore 오류율 비교 &rarr;</a> &bull;
+            <a href="https://www.pacb.com/blog/the-hifi-difference-immunology-with-a-flairr/" style="color:var(--accent)" target="_blank">PacBio FLAIRR-seq &rarr;</a>
+        </p>
+    </div>
+</div>
+
+<!-- ============ SLIDE 6: Accuracy Bars ============ -->
+<div class="slide left-align" id="s6">
+    <h2><span class="grad2">05</span> 원시 단일 리드 정확도 비교</h2>
+    <div class="full-width" style="margin-top:20px">
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--purple)">Illumina</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--purple),#a78bfa)">99.9%</div></div>
+            <div class="bar-note">Q30+</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--green)">PacBio HiFi</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--green),#6ee7b7)">99.9%</div></div>
+            <div class="bar-note">Q30+ CCS</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--orange)">PacBio CLR</div>
+            <div class="bar-track"><div class="bar-fill" style="width:85%;background:linear-gradient(90deg,var(--orange),#fbbf24)">~85%</div></div>
+            <div class="bar-note">원시 서브리드</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--cyan)">ONT R10.4.1</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99%;background:linear-gradient(90deg,var(--cyan),#67e8f9)">~99%</div></div>
+            <div class="bar-note">Q20+ (Kit14)</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--yellow)">ONT R9.4.1</div>
+            <div class="bar-track"><div class="bar-fill" style="width:93%;background:linear-gradient(90deg,var(--yellow),#fcd34d)">~93%</div></div>
+            <div class="bar-note">레거시</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--pink)">ONT Duplex</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99.9%;background:linear-gradient(90deg,var(--pink),#f9a8d4)">99.9%</div></div>
+            <div class="bar-note">Q30+ 양가닥</div>
+        </div>
+        <div class="bar-row">
+            <div class="bar-label" style="color:var(--pink)">Qitan O2</div>
+            <div class="bar-track"><div class="bar-fill" style="width:99%;background:linear-gradient(90deg,var(--pink),#e879f9)">99%</div></div>
+            <div class="bar-note">QPinnacle2</div>
+        </div>
+    </div>
+    <div class="info-box" style="margin-top:20px">
+        <div class="info-title">VHH 시퀀싱에 대한 시사점</div>
+        VHH는 ~360 nt &rarr; Illumina 2x250bp로 전장 커버 어려움 (조립 필요). PacBio HiFi와 Nanopore는 단일 리드로 전장 VDJ + 상수영역까지 커버 가능.
+    </div>
+</div>
+
+<!-- ============ SLIDE 7: VHH Platform Recommendation ============ -->
+<div class="slide left-align" id="s7">
+    <h2><span class="grad3">06</span> 플랫폼별 VHH 시퀀싱 적용</h2>
+    <div class="three-col" style="margin-top:20px">
+        <div class="s-card" style="border-color:var(--purple)">
+            <div class="s-label" style="color:var(--purple)">Illumina</div>
+            <div class="s-value" style="font-size:1.2rem">대용량 레퍼토리 프로파일링</div>
+            <div class="s-detail" style="margin-top:10px">
+                <span class="tag green">SNV/SHM 검출 최고</span><br>
+                CDR3 프로파일링에 최적<br>
+                비용 효율적 (Gb당 $5-10)<br>
+                MiSeq 2x250bp로 VHH 커버 가능하나 조립 필요
+            </div>
+            <p style="margin-top:8px"><a href="https://www.sciencedirect.com/science/article/abs/pii/S0958166924000181" style="color:var(--accent);font-size:0.82rem" target="_blank">항체 레퍼토리 분석 혁신 (2024) &rarr;</a></p>
+        </div>
+        <div class="s-card" style="border-color:var(--green)">
+            <div class="s-label" style="color:var(--green)">PacBio HiFi</div>
+            <div class="s-value" style="font-size:1.2rem">고정확도 전장 VDJ</div>
+            <div class="s-detail" style="margin-top:10px">
+                <span class="tag green">VDJ + 아이소타입 동시 분석</span><br>
+                FLAIRR-seq 워크플로우<br>
+                &gt;99.9% 정확도 + 전장 커버<br>
+                샘플당 비용 높음
+            </div>
+            <p style="margin-top:8px"><a href="https://www.pacb.com/blog/the-hifi-difference-immunology-with-a-flairr/" style="color:var(--accent);font-size:0.82rem" target="_blank">PacBio FLAIRR-seq &rarr;</a></p>
+        </div>
+        <div class="s-card" style="border-color:var(--orange)">
+            <div class="s-label" style="color:var(--orange)">Nanopore</div>
+            <div class="s-value" style="font-size:1.2rem">신속 현장 전장 시퀀싱</div>
+            <div class="s-detail" style="margin-top:10px">
+                <span class="tag yellow">실시간 분석 가능</span><br>
+                FLIRseq 워크플로우 검증됨<br>
+                적응적 샘플링(Read Until)<br>
+                호모폴리머 오류 주의
+            </div>
+            <p style="margin-top:8px"><a href="https://academic.oup.com/clinchem/article/71/2/274/7759349" style="color:var(--accent);font-size:0.82rem" target="_blank">FLIRseq 논문 (2025) &rarr;</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- ============ SLIDE 8: China Nanopore ============ -->
+<div class="slide left-align" id="s8">
+    <h2><span class="grad4">07</span> 중국 나노포어 시퀀싱 기업</h2>
+    <div class="full-width" style="margin-top:16px">
+        <table class="s-table">
+            <thead><tr><th>기업</th><th>위치</th><th>주요 제품</th><th>정확도</th><th>최대 처리량</th><th>상태</th></tr></thead>
+            <tbody>
+                <tr><td style="font-weight:700;color:var(--pink)">齐碳科技 (Qitan)</td><td>청두</td><td>QNome, QPursue, QPinnacle2</td><td style="color:var(--green)">99% (O2)</td><td>800 Gb</td><td><span class="tag green">상용화</span></td></tr>
+                <tr><td style="font-weight:700;color:var(--cyan)">华大智造 (BGI/MGI)</td><td>선전</td><td>CycloneSEQ G100-ER, G400-ER</td><td style="color:var(--green)">97-99%</td><td>400 Gb</td><td><span class="tag green">상용화</span></td></tr>
+                <tr><td style="font-weight:700;color:var(--orange)">安序源 (Axbio)</td><td>선전</td><td>AXP100</td><td>~95%</td><td>-</td><td><span class="tag yellow">초기 상용</span></td></tr>
+                <tr><td style="font-weight:700;color:var(--accent)">今是科技 (Geneus)</td><td>-</td><td>Gseq-500</td><td>-</td><td>-</td><td><span class="tag yellow">초기 상용</span></td></tr>
+                <tr><td style="font-weight:700;color:var(--green)">普译生物 (Polyseq)</td><td>-</td><td>PolyseqOne</td><td>-</td><td>-</td><td><span class="tag red">개발중</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top:12px">
+        <p class="small">
+            <a href="https://www.sciencedirect.com/science/article/abs/pii/S1673852724002443" style="color:var(--accent)" target="_blank">Nanopore sequencing: flourishing in its teenage years (2024 Review) &rarr;</a>
+        </p>
+    </div>
+</div>
+
+<!-- ============ SLIDE 9: Qitan Deep Dive ============ -->
+<div class="slide left-align" id="s9">
+    <h2><span class="grad4">08</span> 齐碳科技 (Qitan Technology) 심층 분석</h2>
+    <h3>중국 최초 상용 나노포어 시퀀서 개발사 (2016 설립, 2021 첫 출시)</h3>
+    <div class="two-col">
+        <div>
+            <div class="s-card" style="margin-bottom:12px">
+                <div class="s-label" style="color:var(--pink)">QNome-3841 (저처리량/휴대용)</div>
+                <div class="product-specs">
+                    <div class="spec-item"><div class="spec-val">~1.5 Gb</div><div class="spec-lbl">출력/8시간</div></div>
+                    <div class="spec-item"><div class="spec-val">~90%</div><div class="spec-lbl">원시 정확도</div></div>
+                    <div class="spec-item"><div class="spec-val">&gt;300 kb</div><div class="spec-lbl">최대 리드</div></div>
+                </div>
+            </div>
+            <div class="s-card" style="margin-bottom:12px">
+                <div class="s-label" style="color:var(--purple)">QPursue-6k (중처리량)</div>
+                <div class="product-specs">
+                    <div class="spec-item"><div class="spec-val">360 Gb</div><div class="spec-lbl">최대 (6x)</div></div>
+                    <div class="spec-item"><div class="spec-val">Q20</div><div class="spec-lbl">정확도</div></div>
+                    <div class="spec-item"><div class="spec-val">Mb급</div><div class="spec-lbl">리드 길이</div></div>
+                </div>
+            </div>
+            <div class="s-card" style="border-color:var(--green)">
+                <div class="s-label" style="color:var(--green)">QPinnacle2 (고처리량, 2025.09)</div>
+                <div class="product-specs">
+                    <div class="spec-item"><div class="spec-val" style="color:var(--green)">800 Gb</div><div class="spec-lbl">최대 (2칩)</div></div>
+                    <div class="spec-item"><div class="spec-val" style="color:var(--green)">99%</div><div class="spec-lbl">원시 (O2)</div></div>
+                    <div class="spec-item"><div class="spec-val">Q50</div><div class="spec-lbl">컨센서스</div></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="s-card highlight" style="margin-bottom:14px">
+                <div class="s-label">회사 현황</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+                    <div><div style="font-size:1.3rem;font-weight:700">~$186M</div><div class="small">누적 투자금</div></div>
+                    <div><div style="font-size:1.3rem;font-weight:700">~30개</div><div class="small">글로벌 특허</div></div>
+                    <div><div style="font-size:1.3rem;font-weight:700">2,000대/년</div><div class="small">생산 능력</div></div>
+                    <div><div style="font-size:1.3rem;font-weight:700">500+</div><div class="small">중국 사용자</div></div>
+                </div>
+            </div>
+            <div class="s-card" style="border-color:var(--cyan)">
+                <div class="s-label" style="color:var(--cyan)">O2 생화학 시스템 (2025)</div>
+                <div class="s-detail" style="margin-top:6px">
+                    <strong>재설계된 포어 단백질</strong>: 깨끗한 염기별 전류<br>
+                    <strong>새 모터 단백질</strong>: 포어 막힘률 감소<br>
+                    <strong>폴리머 막</strong>: ~20% 노이즈 감소<br>
+                    <strong>전 제품 적용</strong>: QNome, QPursue에도 적용 예정
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="small" style="margin-top:10px"><a href="https://labcritics.com/blog/2026/05/04/qitan-tech-vs-oxford-nanopore-inside-the-two-horse-race-for-the-future-of-nanopore-sequencing/" style="color:var(--accent)" target="_blank">Qitan vs ONT 상세 비교 (Labcritics 2026) &rarr;</a></p>
+</div>
+
+<!-- ============ SLIDE 10: BGI CycloneSEQ ============ -->
+<div class="slide left-align" id="s10">
+    <h2><span class="grad4">09</span> BGI CycloneSEQ & 특허 현황</h2>
+    <div class="two-col" style="margin-top:16px">
+        <div>
+            <div class="s-card" style="border-color:var(--cyan);margin-bottom:16px">
+                <div class="s-label" style="color:var(--cyan)">CycloneSEQ (BGI Research / MGI)</div>
+                <div class="product-specs" style="margin-top:12px">
+                    <div class="spec-item"><div class="spec-val">50 Gb</div><div class="spec-lbl">셀당 출력</div></div>
+                    <div class="spec-item"><div class="spec-val">97%</div><div class="spec-lbl">모달 정확도</div></div>
+                    <div class="spec-item"><div class="spec-val">33.6 kb</div><div class="spec-lbl">N50</div></div>
+                    <div class="spec-item"><div class="spec-val">107시간</div><div class="spec-lbl">단일칩 가동</div></div>
+                </div>
+                <div class="s-detail" style="margin-top:12px">
+                    <strong>G100-ER</strong> (2024.09): 85 Gb x2, 99% 정확도<br>
+                    <strong>G400-ER</strong> (2025.03): 400 Gb, 99% 정확도
+                </div>
+                <div class="s-detail">나노포어 밀도: 28.9개/mm<sup>2</sup> (200 um 피치)</div>
+            </div>
+            <p class="small">
+                <a href="https://www.biorxiv.org/content/10.1101/2024.08.19.608720v1" style="color:var(--accent)" target="_blank">CycloneSEQ 논문 (bioRxiv 2024) &rarr;</a><br>
+                <a href="https://en.mgitech.cn/Home/Applications/index/id/20.html" style="color:var(--accent)" target="_blank">MGI CycloneSEQ 페이지 &rarr;</a>
+            </p>
+        </div>
+        <div>
+            <h3 style="border:none;padding:0;margin:0 0 12px">나노포어 시퀀싱 특허 현황</h3>
+            <div class="s-card" style="margin-bottom:12px">
+                <div class="s-label">아시아 (중국 + 일본)</div>
+                <div class="s-value" style="color:var(--cyan)">~500개 특허</div>
+                <div class="s-detail">정부 지원 하에 급속 성장</div>
+            </div>
+            <div class="s-card" style="margin-bottom:12px">
+                <div class="s-label">최근 혁신 방향 (2022-2024)</div>
+                <div class="s-detail">
+                    1. <strong>적응적 샘플링</strong> (임상 규모)<br>
+                    2. <strong>실시간 신호 분석</strong> (GPU/FPGA)<br>
+                    3. <strong>직접 RNA 시퀀싱</strong><br>
+                    4. <strong>포어 단백질 엔지니어링</strong><br>
+                    5. <strong>휴대용 하드웨어 + 엣지 컴퓨팅</strong>
+                </div>
+            </div>
+            <div class="info-box">
+                <div class="info-title">중국의 전략적 위치</div>
+                영국(ONT) 외에 <strong>완전한 국산 나노포어 시퀀싱 역량</strong>을 보유한 유일한 국가
+            </div>
+            <p class="small" style="margin-top:8px"><a href="https://www.patsnap.com/resources/blog/articles/nanopore-dna-sequencing-technology-landscape-2026/" style="color:var(--accent)" target="_blank">PatSnap 나노포어 기술 현황 2026 &rarr;</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- ============ SLIDE 11: Analysis Tools ============ -->
+<div class="slide left-align" id="s11">
+    <h2><span class="grad1">10</span> VDJ 분석 도구 & 파이프라인</h2>
+    <div class="three-col" style="margin-top:20px">
+        <div class="s-card">
+            <div class="s-label" style="color:var(--accent)">V(D)J 할당</div>
+            <div class="s-value" style="font-size:1.1rem">IMGT/V-QUEST</div>
+            <div class="s-detail">낙타과 종 선택 가능 (Camelus, Lama, Vicugna). Germline 대비 정확한 돌연변이 계산. HighV-QUEST로 대용량 분석.</div>
+            <p style="margin-top:8px"><a href="https://www.imgt.org" style="color:var(--accent);font-size:0.85rem" target="_blank">imgt.org &rarr;</a></p>
+        </div>
+        <div class="s-card">
+            <div class="s-label" style="color:var(--green)">Germline 비교</div>
+            <div class="s-value" style="font-size:1.1rem">IgBLAST</div>
+            <div class="s-detail">NCBI 개발. 커스텀 낙타과 germline DB 업로드 가능. FR/CDR별 SHM 분포 분석. 독립 실행 가능.</div>
+            <p style="margin-top:8px"><a href="https://www.ncbi.nlm.nih.gov/igblast/" style="color:var(--accent);font-size:0.85rem" target="_blank">IgBLAST &rarr;</a></p>
+        </div>
+        <div class="s-card">
+            <div class="s-label" style="color:var(--purple)">대용량 파이프라인</div>
+            <div class="s-value" style="font-size:1.1rem">MiXCR / Immcantation</div>
+            <div class="s-detail">MiXCR: 대용량 SRA에서 VDJ 추출. Immcantation (Change-O/SHazaM): SHM 핫스팟, 클론 계통 분석.</div>
+            <p style="margin-top:8px"><a href="https://immcantation.readthedocs.io" style="color:var(--accent);font-size:0.85rem" target="_blank">Immcantation &rarr;</a></p>
+        </div>
+    </div>
+    <div class="info-box" style="margin-top:20px">
+        <div class="info-title">SRA 검색 문자열</div>
+        <code style="background:var(--surface);padding:3px 8px;border-radius:4px;font-size:0.88rem">"Camelus dromedarius" AND "VHH" AND "repertoire"</code><br>
+        <code style="background:var(--surface);padding:3px 8px;border-radius:4px;font-size:0.88rem">"Lama glama" AND "heavy chain only" AND "IGHV"</code><br>
+        <code style="background:var(--surface);padding:3px 8px;border-radius:4px;font-size:0.88rem">"Vicugna pacos" AND "VHH" AND "Next Generation Sequencing"</code>
+    </div>
+</div>
+
+<!-- ============ SLIDE 12: Resources ============ -->
+<div class="slide" id="s12">
+    <h2><span class="grad3">11</span> 참고 자료 & 관련 링크</h2>
+    <div class="link-grid" style="margin-top:24px">
+        <div class="link-card">
+            <a href="https://www.imgt.org/IMGTbiotechnology/Camel_IgG.html" target="_blank">IMGT Camelidae IgG</a>
+            <div class="link-desc">Germline VDJ 참조 표준</div>
+        </div>
+        <div class="link-card">
+            <a href="https://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=arabian_camel&group=IGHV" target="_blank">IMGT Camel IGHV Table</a>
+            <div class="link-desc">아라비안 낙타 IGHV 유전자</div>
+        </div>
+        <div class="link-card">
+            <a href="https://opig.stats.ox.ac.uk/webapps/plabdab-nano/" target="_blank">PLAbDab-nano</a>
+            <div class="link-desc">낙타과 & 상어 나노바디 DB</div>
+        </div>
+        <div class="link-card">
+            <a href="https://www.ncbi.nlm.nih.gov/igblast/" target="_blank">NCBI IgBLAST</a>
+            <div class="link-desc">면역글로불린 BLAST 분석</div>
+        </div>
+        <div class="link-card">
+            <a href="https://www.sciencedirect.com/science/article/abs/pii/S1673852724002443" target="_blank">나노포어 시퀀싱 2024 리뷰</a>
+            <div class="link-desc">중국 나노포어 기술 종합 리뷰</div>
+        </div>
+        <div class="link-card">
+            <a href="https://labcritics.com/blog/2026/05/04/qitan-tech-vs-oxford-nanopore-inside-the-two-horse-race-for-the-future-of-nanopore-sequencing/" target="_blank">Qitan vs ONT 비교</a>
+            <div class="link-desc">Labcritics 심층 분석</div>
+        </div>
+        <div class="link-card">
+            <a href="https://www.biorxiv.org/content/10.1101/2024.08.19.608720v1" target="_blank">BGI CycloneSEQ 논문</a>
+            <div class="link-desc">단일분자 나노포어 플랫폼</div>
+        </div>
+        <div class="link-card">
+            <a href="https://www.pacb.com/blog/the-hifi-difference-immunology-with-a-flairr/" target="_blank">PacBio FLAIRR-seq</a>
+            <div class="link-desc">전장 면역 레퍼토리 시퀀싱</div>
+        </div>
+        <div class="link-card">
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10958182/" target="_blank">Llama to Nanobody (2024)</a>
+            <div class="link-desc">VHH 생산 간소화 워크플로우</div>
+        </div>
+        <div class="link-card">
+            <a href="https://www.patsnap.com/resources/blog/articles/nanopore-dna-sequencing-technology-landscape-2026/" target="_blank">PatSnap 기술 현황 2026</a>
+            <div class="link-desc">나노포어 DNA 시퀀싱 특허</div>
+        </div>
+        <div class="link-card">
+            <a href="./camelid-vdj-sequencing.html" target="_blank">전체 보고서 (웹)</a>
+            <div class="link-desc">이 슬라이드의 전체 버전</div>
+        </div>
+        <div class="link-card">
+            <a href="https://github.com/mrfeixiang/nanobody" target="_blank">GitHub Repository</a>
+            <div class="link-desc">전체 프로젝트 코드 & 데이터</div>
+        </div>
+    </div>
+    <p class="small" style="margin-top:24px;text-align:center">
+        IMGT, NCBI, 발표 문헌 및 제조사 사양 기반 &bull; 2026년 5월 최종 업데이트
+    </p>
+</div>
+
+</div><!-- end deck -->
+
+<!-- Controls -->
+<div class="controls">
+    <button class="ctrl-btn" onclick="prevSlide()">&#9664;</button>
+    <div class="slide-counter"><span id="current">1</span> / <span id="total">12</span></div>
+    <button class="ctrl-btn" onclick="nextSlide()">&#9654;</button>
+    <button class="ctrl-btn" onclick="toggleFullscreen()" title="전체화면">&#x26F6;</button>
+</div>
+
+<div class="kb-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> 슬라이드 이동 &bull; <kbd>F</kbd> 전체화면</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+document.getElementById('total').textContent = total;
+
+function showSlide(n) {
+    slides.forEach((s, i) => {
+        s.classList.remove('active','prev');
+        if (i < n) s.classList.add('prev');
+    });
+    slides[n].classList.add('active');
+    current = n;
+    document.getElementById('current').textContent = n + 1;
+    document.getElementById('progress').style.width = ((n + 1) / total * 100) + '%';
+}
+
+function nextSlide() { if (current < total - 1) showSlide(current + 1); }
+function prevSlide() { if (current > 0) showSlide(current - 1); }
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    else if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+    else if (e.key === 'Home') showSlide(0);
+    else if (e.key === 'End') showSlide(total - 1);
+});
+
+// Touch support
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { if (diff > 0) nextSlide(); else prevSlide(); }
+});
+
+showSlide(0);
+</script>
+</body>
+</html>
